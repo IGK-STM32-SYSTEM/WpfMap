@@ -5,8 +5,39 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfMap"
         mc:Ignorable="d"
+        Loaded="Window_Loaded"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="33*"/>
+            <RowDefinition Height="343*"/>
+            <RowDefinition Height="43*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="80*"/>
+            <ColumnDefinition Width="9*"/>
+        </Grid.ColumnDefinitions>
+        <!--绘图区-->
+        <ScrollViewer Grid.Column="1" Grid.Row="1" x:Name="drawViewScroll" VerticalScrollBarVisibility="Disabled"
+                          PreviewMouseWheel="image_PreviewMouseWheel" 
+                          PreviewMouseRightButtonDown="imageRobot_PreviewMouseRightButtonDown" 
+                          PreviewMouseMove="imageRobot_PreviewMouseMove"
+                          PreviewMouseRightButtonUp="imageRobot_PreviewMouseRightButtonUp"
+                          PreviewMouseLeftButtonDown="imageRobot_PreviewMouseLeftButtonDown" 
+                          PreviewMouseLeftButtonUp="imageRobot_PreviewMouseLeftButtonUp"
+                          Background="Gray"
+                          PreviewKeyDown="drawViewScroll_PreviewKeyDown"
+                          PreviewKeyUp="drawViewScroll_PreviewKeyUp">
+            <Grid  x:Name="gridDraw">
+                <Grid.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform x:Name="sfr"/>
+                        <TranslateTransform x:Name="tlt"/>
+                    </TransformGroup>
+                </Grid.RenderTransform>
+                <Canvas x:Name="cvMap"></Canvas>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </Window>
