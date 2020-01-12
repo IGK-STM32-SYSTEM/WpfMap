@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Controls;
+using System.Windows.Shapes;
 
 namespace WpfMap
 {
@@ -48,5 +50,29 @@ namespace WpfMap
 
         ////地图尺寸
         //public static System.Drawing.Size MapSize;
+
+        //画布比例
+        private double CanvasScale = 1;
+
+        //站点
+        public class Station
+        {
+            /// <summary>
+            /// 坐标
+            /// </summary>
+            public System.Windows.Point point = new System.Windows.Point();
+            /// <summary>
+            /// 编号
+            /// </summary>
+            public int Num = 0;
+            //绘图对象
+            public Ellipse ellipse = new Ellipse();
+            //绘文字对象
+            public TextBlock textBlock = new TextBlock();
+        }
+        /// <summary>
+        /// 站点列表
+        /// </summary>
+        public static List<Station> Stations = new List<Station>();
     }
 }
