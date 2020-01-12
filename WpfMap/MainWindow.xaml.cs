@@ -125,7 +125,8 @@ namespace WpfMap
             Canvas.SetTop(textBlock, y);
             canvasObj.Children.Add(textBlock);
         }
-
+        //当前编辑的站点
+        int NowEditeStation = -1;
         //记录用户按键
         class UserKeyClass
         {
@@ -247,7 +248,7 @@ namespace WpfMap
                         //将当前站点切换为绿色
 
                         GlobalVar.Stations[i].ellipse.Fill = Brushes.Green;
-
+                        NowEditeStation = i;
                         ////切换当前站点
                         //GlobalVar.routeConfig.StationNow = i;
                         ////更新界面
@@ -270,46 +271,30 @@ namespace WpfMap
         //左键抬起
         private void imageRobot_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            //重置机器人位置
-            if (GlobalVar.mouseFunction == GlobalVar.MouseFunctionEnum.ResetRobot)
+            //记录按下时的位置
+            GlobalVar.mouseLeftBtnDownToMap = e.GetPosition(cvMap);
+            var distance = MathHelper.Distance(GlobalVar.Stations[NowEditeStation].point, GlobalVar.mouseLeftBtnDownToMap);
+            //在当前站点上
+            if (distance <= 20)
             {
-                //清除标志
-                GlobalVar.mouseFunction = GlobalVar.MouseFunctionEnum.None;
-                ////清除指示器
-                //ClearPostionCursor();
-                ////界面坐标系转真实坐标系
-                //PointF pointf = RosHelper.ViewToAxis(GlobalVar.mouseLeftBtnDownToMap);
-                ////真实坐标系转世界坐标系
-                //pointf = RosHelper.AxisToWorld(pointf, GlobalVar.SubHandle.mapGrid);
+                ////将当前站点切换为绿色
 
-                ////获取当前坐标
-                //System.Windows.Point nowPoint = e.GetPosition(gridDraw);
-                ////计算角度
-                //double angle = RosHelper.PointToAngle(RosHelper.ViewToAxisPoint(GlobalVar.mouseLeftBtnDownToMap), RosHelper.ViewToAxisPoint(nowPoint));
-
-                ////发布目标位置话题
-                //string resetId = GlobalVar.rosSocket.Advertise("/initialpose", MessageList.geometry_msgs.PoseWithCovarianceStamped);
-
-                //GeometryPoseWithCovarianceStamped gps = new GeometryPoseWithCovarianceStamped();
-                //gps.header.frame_id = "map";
-                //gps.pose.pose.position.x = pointf.X;
-                //gps.pose.pose.position.y = pointf.Y;
-                //gps.pose.pose.orientation.z = (float)Math.Sin(angle / 2.0 * Math.PI / 180.0);
-                //gps.pose.pose.orientation.w = (float)Math.Cos(angle / 2.0 * Math.PI / 180.0);
-                //GlobalVar.rosSocket.Publish(resetId, gps);
-
-                //Msg.Show(string.Format(
-                //    "重置机器人坐标:\r\n" +
-                //    "X:{0}\r\n " +
-                //    "Y:{1}\r\n " +
-                //    "Z:{2}\r\n " +
-                //    "W:{3}",
-                //    gps.pose.pose.position.x,
-                //    gps.pose.pose.position.y,
-                //    gps.pose.pose.orientation.z,
-                //    gps.pose.pose.orientation.w
-                //    ), System.Windows.Media.Brushes.Yellow);
+                //GlobalVar.Stations[NowEditeStation].ellipse.Fill = Brushes.Green;
+                //NowEditeStation = i;
+                //////切换当前站点
+                ////GlobalVar.routeConfig.StationNow = i;
+                //////更新界面
+                ////DrawRoute();
+                //////更新信息
+                ////RouteInfoUpdate();
+                return;
             }
+            else
+            {
+                NowEditeStation = -1;
+
+            }
+
         }
         //鼠标移动
         private void imageRobot_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
@@ -376,14 +361,14 @@ namespace WpfMap
             {
                 //手动调整时启动
                 //左键移动位置
-                if (e.LeftButton == MouseButtonState.Pressed)
+                if (e.LeftButton == MouseButtonState.Pressed && NowEditeStation != -1)
                 {
                     nowPoint.X -= 10;
                     nowPoint.Y -= 10;
-                    Thickness thickness = GlobalVar.Stations[2].ellipse.Margin;
-                    thickness.Left = nowPoint.X- nowPoint.X % 20;
-                    thickness.Top = nowPoint.Y- nowPoint.Y % 20;
-                    GlobalVar.Stations[2].ellipse.Margin = thickness;
+                    Thickness thickness = GlobalVar.Stations[NowEditeStation].ellipse.Margin;
+                    thickness.Left = nowPoint.X - nowPoint.X % 20;
+                    thickness.Top = nowPoint.Y - nowPoint.Y % 20;
+                    GlobalVar.Stations[NowEditeStation].ellipse.Margin = thickness;
 
                     //thickness = GlobalVar.Stations[2].textBlock.Margin;
                     //thickness.Left = nowPoint.X - nowPoint.X % 20;
