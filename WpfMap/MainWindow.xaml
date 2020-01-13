@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfMap"
         mc:Ignorable="d"
-        Loaded="Window_Loaded"
+        Loaded="Window_Loaded" PreviewKeyDown="drawViewScroll_PreviewKeyDown"
+                          PreviewKeyUp="drawViewScroll_PreviewKeyUp"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
@@ -19,6 +20,7 @@
             <ColumnDefinition Width="72*"/>
         </Grid.ColumnDefinitions>
         <!--绘图区-->
+        <Border  Grid.Column="1" Grid.Row="1"  BorderBrush="DarkCyan"  BorderThickness="1"/>
         <ScrollViewer Grid.Column="1" Grid.Row="1" x:Name="drawViewScroll" VerticalScrollBarVisibility="Disabled"
                           PreviewMouseWheel="image_PreviewMouseWheel" 
                           PreviewMouseRightButtonDown="imageRobot_PreviewMouseRightButtonDown" 
@@ -26,11 +28,7 @@
                           PreviewMouseRightButtonUp="imageRobot_PreviewMouseRightButtonUp"
                           PreviewMouseLeftButtonDown="imageRobot_PreviewMouseLeftButtonDown" 
                           PreviewMouseLeftButtonUp="imageRobot_PreviewMouseLeftButtonUp"
-                          Background="White"
-                          PreviewKeyDown="drawViewScroll_PreviewKeyDown"
-                      BorderBrush="Black"
-                      BorderThickness="1"
-                          PreviewKeyUp="drawViewScroll_PreviewKeyUp">
+                          >
             <Grid  x:Name="gridDraw">
                 <Grid.RenderTransform>
                     <TransformGroup>
@@ -44,5 +42,23 @@
         </ScrollViewer>
         <RadioButton x:Name="RadioLook" Content="查看" Click="RadioLook_Click" HorizontalAlignment="Left" IsChecked="True"  Margin="10,35,0,0"  Grid.Row="1" VerticalAlignment="Top" Height="14" Width="52"/>
         <RadioButton x:Name="RadioEdit" Content="编辑" Click="RadioEdit_Click" HorizontalAlignment="Left" Margin="10,54,0,0" Grid.Row="1" VerticalAlignment="Top" Height="14" Width="52"/>
+        <!--状态栏-->
+        <Border Grid.Row="2" Grid.Column="1" BorderThickness="0,2,0,0">
+            <StackPanel Name="bottomstackPanel" Orientation="Horizontal">
+                <Label Content="缩放:" VerticalAlignment="Center"/>
+                <Label Content="{Binding Scale}" VerticalAlignment="Center"/>
+                <Label Content="平移:" VerticalAlignment="Center"/>
+                <Label Content="{Binding Origin}" VerticalAlignment="Center"/>
+                <Label Content="实时:" VerticalAlignment="Center"/>
+                <Label Content="{Binding View}" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+        <Border  Grid.Row="0" Grid.Column="1"  BorderBrush="DarkCyan"  BorderThickness="1"/>
+        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+            <Label Content="添加元素"  VerticalAlignment="Center" />
+            <Button x:Name="Btn_Add_RFID" Content="标签" Click="Btn_Add_RFID_Click"  Margin="10,0" VerticalAlignment="Center"/>
+            <Button x:Name="Btn_Add_RouteLine" Content="直线" Click="Btn_Add_RouteLine_Click" Margin="10,0" VerticalAlignment="Center"/>
+            <Button x:Name="Btn_Add_RouteForkLine" Content="分叉线" Click="Btn_Add_RouteForkLine_Click" Margin="10,0" VerticalAlignment="Center"/>
+        </StackPanel>
     </Grid>
 </Window>

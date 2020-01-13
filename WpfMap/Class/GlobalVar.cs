@@ -42,6 +42,31 @@ namespace WpfMap
 
         }
         public static MouseFunctionEnum mouseFunction = MouseFunctionEnum.None;
+        //元素类型枚举
+        public enum EnumElementType
+        {
+            /// <summary>
+            /// 无
+            /// </summary>
+            None,
+            /// <summary>
+            /// 标签
+            /// </summary>
+            RFID,
+            /// <summary>
+            /// 直线
+            /// </summary>
+            RouteLine,
+            /// <summary>
+            /// 分叉线
+            /// </summary>
+            RouteForkLine
+        }
+        /// <summary>
+        /// 正在添加的元素类型
+        /// </summary>
+        public static EnumElementType NowAddEditElementType =  EnumElementType.None;
+
         //鼠标左键按下，记录按下的位置
         public static System.Windows.Point mouseLeftBtnDownToMap = new System.Windows.Point();
         public static System.Windows.Point mouseLeftBtnDownToView = new System.Windows.Point();
@@ -55,5 +80,8 @@ namespace WpfMap
             public KeyStates KeyState = KeyStates.None;
         }
         public static UserKeyClass Userkey = new UserKeyClass();
+
+        //底部消息栏
+        public static BindHelper.ViewInfoBound ViewInfo = new BindHelper.ViewInfoBound();
     }
 }

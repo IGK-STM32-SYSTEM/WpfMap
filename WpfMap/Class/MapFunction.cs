@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace WpfMap
 {
@@ -73,10 +74,48 @@ namespace WpfMap
             thickness.Top -= diff_y;
             MapElement.MapRFIDList[index].ellipse.Margin = thickness;
 
+            //选择框跟随
+            MapElement.MapRFIDList[index].selectRectangle.Margin = thickness;
+
             //文字跟随即可
             thickness.Left -= diff_x-15;
             thickness.Top -= diff_y-10;
             MapElement.MapRFIDList[index].textBlock.Margin = thickness;
+
+        }
+
+        /// <summary>
+        /// 设置标到选中状态
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="canvas"></param>
+        public static void SetRFIDIsSelected(int index,Canvas canvas)
+        {
+            if (index == -1)
+                return;
+            if (canvas.Children.Contains(MapElement.MapRFIDList[index].selectRectangle))
+                return;
+            MapElement.MapRFIDList[index].selectRectangle.Fill = null;
+            MapElement.MapRFIDList[index].selectRectangle.StrokeThickness = 0.8;
+            MapElement.MapRFIDList[index].selectRectangle.Stroke = Brushes.Coral;
+            MapElement.MapRFIDList[index].selectRectangle.Width = MapElement.RFID_Radius * 2;
+            MapElement.MapRFIDList[index].selectRectangle.Height = MapElement.RFID_Radius * 2;
+            MapElement.MapRFIDList[index].selectRectangle.Margin = MapElement.MapRFIDList[index].ellipse.Margin;
+            //显示虚线
+            MapElement.MapRFIDList[index].selectRectangle.StrokeDashArray = new DoubleCollection() { 3, 5 };
+            MapElement.MapRFIDList[index].selectRectangle.StrokeDashCap = PenLineCap.Triangle;
+            canvas.Children.Add(MapElement.MapRFIDList[index].selectRectangle);
+        }
+        /// <summary>
+        /// 设置标到正常状态
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="canvas"></param>
+        public static void SetRFIDIsNormal(int index, Canvas canvas)
+        {
+            if (index == -1)
+                return;
+            canvas.Children.Remove(MapElement.MapRFIDList[index].selectRectangle);
         }
     }
 }

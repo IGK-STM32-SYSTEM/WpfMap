@@ -25,10 +25,18 @@ namespace WpfMap
             /// 编号
             /// </summary>
             public int Num = 0;
-            //绘图对象
+            /// <summary>
+            /// 绘图对象
+            /// </summary>
             public Ellipse ellipse = new Ellipse();
-            //绘文字对象
+            /// <summary>
+            /// 绘文字对象
+            /// </summary>
             public TextBlock textBlock = new TextBlock();
+            /// <summary>
+            /// 选中框
+            /// </summary>
+            public Rectangle selectRectangle = new Rectangle();
         }
         /// <summary>
         /// 标签绘图列表
@@ -104,9 +112,29 @@ namespace WpfMap
                 item.ellipse.Stroke = System.Windows.Media.Brushes.Gray;
                 canvas.Children.Add(item.ellipse);
                 //显示编号
-                CavnvasBase.DrawText(item.ellipse.Margin.Left + 15, item.ellipse.Margin.Top + 10, item.Num.ToString(), Colors.DarkGray, canvas, item.textBlock);
+                CavnvasBase.DrawText(item.ellipse.Margin.Left + 15, item.ellipse.Margin.Top + 10, item.Num.ToString(), Colors.Black, canvas, item.textBlock);
             }
         }
+
+        /// <summary>
+        /// 绘制单个RFID
+        /// </summary>
+        public static void DrawRFID(int index, Canvas canvas)
+        {
+            //站点
+            float Radius = 20;
+            //绘制
+            MapRFIDList[index].ellipse.Height = Radius * 2;
+            MapRFIDList[index].ellipse.Width = Radius * 2;
+            //item.ellipse.Margin = new Thickness(item.point.X - Radius, item.point.Y - Radius, 0, 0);
+            MapRFIDList[index].ellipse.StrokeThickness = 1;
+            MapRFIDList[index].ellipse.Fill = System.Windows.Media.Brushes.Yellow;
+            MapRFIDList[index].ellipse.Stroke = System.Windows.Media.Brushes.Gray;
+            canvas.Children.Add(MapRFIDList[index].ellipse);
+            //显示编号
+            CavnvasBase.DrawText(MapRFIDList[index].ellipse.Margin.Left + 15, MapRFIDList[index].ellipse.Margin.Top + 10, MapRFIDList[index].Num.ToString(), Colors.Black, canvas, MapRFIDList[index].textBlock);
+        }
+
         /// <summary>
         /// 绘制画布栅格
         /// </summary>
