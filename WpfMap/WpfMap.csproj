@@ -60,7 +60,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Class\CavnvasBase.cs" />
     <Compile Include="Class\GlobalVar.cs" />
+    <Compile Include="Class\MapElement.cs" />
+    <Compile Include="Class\MapFunction.cs" />
     <Compile Include="Class\MathHelper.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

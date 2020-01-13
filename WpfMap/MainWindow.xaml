@@ -42,7 +42,7 @@
                 <Canvas x:Name="cvMap"></Canvas>
             </Grid>
         </ScrollViewer>
-        <RadioButton x:Name="RadioLook" Content="查看" Click="RadioLook_Click" HorizontalAlignment="Left"   Margin="10,35,0,0"  Grid.Row="1" VerticalAlignment="Top" Height="14" Width="52"/>
-        <RadioButton x:Name="RadioEdit" Content="编辑" Click="RadioEdit_Click" HorizontalAlignment="Left" IsChecked="True" Margin="10,54,0,0" Grid.Row="1" VerticalAlignment="Top" Height="14" Width="52"/>
+        <RadioButton x:Name="RadioLook" Content="查看" Click="RadioLook_Click" HorizontalAlignment="Left" IsChecked="True"  Margin="10,35,0,0"  Grid.Row="1" VerticalAlignment="Top" Height="14" Width="52"/>
+        <RadioButton x:Name="RadioEdit" Content="编辑" Click="RadioEdit_Click" HorizontalAlignment="Left" Margin="10,54,0,0" Grid.Row="1" VerticalAlignment="Top" Height="14" Width="52"/>
     </Grid>
 </Window>

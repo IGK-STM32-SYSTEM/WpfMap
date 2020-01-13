@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Shapes;
 
 namespace WpfMap
@@ -44,35 +45,15 @@ namespace WpfMap
         //鼠标左键按下，记录按下的位置
         public static System.Windows.Point mouseLeftBtnDownToMap = new System.Windows.Point();
         public static System.Windows.Point mouseLeftBtnDownToView = new System.Windows.Point();
-
         //右键按下
         public static System.Windows.Point mouseRightBtnDownPoint = new System.Windows.Point();
 
-        ////地图尺寸
-        //public static System.Drawing.Size MapSize;
-
-        //画布比例
-        private double CanvasScale = 1;
-
-        //站点
-        public class Station
+        //记录用户按键
+        public class UserKeyClass
         {
-            /// <summary>
-            /// 坐标
-            /// </summary>
-            public System.Windows.Point point = new System.Windows.Point();
-            /// <summary>
-            /// 编号
-            /// </summary>
-            public int Num = 0;
-            //绘图对象
-            public Ellipse ellipse = new Ellipse();
-            //绘文字对象
-            public TextBlock textBlock = new TextBlock();
+            public Key Key;
+            public KeyStates KeyState = KeyStates.None;
         }
-        /// <summary>
-        /// 站点列表
-        /// </summary>
-        public static List<Station> Stations = new List<Station>();
+        public static UserKeyClass Userkey = new UserKeyClass();
     }
 }
