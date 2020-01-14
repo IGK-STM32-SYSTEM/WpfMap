@@ -260,16 +260,21 @@ namespace WpfMap
 
 
             //移动线
-            Thickness tk = MapElement.MapLineList[index].line.Margin;
+            Thickness tk = new Thickness();
+            tk.Left = MapElement.MapLineList[index].line.Margin.Left;
+            tk.Top = MapElement.MapLineList[index].line.Margin.Top;
+
             tk.Left += difx;
             tk.Top += dify;
             MapElement.MapLineList[index].line.Margin = tk;
             //选择线跟随
             MapElement.MapLineList[index].SelectLine.Margin = tk;
             //起点编辑器跟随
+            tk.Left -= 10;
+            tk.Top -= 10;
             MapElement.MapLineList[index].StartRect.Margin = tk;
             //终点编辑器跟随
-            tk.Left += margin_Diff_Left;
+            tk.Left += margin_Diff_Left ;
             tk.Top += margin_Diff_Top;
             MapElement.MapLineList[index].EndRect.Margin = tk;
 
