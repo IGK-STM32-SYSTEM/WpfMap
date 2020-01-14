@@ -10,6 +10,7 @@ namespace WpfMap
 {
     public class MapFunction
     {
+        /*-----------------RFID-------------------------------*/
         /// <summary>
         /// 判断坐标是否在某个标签上
         /// </summary>
@@ -52,14 +53,13 @@ namespace WpfMap
             else
                 return false;
         }
-
         /// <summary>
         /// 更新RFID到指定位置
         /// </summary>
         /// <param name="index">RFID索引</param>
         /// <param name="point">目标位置</param>
         /// <param name="canvas">画布</param>
-        public static void MoveRFIDTo(int index,Point  point,Canvas canvas)
+        public static void MoveRFIDTo(int index,Point  point)
         {
             point.X -= MapElement.GridSize/2;
             point.Y -= MapElement.GridSize/2;
@@ -83,39 +83,93 @@ namespace WpfMap
             MapElement.MapRFIDList[index].textBlock.Margin = thickness;
 
         }
-
         /// <summary>
         /// 设置标到选中状态
         /// </summary>
         /// <param name="index"></param>
         /// <param name="canvas"></param>
-        public static void SetRFIDIsSelected(int index,Canvas canvas)
+        public static void SetRFIDIsSelected(int index)
         {
             if (index == -1)
                 return;
-            if (canvas.Children.Contains(MapElement.MapRFIDList[index].selectRectangle))
+            if (MapElement.CvRFID.Children.Contains(MapElement.MapRFIDList[index].selectRectangle))
                 return;
             MapElement.MapRFIDList[index].selectRectangle.Fill = null;
             MapElement.MapRFIDList[index].selectRectangle.StrokeThickness = 0.8;
-            MapElement.MapRFIDList[index].selectRectangle.Stroke = Brushes.Coral;
+            MapElement.MapRFIDList[index].selectRectangle.Stroke = Brushes.Black;
             MapElement.MapRFIDList[index].selectRectangle.Width = MapElement.RFID_Radius * 2;
             MapElement.MapRFIDList[index].selectRectangle.Height = MapElement.RFID_Radius * 2;
             MapElement.MapRFIDList[index].selectRectangle.Margin = MapElement.MapRFIDList[index].ellipse.Margin;
             //显示虚线
             MapElement.MapRFIDList[index].selectRectangle.StrokeDashArray = new DoubleCollection() { 3, 5 };
             MapElement.MapRFIDList[index].selectRectangle.StrokeDashCap = PenLineCap.Triangle;
-            canvas.Children.Add(MapElement.MapRFIDList[index].selectRectangle);
+            MapElement.CvRFID.Children.Add(MapElement.MapRFIDList[index].selectRectangle);
         }
         /// <summary>
         /// 设置标到正常状态
         /// </summary>
         /// <param name="index"></param>
         /// <param name="canvas"></param>
-        public static void SetRFIDIsNormal(int index, Canvas canvas)
+        public static void SetRFIDIsNormal(int index)
         {
             if (index == -1)
                 return;
-            canvas.Children.Remove(MapElement.MapRFIDList[index].selectRectangle);
+            MapElement.CvRFID.Children.Remove(MapElement.MapRFIDList[index].selectRectangle);
         }
+        /*-----------------直线-------------------------------*/
+        /// <summary>
+        /// 设置标到正常状态
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="canvas"></param>
+        public static void SetRouteLineIsNormal(int index)
+        {
+            if (index == -1)
+                return;
+            MapElement.CvRouteLine.Children.Remove(MapElement.MapLineList[index].selectRectangle);
+        }
+
+        /*-----------------分叉线-----------------------------*/
+
+        /// <summary>
+        /// 设置标到正常状态
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="canvas"></param>
+        public static void SetRouteForkLineIsNormal(int index)
+        {
+            if (index == -1)
+                return;
+            MapElement.CvForkLine.Children.Remove(MapElement.MapForkLineList[index].selectRectangle);
+        }
+
+        /*-----------------综合-----------------------------*/
+        public static void ClearAllSelect()
+        {
+            switch (GlobalVar.NowSelectType)
+            {
+                case GlobalVar.EnumElementType.RFID:
+                    if (GlobalVar.NowSelectIndex != -1)
+                    {
+                        MapFunction.SetRFIDIsNormal(GlobalVar.NowSelectIndex);
+                    }
+                    break;
+                case GlobalVar.EnumElementType.RouteLine:
+                    if (GlobalVar.NowSelectIndex != -1)
+                    {
+                        MapFunction.SetRouteLineIsNormal(GlobalVar.NowSelectIndex);
+                    }
+                    break;
+                case GlobalVar.EnumElementType.RouteForkLine:
+                    if (GlobalVar.NowSelectIndex != -1)
+                    {
+                        MapFunction.SetRouteForkLineIsNormal(GlobalVar.NowSelectIndex);
+                    }
+                    break;
+                default: break;
+            }
+        }
+
+
     }
 }

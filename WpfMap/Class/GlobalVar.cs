@@ -8,40 +8,28 @@ namespace WpfMap
 {
     public class GlobalVar
     {
-        //鼠标当前功能功能
-        public enum MouseFunctionEnum
+        /// <summary>
+        /// 当前操作模式
+        /// </summary>
+        public enum EnumMode
         {
             /// <summary>
             /// 空闲
             /// </summary>
             None,
             /// <summary>
-            /// 设置机器人位置
+            /// 编辑元素
             /// </summary>
-            ResetRobot,
+            Edit,
             /// <summary>
-            /// 发布机器人目标位置
+            /// 添加元素
             /// </summary>
-            SetTargetPose,
-            /// <summary>
-            /// 移动视图
-            /// </summary>
-            MoveView,
-            /// <summary>
-            /// 缩放视图
-            /// </summary>
-            ZoomView,
-            /// <summary>
-            /// 旋转视图
-            /// </summary>
-            RotateView,
-            /// <summary>
-            /// 路径编辑模式，左键移动位置，右键调整方向
-            /// </summary>
-            RouteEdit,
-
+            Add
         }
-        public static MouseFunctionEnum mouseFunction = MouseFunctionEnum.None;
+        /// <summary>
+        /// 当前操作模式
+        /// </summary>
+        public static EnumMode NowMode = EnumMode.Edit;
         //元素类型枚举
         public enum EnumElementType
         {
@@ -65,7 +53,15 @@ namespace WpfMap
         /// <summary>
         /// 正在添加的元素类型
         /// </summary>
-        public static EnumElementType NowAddEditElementType =  EnumElementType.None;
+        public static EnumElementType NowAddType =  EnumElementType.None;
+        /// <summary>
+        /// 正在操作元素的索引
+        /// </summary>
+        public static int NowSelectIndex = -1;
+        /// <summary>
+        /// 当前选中的类型
+        /// </summary>
+        public static EnumElementType NowSelectType = EnumElementType.None;
 
         //鼠标左键按下，记录按下的位置
         public static System.Windows.Point mouseLeftBtnDownToMap = new System.Windows.Point();
