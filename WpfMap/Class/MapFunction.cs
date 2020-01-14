@@ -136,7 +136,10 @@ namespace WpfMap
             {
                 //拿到直线
                 Line line = MapElement.MapLineList[i].line;
-                double dis = MathHelper.DistancePointToLine(point, line);
+                Point pt = point;
+                pt.X -= line.Margin.Left;
+                pt.Y -= line.Margin.Top;
+                double dis = MathHelper.DistancePointToLine(pt, line);
                 if (dis < 5)
                     return i;
             }
@@ -165,8 +168,8 @@ namespace WpfMap
 
 
             //更新线终点坐标
-            MapElement.MapLineList[index].line.X2 = point.X - point.X % MapElement.GridSize + MapElement.GridSize;
-            MapElement.MapLineList[index].line.Y2 = point.Y - point.Y % MapElement.GridSize + MapElement.GridSize;
+            MapElement.MapLineList[index].line.X2 = point.X - point.X % MapElement.GridSize + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Left;
+            MapElement.MapLineList[index].line.Y2 = point.Y - point.Y % MapElement.GridSize + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Top;
             //MapElement.MapLineList[index].line.Margin = thickness;
 
             //选择线跟随
@@ -233,39 +236,87 @@ namespace WpfMap
         /// <param name="canvas">画布</param>
         public static void MoveRouteLineForEdit(int index, Point point)
         {
-            point.X -= MapElement.GridSize / 2;
-            point.Y -= MapElement.GridSize / 2;
+            //获取移动偏差
+            double difx = GlobalVar.mouseLeftBtnDownMoveDiff.X;
+            double dify = GlobalVar.mouseLeftBtnDownMoveDiff.Y;
 
-            //计算xy方向偏差
-            Thickness thickness = MapElement.MapLineList[index].line.Margin;
-            //对MapElement.GridSize取余，实现移动时按照栅格移动效果
-            double diff_x = thickness.Left - (point.X - point.X % MapElement.GridSize);
-            double diff_y = thickness.Top - (point.Y - point.Y % MapElement.GridSize);
+            //如果够一个栅格的偏差，记录移动
+            //if (Math.Abs(difx) >= MapElement.GridSize || Math.Abs(dify) >= MapElement.GridSize)
+            //    GlobalVar.mouseLeftBtnDownMoveLast = point;
+            //else
+            //    return;
+            //对齐栅格
+            //difx -= difx % MapElement.GridSize;
+            //dify -= dify % MapElement.GridSize;
+            ////纠正偏差
+            //difx -= MapElement.GridSize / 2;
+            //dify -= MapElement.GridSize / 2;
+            Console.WriteLine("diffx:{0},diffy:{1}", difx, dify);
 
-            thickness.Left -= diff_x;
-            thickness.Top -= diff_y;
+            //计算起点编辑器和终点编辑器margin的偏差
+            double margin_Diff_Left = MapElement.MapLineList[index].EndRect.Margin.Left - MapElement.MapLineList[index].StartRect.Margin.Left;
+            double margin_Diff_Top = MapElement.MapLineList[index].EndRect.Margin.Top - MapElement.MapLineList[index].StartRect.Margin.Top;
+
+
 
             //移动线
-            MapElement.MapLineList[index].line.Margin = thickness;
-
+            Thickness tk = MapElement.MapLineList[index].line.Margin;
+            tk.Left += difx;
+            tk.Top += dify;
+            MapElement.MapLineList[index].line.Margin = tk;
             //选择线跟随
-            MapElement.MapLineList[index].SelectLine.Margin = thickness;
-
+            MapElement.MapLineList[index].SelectLine.Margin = tk;
             //起点编辑器跟随
-            thickness.Left += MapElement.GridSize / 2;
-            thickness.Top += MapElement.GridSize / 2;
-            MapElement.MapLineList[index].StartRect.Margin = thickness;
-
+            MapElement.MapLineList[index].StartRect.Margin = tk;
             //终点编辑器跟随
-            thickness.Left += MapElement.GridSize / 2;
-            thickness.Top += MapElement.GridSize / 2;
-            MapElement.MapLineList[index].EndRect.Margin = thickness;
+            tk.Left += margin_Diff_Left;
+            tk.Top += margin_Diff_Top;
+            MapElement.MapLineList[index].EndRect.Margin = tk;
 
 
-            //文字跟随即可
-            thickness.Left -= diff_x - 15;
-            thickness.Top -= diff_y - 10;
-            MapElement.MapLineList[index].textBlock.Margin = thickness;
+            /////////////////////////////////////////////
+            //point.X -= MapElement.GridSize / 2;
+            //point.Y -= MapElement.GridSize / 2;
+
+            ////计算xy方向偏差
+            //Thickness thickness = MapElement.MapLineList[index].line.Margin;
+            ////对MapElement.GridSize取余，实现移动时按照栅格移动效果
+            //double diff_x = thickness.Left - (point.X - point.X % MapElement.GridSize);
+            //double diff_y = thickness.Top - (point.Y - point.Y % MapElement.GridSize);
+
+            //thickness.Left -= diff_x;
+            //thickness.Top -= diff_y;
+
+            ////计算起点编辑器和终点编辑器margin的偏差
+            //double margin_Diff_Left = MapElement.MapLineList[index].EndRect.Margin.Left - MapElement.MapLineList[index].StartRect.Margin.Left;
+            //double margin_Diff_Top = MapElement.MapLineList[index].EndRect.Margin.Top - MapElement.MapLineList[index].StartRect.Margin.Top;
+
+
+            //Thickness tk = thickness;
+            ////移动线
+            //tk.Left += MapElement.GridSize;
+            //tk.Top += MapElement.GridSize;
+            //MapElement.MapLineList[index].line.Margin = tk;
+            ////选择线跟随
+            //MapElement.MapLineList[index].SelectLine.Margin = tk;
+
+            ////起点编辑器跟随
+            //tk = thickness;
+            //tk.Left += MapElement.GridSize / 2;
+            //tk.Top += MapElement.GridSize / 2;
+            //MapElement.MapLineList[index].StartRect.Margin = tk;
+
+            ////终点编辑器跟随
+            //tk = thickness;
+            //tk.Left += MapElement.GridSize / 2 + margin_Diff_Left;
+            //tk.Top += MapElement.GridSize / 2 + margin_Diff_Top;
+            //MapElement.MapLineList[index].EndRect.Margin = tk;
+
+
+            //////文字跟随即可
+            ////thickness.Left -= diff_x - 15;
+            ////thickness.Top -= diff_y - 10;
+            ////MapElement.MapLineList[index].textBlock.Margin = thickness;
 
         }
 

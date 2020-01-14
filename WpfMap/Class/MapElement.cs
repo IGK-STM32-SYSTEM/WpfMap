@@ -249,11 +249,14 @@ namespace WpfMap
 
             //绘制
             MapElement.MapLineList[index].line.Stroke = Brushes.Black;
-            MapElement.MapLineList[index].line.X1 = diff_x;
-            MapElement.MapLineList[index].line.X2 = diff_x;
-            MapElement.MapLineList[index].line.Y1 = diff_y;
-            MapElement.MapLineList[index].line.Y2 = diff_y;
+            //MapElement.MapLineList[index].line.X1 = diff_x;
+            //MapElement.MapLineList[index].line.X2 = diff_x;
+            //MapElement.MapLineList[index].line.Y1 = diff_y;
+            //MapElement.MapLineList[index].line.Y2 = diff_y;
             MapElement.MapLineList[index].line.StrokeThickness = 3;//线的宽度
+
+            MapElement.MapLineList[index].line.Margin = new Thickness(diff_x, diff_y,0,0);
+
             //MapElement.MapLineList[index].line.HorizontalAlignment = HorizontalAlignment.Left;
             //MapElement.MapLineList[index].line.VerticalAlignment = VerticalAlignment.Center;
             MapElement.CvRouteLine.Children.Add(MapElement.MapLineList[index].line);
@@ -356,6 +359,7 @@ namespace WpfMap
             MapElement.MapLineList[index].SelectLine.X2 = MapElement.MapLineList[index].line.X2;
             MapElement.MapLineList[index].SelectLine.Y1 = MapElement.MapLineList[index].line.Y1;
             MapElement.MapLineList[index].SelectLine.Y2 = MapElement.MapLineList[index].line.Y2;
+            MapElement.MapLineList[index].SelectLine.Margin = MapElement.MapLineList[index].line.Margin;
             MapElement.MapLineList[index].SelectLine.StrokeThickness = 1;//线的宽度
             //虚线
             MapElement.MapLineList[index].SelectLine.StrokeDashArray = new DoubleCollection() { 3, 5 };

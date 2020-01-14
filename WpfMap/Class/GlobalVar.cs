@@ -66,6 +66,15 @@ namespace WpfMap
         //鼠标左键按下，记录按下的位置
         public static System.Windows.Point mouseLeftBtnDownToMap = new System.Windows.Point();
         public static System.Windows.Point mouseLeftBtnDownToView = new System.Windows.Point();
+        /// <summary>
+        /// 鼠标左键按下移动历史值
+        /// </summary>
+        public static System.Windows.Point mouseLeftBtnDownMoveLast = new System.Windows.Point();
+        /// <summary>
+        /// 鼠标左键按下移动偏差，左键按下后清空
+        /// </summary>
+        public static System.Windows.Point mouseLeftBtnDownMoveDiff = new System.Windows.Point();
+
         //右键按下
         public static System.Windows.Point mouseRightBtnDownPoint = new System.Windows.Point();
 
