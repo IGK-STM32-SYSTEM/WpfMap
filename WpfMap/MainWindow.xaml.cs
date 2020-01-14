@@ -297,7 +297,11 @@ namespace WpfMap
                         MapFunction.MoveRFIDTo(GlobalVar.NowSelectIndex, nowPoint);
                     else
                     if (GlobalVar.NowType == GlobalVar.EnumElementType.RouteLine)
-                        MapFunction.MoveRouteLineForEdit(GlobalVar.NowSelectIndex, nowPoint);
+                    {
+                        //测试代码
+                        MapFunction.MoveRouteLineStart(GlobalVar.NowSelectIndex, nowPoint);
+                      //  MapFunction.MoveRouteLineForEdit(GlobalVar.NowSelectIndex, nowPoint);
+                    }
                 }
             }
             else

@@ -150,7 +150,6 @@ namespace WpfMap
         /// </summary>
         /// <param name="index">索引</param>
         /// <param name="point">目标位置</param>
-        /// <param name="canvas">画布</param>
         public static void UpdateRouteLineEndPoint(int index, Point point)
         {
             point.X -= MapElement.GridSize / 2;
@@ -190,7 +189,6 @@ namespace WpfMap
         /// </summary>
         /// <param name="index">索引</param>
         /// <param name="point">目标位置</param>
-        /// <param name="canvas">画布</param>
         public static void MoveRouteLineForAdd(int index, Point point)
         {
             point.X -= MapElement.GridSize / 2;
@@ -228,6 +226,88 @@ namespace WpfMap
             //MapElement.MapLineList[index].textBlock.Margin = thickness;
 
         }
+        /// <summary>
+        /// 移动直线起点位置【编辑状态】
+        /// </summary>
+        /// <param name="index">索引</param>
+        /// <param name="point">目标位置</param>
+        public static void MoveRouteLineStart(int index, Point point)
+        {
+            point.X -= MapElement.GridSize / 2;
+            point.Y -= MapElement.GridSize / 2;
+
+            //计算xy方向偏差
+            Thickness thickness = MapElement.MapLineList[index].line.Margin;
+            //对MapElement.GridSize取余，实现移动时按照栅格移动效果
+            double diff_x = thickness.Left - (point.X - point.X % MapElement.GridSize);
+            double diff_y = thickness.Top - (point.Y - point.Y % MapElement.GridSize);
+
+            thickness.Left -= diff_x;
+            thickness.Top -= diff_y;
+
+            //更新线起点坐标
+            MapElement.MapLineList[index].line.X1 = point.X - point.X % MapElement.GridSize + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Left;
+            MapElement.MapLineList[index].line.Y1 = point.Y - point.Y % MapElement.GridSize + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Top;
+
+            //选择线跟随
+            MapElement.MapLineList[index].SelectLine.X1 = MapElement.MapLineList[index].line.X1;
+            MapElement.MapLineList[index].SelectLine.Y1 = MapElement.MapLineList[index].line.Y1;
+
+
+            //起点编辑器跟随
+            thickness.Left += MapElement.GridSize / 2;
+            thickness.Top += MapElement.GridSize / 2;
+            MapElement.MapLineList[index].StartRect.Margin = thickness;
+
+            ////文字跟随即可
+            //thickness.Left -= diff_x - 15;
+            //thickness.Top -= diff_y - 10;
+            //MapElement.MapLineList[index].textBlock.Margin = thickness;
+
+        }
+        /// <summary>
+        /// 移动直线终点位置【编辑状态】
+        /// </summary>
+        /// <param name="index">索引</param>
+        /// <param name="point">目标位置</param>
+        public static void MoveRouteLineEnd(int index, Point point)
+        {
+            point.X -= MapElement.GridSize / 2;
+            point.Y -= MapElement.GridSize / 2;
+
+            //计算xy方向偏差
+            Thickness thickness = MapElement.MapLineList[index].line.Margin;
+            //对MapElement.GridSize取余，实现移动时按照栅格移动效果
+            double diff_x = thickness.Left - (point.X - point.X % MapElement.GridSize);
+            double diff_y = thickness.Top - (point.Y - point.Y % MapElement.GridSize);
+
+            thickness.Left -= diff_x;
+            thickness.Top -= diff_y;
+
+            //移动线
+            //MapElement.MapLineList[index].line.Margin = thickness;
+
+            //选择线跟随
+            //  MapElement.MapLineList[index].SelectLine.Margin = thickness;
+
+            //起点编辑器跟随
+            thickness.Left += MapElement.GridSize / 2;
+            thickness.Top += MapElement.GridSize / 2;
+            MapElement.MapLineList[index].StartRect.Margin = thickness;
+
+            ////终点编辑器跟随
+            //thickness.Left += MapElement.GridSize / 2;
+            //thickness.Top += MapElement.GridSize / 2;
+            //MapElement.MapLineList[index].EndRect.Margin = thickness;
+
+
+            ////文字跟随即可
+            //thickness.Left -= diff_x - 15;
+            //thickness.Top -= diff_y - 10;
+            //MapElement.MapLineList[index].textBlock.Margin = thickness;
+
+        }
+
         /// <summary>
         /// 更新直线到指定位置【编辑状态】
         /// </summary>
