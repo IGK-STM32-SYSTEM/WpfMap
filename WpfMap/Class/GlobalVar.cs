@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Shapes;
@@ -74,6 +75,15 @@ namespace WpfMap
         /// 鼠标左键按下移动偏差，左键按下后清空
         /// </summary>
         public static System.Windows.Point mouseLeftBtnDownMoveDiff = new System.Windows.Point();
+        /// <summary>
+        /// 鼠标左键按下移动累计偏差，左键按下后清空
+        /// </summary>
+        public static System.Windows.Point mouseLeftBtnDownMoveDiffSum = new System.Windows.Point();
+
+        /// <summary>
+        /// 临时变量，记录直线margin
+        /// </summary>
+        public static Thickness RouteLineMarginLast = new Thickness();
 
         //右键按下
         public static System.Windows.Point mouseRightBtnDownPoint = new System.Windows.Point();

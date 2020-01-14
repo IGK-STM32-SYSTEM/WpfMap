@@ -143,6 +143,7 @@ namespace WpfMap
             GlobalVar.mouseLeftBtnDownToMap = e.GetPosition(cvMap);
             //更新左键按下移动上一次值
             GlobalVar.mouseLeftBtnDownMoveLast = GlobalVar.mouseLeftBtnDownToMap;
+            GlobalVar.mouseLeftBtnDownMoveDiffSum = new Point(0,0);
             //编辑属性
             if (GlobalVar.NowMode == GlobalVar.EnumMode.EditElement)
             {
@@ -174,6 +175,9 @@ namespace WpfMap
                 rs = MapFunction.IsOnRouteLine(GlobalVar.mouseLeftBtnDownToMap);
                 if (rs != -1)
                 {
+                    //记录当前margin
+                    GlobalVar.RouteLineMarginLast = MapElement.MapLineList[rs].line.Margin;
+
                     //如果选中的和之前是同一个元素
                     if (rs == GlobalVar.NowSelectIndex && GlobalVar.NowType == GlobalVar.EnumElementType.RouteLine)
                     {
@@ -289,7 +293,10 @@ namespace WpfMap
                     //计算左键按下移动偏差
                     GlobalVar.mouseLeftBtnDownMoveDiff.X = nowPoint.X - GlobalVar.mouseLeftBtnDownMoveLast.X;
                     GlobalVar.mouseLeftBtnDownMoveDiff.Y = nowPoint.Y - GlobalVar.mouseLeftBtnDownMoveLast.Y;
-                    GlobalVar.mouseLeftBtnDownMoveLast = nowPoint;
+                    //GlobalVar.mouseLeftBtnDownMoveLast = nowPoint;
+                    GlobalVar.mouseLeftBtnDownMoveDiffSum.X = GlobalVar.mouseLeftBtnDownMoveDiff.X;
+                    GlobalVar.mouseLeftBtnDownMoveDiffSum.Y = GlobalVar.mouseLeftBtnDownMoveDiff.Y;
+
 
                     if (GlobalVar.NowType == GlobalVar.EnumElementType.RFID)
                         MapFunction.MoveRFIDTo(GlobalVar.NowSelectIndex, nowPoint);
