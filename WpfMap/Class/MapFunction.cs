@@ -237,8 +237,8 @@ namespace WpfMap
         public static void MoveRouteLineForEdit(int index, Point point)
         {
             //获取移动偏差
-            double difx = GlobalVar.mouseLeftBtnDownMoveDiffSum.X;
-            double dify = GlobalVar.mouseLeftBtnDownMoveDiffSum.Y;
+            double difx = GlobalVar.mouseLeftBtnDownMoveDiff.X;
+            double dify = GlobalVar.mouseLeftBtnDownMoveDiff.Y;
 
             //提高变化阈值【当光标超过半个栅格就发生跳格】
             if (difx > 0)

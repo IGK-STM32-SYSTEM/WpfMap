@@ -143,7 +143,6 @@ namespace WpfMap
             GlobalVar.mouseLeftBtnDownToMap = e.GetPosition(cvMap);
             //更新左键按下移动上一次值
             GlobalVar.mouseLeftBtnDownMoveLast = GlobalVar.mouseLeftBtnDownToMap;
-            GlobalVar.mouseLeftBtnDownMoveDiffSum = new Point(0,0);
             //编辑属性
             if (GlobalVar.NowMode == GlobalVar.EnumMode.EditElement)
             {
@@ -293,10 +292,6 @@ namespace WpfMap
                     //计算左键按下移动偏差
                     GlobalVar.mouseLeftBtnDownMoveDiff.X = nowPoint.X - GlobalVar.mouseLeftBtnDownMoveLast.X;
                     GlobalVar.mouseLeftBtnDownMoveDiff.Y = nowPoint.Y - GlobalVar.mouseLeftBtnDownMoveLast.Y;
-                    //GlobalVar.mouseLeftBtnDownMoveLast = nowPoint;
-                    GlobalVar.mouseLeftBtnDownMoveDiffSum.X = GlobalVar.mouseLeftBtnDownMoveDiff.X;
-                    GlobalVar.mouseLeftBtnDownMoveDiffSum.Y = GlobalVar.mouseLeftBtnDownMoveDiff.Y;
-
 
                     if (GlobalVar.NowType == GlobalVar.EnumElementType.RFID)
                         MapFunction.MoveRFIDTo(GlobalVar.NowSelectIndex, nowPoint);
