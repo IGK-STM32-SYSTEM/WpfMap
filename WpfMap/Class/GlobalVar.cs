@@ -20,16 +20,16 @@ namespace WpfMap
             /// <summary>
             /// 编辑元素
             /// </summary>
-            Edit,
+            EditElement,
             /// <summary>
             /// 添加元素
             /// </summary>
-            Add
+            AddElement
         }
         /// <summary>
         /// 当前操作模式
         /// </summary>
-        public static EnumMode NowMode = EnumMode.Edit;
+        public static EnumMode NowMode = EnumMode.EditElement;
         //元素类型枚举
         public enum EnumElementType
         {
@@ -51,9 +51,9 @@ namespace WpfMap
             RouteForkLine
         }
         /// <summary>
-        /// 正在添加的元素类型
+        /// 正在添加的线条的步骤，指示正在进行第几步，从1开始
         /// </summary>
-        public static EnumElementType NowAddType =  EnumElementType.None;
+        public static int AddRouteLineStep = 1;
         /// <summary>
         /// 正在操作元素的索引
         /// </summary>
@@ -61,7 +61,7 @@ namespace WpfMap
         /// <summary>
         /// 当前选中的类型
         /// </summary>
-        public static EnumElementType NowSelectType = EnumElementType.None;
+        public static EnumElementType NowType = EnumElementType.None;
 
         //鼠标左键按下，记录按下的位置
         public static System.Windows.Point mouseLeftBtnDownToMap = new System.Windows.Point();

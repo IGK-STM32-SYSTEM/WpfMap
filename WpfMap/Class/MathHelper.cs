@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.Windows.Shapes;
 
 namespace WpfMap
 {
@@ -77,7 +78,65 @@ namespace WpfMap
             point.Y = pointA.Y - Math.Sin(Math.PI * (angle / 180.0)) * distance;
             return point;
         }
+        /// <summary>
+        /// 计算一个点是否在一个矩形内，不包含边沿
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public static bool PointInRect(Rect rect,Point point)
+        {
+            Point start=new Point ();
+            Point end = new Point ();
+            start.X = rect.X;
+            start.Y = rect.Y;
+            end.X = rect.X + rect.Width;
+            end.Y = rect.Y + rect.Height;
+            if (point.X > start.X && point.X < end.X && point.Y > start.Y && point.Y < end.Y)
+                return true;
+            else
+                return false;
+        }
+        /// <summary>
+        /// 点到线段的垂线长度
+        /// </summary>
+        /// <param name="point"></param>
+        /// <param name="line"></param>
+        /// <returns></returns>
+        public static float DistancePointToLine(Point point, Line line)
+        {
+            float reVal = 0f;
+            bool retData = false;
+            double x = point.X;
+            double y = point.Y;
+            double x1 = line.X1;
+            double x2 = line.X2;
+            double y1 = line.Y1;
+            double y2 = line.Y2;
 
+            double cross = (x2 - x1) * (x - x1) + (y2 - y1) * (y - y1);
+            if (cross <= 0)
+            {
+                reVal = (float)Math.Sqrt((x - x1) * (x - x1) + (y - y1) * (y - y1));
+                retData = true;
+            }
+
+            double d2 = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
+            if (cross >= d2)
+            {
+                reVal = (float)Math.Sqrt((x - x2) * (x - x2) + (y - y2) * (y - y2));
+                retData = true;
+            }
+
+            if (!retData)
+            {
+                double r = cross / d2;
+                double px = x1 + (x2 - x1) * r;
+                double py = y1 + (y2 - y1) * r;
+                reVal = (float)Math.Sqrt((x - px) * (x - px) + (py - y) * (py - y));
+            }
+            return reVal;
+        }
         ///// <summary>
         ///// 三角形，根据一个参考起点坐标，三角形高度，三角形顶角角度，计算出三角形的三个顶点坐标
         ///// </summary>

@@ -28,5 +28,15 @@ namespace WpfMap
             textBlock.Margin = new Thickness(x, y, 0, 0);
             canvasObj.Children.Add(textBlock);
         }
+        /// <summary>
+        /// 获取透明度颜色
+        /// </summary>
+        /// <param name="alpha"></param>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public static SolidColorBrush GetSolid(byte alpha, Color color)
+        {
+            return new SolidColorBrush(Color.FromArgb(100, color.R, color.G, color.B));
+        }
     }
 }

@@ -104,16 +104,34 @@ namespace WpfMap
             //恢复移动视图的手形光标
             this.Cursor = Cursors.Arrow;
             //编辑属性
-            if (GlobalVar.NowMode == GlobalVar.EnumMode.Edit)
+            if (GlobalVar.NowMode == GlobalVar.EnumMode.EditElement)
             {
             }
             else
             //添加新元素
-            if (GlobalVar.NowMode == GlobalVar.EnumMode.Add)
+            if (GlobalVar.NowMode == GlobalVar.EnumMode.AddElement)
             {
+                if (GlobalVar.NowType == GlobalVar.EnumElementType.RouteLine)
+                {
+                    //如果是第一步
+                    if (GlobalVar.AddRouteLineStep == 1)
+                    {
+                        //清除图形
+                        MapFunction.ClearAllSelect();
+                        //删除新增线条
+                        MapElement.MapLineList.RemoveAt(GlobalVar.NowSelectIndex);
+                    }
+                    else
+                    if (GlobalVar.AddRouteLineStep == 2)
+                    {
+                        //清除图形
+                        MapFunction.ClearAllSelect();
+                    }
+                }
                 //结束添加
-                GlobalVar.NowAddType = GlobalVar.EnumElementType.None;
-                GlobalVar.NowMode = GlobalVar.EnumMode.Edit;
+                GlobalVar.NowType = GlobalVar.EnumElementType.None;
+                GlobalVar.NowMode = GlobalVar.EnumMode.EditElement;
+                GlobalVar.NowSelectIndex = -1;
                 return;
             }
 
@@ -125,46 +143,63 @@ namespace WpfMap
             GlobalVar.mouseLeftBtnDownToMap = e.GetPosition(cvMap);
             GlobalVar.mouseLeftBtnDownToView = e.GetPosition(drawViewScroll);
             //编辑属性
-            if (GlobalVar.NowMode == GlobalVar.EnumMode.Edit)
+            if (GlobalVar.NowMode == GlobalVar.EnumMode.EditElement)
             {
-                //判断光标是否在某个站点上
+                //判断光标是否在标签上
                 int rs = MapFunction.IsOnRFID(GlobalVar.mouseLeftBtnDownToMap);
                 if (rs != -1)
-                    GlobalVar.NowSelectType = GlobalVar.EnumElementType.RFID;
-                //如果本次未选中但之前有选中的，则清除之前
-                if (rs == -1 && GlobalVar.NowSelectIndex != -1)
                 {
-                    if (GlobalVar.NowSelectType == GlobalVar.EnumElementType.RFID)
+                    //如果选中的和之前是同一个元素
+                    if (rs == GlobalVar.NowSelectIndex && GlobalVar.NowType == GlobalVar.EnumElementType.RFID)
                     {
-                        MapFunction.SetRFIDIsNormal(GlobalVar.NowSelectIndex);
+                        //不做任何处理
+                        return;
                     }
-                }
-                else
-                //当前选中的和之前选中的不一致，则清除之前的
-                if (rs != -1 && rs != GlobalVar.NowSelectIndex)
-                {
-                    if (GlobalVar.NowSelectType == GlobalVar.EnumElementType.RFID)
+                    else
                     {
-                        //清除之前的选中状态
-                        MapFunction.SetRFIDIsNormal(GlobalVar.NowSelectIndex);
+                        //清除选中
+                        MapFunction.ClearAllSelect();
                         //设置该点选中
                         MapFunction.SetRFIDIsSelected(rs);
+                        //更新当前选中索引
+                        GlobalVar.NowSelectIndex = rs;
+                        //更新当前元素
+                        GlobalVar.NowType = GlobalVar.EnumElementType.RFID;
+                        return;
                     }
                 }
-                else
+
+                //判断光标是否在直线上
+                rs = MapFunction.IsOnRouteLine(GlobalVar.mouseLeftBtnDownToMap);
+                if (rs != -1)
                 {
-                    //设置该点选中
-                    if (GlobalVar.NowSelectType == GlobalVar.EnumElementType.RFID)
+                    //如果选中的和之前是同一个元素
+                    if (rs == GlobalVar.NowSelectIndex && GlobalVar.NowType == GlobalVar.EnumElementType.RouteLine)
                     {
-                        MapFunction.SetRFIDIsSelected(rs);
+                        //不做任何处理
+                        return;
+                    }
+                    else
+                    {
+                        //清除选中
+                        MapFunction.ClearAllSelect();
+                        //设置该点选中
+                        MapFunction.SetRouteLineIsSelected(rs);
+                        //更新当前选中索引
+                        GlobalVar.NowSelectIndex = rs;
+                        //更新当前元素
+                        GlobalVar.NowType = GlobalVar.EnumElementType.RouteLine;
+                        return;
                     }
                 }
-                //更新当前选中索引
-                GlobalVar.NowSelectIndex = rs;
+
+                //清除选中
+                MapFunction.ClearAllSelect();
+                GlobalVar.NowSelectIndex = -1;
             }
             else
             //添加新元素
-            if (GlobalVar.NowMode == GlobalVar.EnumMode.Add)
+            if (GlobalVar.NowMode == GlobalVar.EnumMode.AddElement)
             {
 
             }
@@ -175,7 +210,7 @@ namespace WpfMap
             //记录按下时的位置
             GlobalVar.mouseLeftBtnDownToMap = e.GetPosition(cvMap);
             //编辑属性
-            if (GlobalVar.NowMode == GlobalVar.EnumMode.Edit)
+            if (GlobalVar.NowMode == GlobalVar.EnumMode.EditElement)
             {
                 //bool rs = MapFunction.IsOnOneRFID(GlobalVar.mouseLeftBtnDownToMap, GlobalVar.NowSelectIndex);
                 ////不在当前站点上
@@ -184,13 +219,43 @@ namespace WpfMap
             }
             else
             //添加新元素
-            if (GlobalVar.NowMode == GlobalVar.EnumMode.Add)
+            if (GlobalVar.NowMode == GlobalVar.EnumMode.AddElement)
             {
-                //继续增加一个
-                if (GlobalVar.NowAddType == GlobalVar.EnumElementType.RFID)
+                //增加下一个
+                if (GlobalVar.NowType == GlobalVar.EnumElementType.RFID)
                 {
-                    //添加一个RFID
+                    //添加新RFID
                     GlobalVar.NowSelectIndex = MapElement.AddRFIDAndShow();
+                }
+                else
+                if (GlobalVar.NowType == GlobalVar.EnumElementType.RouteLine)
+                {
+                    //如果是第一步
+                    if (GlobalVar.AddRouteLineStep == 1)
+                    {
+                        //【隐藏编辑器】【隐藏后再添加，避免编辑器出现在线条下发】
+                        MapFunction.SetRouteLineIsNormal(GlobalVar.NowSelectIndex);
+                        //显示直线,并设置起点坐标
+                        MapElement.DrawRouteLine(GlobalVar.NowSelectIndex, GlobalVar.mouseLeftBtnDownToMap);
+                        //显示起点编辑器
+                        MapElement.RouteLineShowStart(GlobalVar.NowSelectIndex);
+                        //显示终点编辑器
+                        MapElement.RouteLineShowEnd(GlobalVar.NowSelectIndex);
+                        //进入第二步
+                        GlobalVar.AddRouteLineStep = 2;
+                    }
+                    else
+                    if (GlobalVar.AddRouteLineStep == 2)
+                    {
+                        //直线添加完成【隐藏编辑器】
+                        MapFunction.SetRouteLineIsNormal(GlobalVar.NowSelectIndex);
+                        //添加新直线
+                        GlobalVar.NowSelectIndex = MapElement.AddRouteLine();
+                        //显示直线起点编辑器
+                        MapElement.RouteLineShowStart(GlobalVar.NowSelectIndex);
+                        //返回添加直线第一步
+                        GlobalVar.AddRouteLineStep = 1;
+                    }
                 }
             }
         }
@@ -201,7 +266,7 @@ namespace WpfMap
             Point nowPoint = e.GetPosition(gridDraw);
             //显示当前坐标到界面
             GlobalVar.ViewInfo.View = new Point(Math.Round(nowPoint.X, 0), Math.Round(nowPoint.Y, 0));
-            
+
             //移动视图【如果右键按下】
             if (e.RightButton == MouseButtonState.Pressed)
             {
@@ -215,19 +280,40 @@ namespace WpfMap
                 GlobalVar.ViewInfo.Origin = new Point(Math.Round(tlt.X, 0), Math.Round(tlt.Y, 0));
             }
             //编辑属性
-            if (GlobalVar.NowMode == GlobalVar.EnumMode.Edit)
+            if (GlobalVar.NowMode == GlobalVar.EnumMode.EditElement)
             {
                 //左键按住移动位置【调整元素位置】
                 if (e.LeftButton == MouseButtonState.Pressed && GlobalVar.NowSelectIndex != -1)
                 {
-                    MapFunction.MoveRFIDTo(GlobalVar.NowSelectIndex, nowPoint);
+                    if(GlobalVar.NowType == GlobalVar.EnumElementType.RFID)
+                        MapFunction.MoveRFIDTo(GlobalVar.NowSelectIndex, nowPoint);
+                    else
+                    if (GlobalVar.NowType == GlobalVar.EnumElementType.RouteLine)
+                        MapFunction.MoveRouteLineForEdit(GlobalVar.NowSelectIndex, nowPoint);
                 }
             }
             else
             //添加新元素
-            if (GlobalVar.NowMode == GlobalVar.EnumMode.Add)
+            if (GlobalVar.NowMode == GlobalVar.EnumMode.AddElement)
             {
-                MapFunction.MoveRFIDTo(GlobalVar.NowSelectIndex, nowPoint);
+                if (GlobalVar.NowType == GlobalVar.EnumElementType.RFID)
+                    MapFunction.MoveRFIDTo(GlobalVar.NowSelectIndex, nowPoint);
+                else
+                if (GlobalVar.NowType == GlobalVar.EnumElementType.RouteLine)
+                {
+                    if (GlobalVar.AddRouteLineStep == 1)
+                    {
+                        MapFunction.MoveRouteLineForAdd(GlobalVar.NowSelectIndex, nowPoint);
+                    }
+                    else
+                    {
+                        MapFunction.UpdateRouteLineEndPoint(GlobalVar.NowSelectIndex, nowPoint);
+                    }
+                }
+
+                else
+                if (GlobalVar.NowType == GlobalVar.EnumElementType.RouteLine)
+                    MapFunction.MoveRFIDTo(GlobalVar.NowSelectIndex, nowPoint);
             }
         }
         private void drawViewScroll_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -269,31 +355,36 @@ namespace WpfMap
         {
             //清除选中状态
             MapFunction.ClearAllSelect();
-            GlobalVar.NowAddType = GlobalVar.EnumElementType.RFID;
+            GlobalVar.NowType = GlobalVar.EnumElementType.RFID;
             //添加一个RFID
             GlobalVar.NowSelectIndex = MapElement.AddRFIDAndShow();
             //进入添加模式
-            GlobalVar.NowMode = GlobalVar.EnumMode.Add;
+            GlobalVar.NowMode = GlobalVar.EnumMode.AddElement;
         }
         private void Btn_Add_RouteLine_Click(object sender, RoutedEventArgs e)
         {
             //清除选中状态
             MapFunction.ClearAllSelect();
-            GlobalVar.NowAddType = GlobalVar.EnumElementType.RouteLine;
+            //选中类型为直线
+            GlobalVar.NowType = GlobalVar.EnumElementType.RouteLine;
             //添加直线
-            GlobalVar.NowSelectIndex = MapElement.AddRouteLineAndShow();
+            GlobalVar.NowSelectIndex = MapElement.AddRouteLine();
+            //显示直线起点编辑器
+            MapElement.RouteLineShowStart(GlobalVar.NowSelectIndex);
+            //添加直线第一步
+            GlobalVar.AddRouteLineStep = 1;
             //进入添加模式
-            GlobalVar.NowMode = GlobalVar.EnumMode.Add;
+            GlobalVar.NowMode = GlobalVar.EnumMode.AddElement;
         }
         private void Btn_Add_RouteForkLine_Click(object sender, RoutedEventArgs e)
         {
             //清除选中状态
             MapFunction.ClearAllSelect();
-            GlobalVar.NowAddType = GlobalVar.EnumElementType.RouteForkLine;
+            GlobalVar.NowType = GlobalVar.EnumElementType.RouteForkLine;
             //添加分叉线
             GlobalVar.NowSelectIndex = MapElement.AddForkLineAndShow();
             //进入添加模式
-            GlobalVar.NowMode = GlobalVar.EnumMode.Add;
+            GlobalVar.NowMode = GlobalVar.EnumMode.AddElement;
         }
         #endregion
     }

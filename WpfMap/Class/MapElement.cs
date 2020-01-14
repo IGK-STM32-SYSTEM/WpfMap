@@ -51,6 +51,30 @@ namespace WpfMap
         public class RouteLine
         {
             /// <summary>
+            /// 编号
+            /// </summary>
+            public int Num = 0;
+            /// <summary>
+            /// 线条对象
+            /// </summary>
+            public Line line = new Line();
+            /// <summary>
+            /// 起点矩形编辑器
+            /// </summary>
+            public Rectangle StartRect = new Rectangle();
+            /// <summary>
+            /// 终点矩形编辑器
+            /// </summary>
+            public Rectangle EndRect = new Rectangle();
+            /// <summary>
+            /// 选中提示线虚线
+            /// </summary>
+            public Line SelectLine = new Line();
+            /// <summary>
+            /// 编号显示文本
+            /// </summary>
+            public TextBlock textBlock = new TextBlock();
+            /// <summary>
             /// 起点标签
             /// </summary>
             public int StartRFID = 0;
@@ -59,21 +83,9 @@ namespace WpfMap
             /// </summary>
             public int EndRFID = 0;
             /// <summary>
-            /// 起点坐标
-            /// </summary>
-            public Point StartPoint = new Point();
-            /// <summary>
-            /// 终点坐标
-            /// </summary>
-            public Point StopPoint = new Point();
-            /// <summary>
             /// 四个方向 0，1，2，3
             /// </summary>
             public int Dir = 0;
-            /// <summary>
-            /// 选中框
-            /// </summary>
-            public Rectangle selectRectangle = new Rectangle();
         }
         /// <summary>
         /// 直线集合
@@ -106,13 +118,13 @@ namespace WpfMap
             /// 选中框
             /// </summary>
             public Rectangle selectRectangle = new Rectangle();
-        } 
-        
+        }
+
         /// <summary>
         /// 分叉线集合
         /// </summary>
         public static List<MapElement.RouteForkLine> MapForkLineList = new List<MapElement.RouteForkLine>();
-       
+
         /*-------背景栅格---------------*/
         /// <summary>
         /// 绘制画布栅格
@@ -166,7 +178,7 @@ namespace WpfMap
                 MapElement.CvGrid.Children.Add(line);
             }
         }
-        
+
         /*-------RFID---------------*/
         /// <summary>
         /// 绘制单个RFID
@@ -174,7 +186,7 @@ namespace WpfMap
         public static void DrawRFID(int index)
         {
             //站点
-            float Radius = 20;
+            float Radius = MapElement.RFID_Radius;
             //绘制
             MapRFIDList[index].ellipse.Height = Radius * 2;
             MapRFIDList[index].ellipse.Width = Radius * 2;
@@ -188,8 +200,8 @@ namespace WpfMap
                 MapRFIDList[index].ellipse.Margin.Left + 15,
                 MapRFIDList[index].ellipse.Margin.Top + 10,
                 MapRFIDList[index].Num.ToString(),
-                Colors.Black, 
-                MapElement.CvRFID, 
+                Colors.Black,
+                MapElement.CvRFID,
                 MapRFIDList[index].textBlock
                 );
         }
@@ -221,65 +233,138 @@ namespace WpfMap
             //绘制到界面
             MapElement.DrawRFID(MapElement.MapRFIDList.Count - 1);
             //设置该RFID为当前正在操作的RFID
-            return  MapElement.MapRFIDList.Count - 1;
+            return MapElement.MapRFIDList.Count - 1;
         }
-     
+
         /*-------路径直线---------------*/
         /// <summary>
-        /// 绘制单个RFID
+        /// 绘制一条直线
         /// </summary>
-        public static void DrawRouteLine(int index)
+        public static void DrawRouteLine(int index, Point StartPoint)
         {
-            //站点
-            float Radius = 20;
+            StartPoint.X -= MapElement.GridSize / 2;
+            StartPoint.Y -= MapElement.GridSize / 2;
+            double diff_x = StartPoint.X - StartPoint.X % MapElement.GridSize + MapElement.GridSize;
+            double diff_y = StartPoint.Y - StartPoint.Y % MapElement.GridSize + MapElement.GridSize;
+
             //绘制
-            MapRFIDList[index].ellipse.Height = Radius * 2;
-            MapRFIDList[index].ellipse.Width = Radius * 2;
-            //item.ellipse.Margin = new Thickness(item.point.X - Radius, item.point.Y - Radius, 0, 0);
-            MapRFIDList[index].ellipse.StrokeThickness = 1;
-            MapRFIDList[index].ellipse.Fill = System.Windows.Media.Brushes.Yellow;
-            MapRFIDList[index].ellipse.Stroke = System.Windows.Media.Brushes.Gray;
-            MapElement.CvRouteLine.Children.Add(MapRFIDList[index].ellipse);
-            //显示编号
-            CavnvasBase.DrawText(
-                MapRFIDList[index].ellipse.Margin.Left + 15, 
-                MapRFIDList[index].ellipse.Margin.Top + 10, 
-                MapRFIDList[index].Num.ToString(), 
-                Colors.Black,
-                MapElement.CvRouteLine, 
-                MapRFIDList[index].textBlock
-                );
+            MapElement.MapLineList[index].line.Stroke = Brushes.Black;
+            MapElement.MapLineList[index].line.X1 = diff_x;
+            MapElement.MapLineList[index].line.X2 = diff_x;
+            MapElement.MapLineList[index].line.Y1 = diff_y;
+            MapElement.MapLineList[index].line.Y2 = diff_y;
+            MapElement.MapLineList[index].line.StrokeThickness = 3;//线的宽度
+            //MapElement.MapLineList[index].line.HorizontalAlignment = HorizontalAlignment.Left;
+            //MapElement.MapLineList[index].line.VerticalAlignment = VerticalAlignment.Center;
+            MapElement.CvRouteLine.Children.Add(MapElement.MapLineList[index].line);
+
+            ////显示编号
+            //CavnvasBase.DrawText(
+            //    MapRFIDList[index].ellipse.Margin.Left + 15,
+            //    MapRFIDList[index].ellipse.Margin.Top + 10,
+            //    MapRFIDList[index].Num.ToString(),
+            //    Colors.Black,
+            //    MapElement.CvRouteLine,
+            //    MapRFIDList[index].textBlock
+            //    );
         }
 
         /// <summary>
-        /// 绘制RFID列表
+        /// 绘制一条直线
+        /// </summary>
+        public static void DrawRouteLine(int index)
+        {
+            //绘制
+            MapElement.MapLineList[index].line.Stroke = Brushes.Black;
+            MapElement.MapLineList[index].line.X1 = 0;
+            MapElement.MapLineList[index].line.X2 = 0;
+            MapElement.MapLineList[index].line.Y1 = 0;
+            MapElement.MapLineList[index].line.Y2 = 0;
+            MapElement.MapLineList[index].line.StrokeThickness = 3;//线的宽度
+            //MapElement.MapLineList[index].line.HorizontalAlignment = HorizontalAlignment.Left;
+            //MapElement.MapLineList[index].line.VerticalAlignment = VerticalAlignment.Center;
+            MapElement.CvRouteLine.Children.Add(MapElement.MapLineList[index].line);
+
+            ////显示编号
+            //CavnvasBase.DrawText(
+            //    MapRFIDList[index].ellipse.Margin.Left + 15,
+            //    MapRFIDList[index].ellipse.Margin.Top + 10,
+            //    MapRFIDList[index].Num.ToString(),
+            //    Colors.Black,
+            //    MapElement.CvRouteLine,
+            //    MapRFIDList[index].textBlock
+            //    );
+        }
+        /// <summary>
+        /// 绘制直线列表
         /// </summary>
         public static void DrawRouteLineList()
         {
-            if (MapRFIDList.Count == 0)
+            if (MapLineList.Count == 0)
                 return;
-            for (int i = 0; i < MapRFIDList.Count; i++)
+            for (int i = 0; i < MapLineList.Count; i++)
             {
-                DrawRFID(i);
+                DrawRouteLine(i);
             }
         }
 
         /// <summary>
-        /// 添加一个RFID 并显示
+        /// 添加一条直线
         /// </summary>
-        /// <param name="canvas">画布对象</param>
-        /// <returns>返回该RFID的索引</returns>
-        public static int AddRouteLineAndShow()
+        /// <returns>返回索引</returns>
+        public static int AddRouteLine()
         {
-            //添加一个RFID
-            MapElement.RFID rfid = new MapElement.RFID();
-            rfid.Num = MapElement.MapRFIDList.Count + 1;
-            MapElement.MapRFIDList.Add(rfid);
-            //绘制到界面
-            MapElement.DrawRFID(MapElement.MapRFIDList.Count - 1);
-            //设置该RFID为当前正在操作的RFID
-            return MapElement.MapRFIDList.Count - 1;
+            //添加直线
+            MapElement.RouteLine line = new MapElement.RouteLine();
+            line.Num = MapElement.MapLineList.Count + 1;
+            MapElement.MapLineList.Add(line);
+            //返回索引
+            return MapElement.MapLineList.Count - 1;
         }
+        /// <summary>
+        /// 显示起点编辑器
+        /// </summary>
+        public static void RouteLineShowStart(int index)
+        {
+            MapElement.MapLineList[index].StartRect.Fill = CavnvasBase.GetSolid(100,Colors.Green);//半透明
+            MapElement.MapLineList[index].StartRect.StrokeThickness = 0.5;
+            MapElement.MapLineList[index].StartRect.Stroke = Brushes.Gray;
+            MapElement.MapLineList[index].StartRect.Width = MapElement.GridSize;
+            MapElement.MapLineList[index].StartRect.Height = MapElement.GridSize;
+            MapElement.CvRouteLine.Children.Add(MapElement.MapLineList[index].StartRect);
+        }
+        /// <summary>
+        /// 显示终点编辑器
+        /// </summary>
+        public static void RouteLineShowEnd(int index)
+        {
+           
+            MapElement.MapLineList[index].EndRect.Fill = CavnvasBase.GetSolid(100, Colors.Green); //半透明
+            MapElement.MapLineList[index].EndRect.StrokeThickness = 0.5;
+            MapElement.MapLineList[index].EndRect.Stroke = Brushes.Gray;
+            MapElement.MapLineList[index].EndRect.Width = MapElement.GridSize;
+            MapElement.MapLineList[index].EndRect.Height = MapElement.GridSize;
+            MapElement.CvRouteLine.Children.Add(MapElement.MapLineList[index].EndRect);
+        }
+        /// <summary>
+        /// 显示选择状态线
+        /// </summary>
+        public static void RouteLineShowSelectLine(int index)
+        {
+            MapElement.MapLineList[index].SelectLine.Stroke = Brushes.Yellow;
+            MapElement.MapLineList[index].SelectLine.X1 = MapElement.MapLineList[index].line.X1;
+            MapElement.MapLineList[index].SelectLine.X2 = MapElement.MapLineList[index].line.X2;
+            MapElement.MapLineList[index].SelectLine.Y1 = MapElement.MapLineList[index].line.Y1;
+            MapElement.MapLineList[index].SelectLine.Y2 = MapElement.MapLineList[index].line.Y2;
+            MapElement.MapLineList[index].SelectLine.StrokeThickness = 1;//线的宽度
+            //虚线
+            MapElement.MapLineList[index].SelectLine.StrokeDashArray = new DoubleCollection() { 3, 5 };
+            //MapElement.MapRFIDList[index].selectRectangle.StrokeDashCap = PenLineCap.Triangle;
+            //MapElement.MapLineList[index].SelectLine.HorizontalAlignment = HorizontalAlignment.Left;
+            //MapElement.MapLineList[index].SelectLine.VerticalAlignment = VerticalAlignment.Center;
+            MapElement.CvRouteLine.Children.Add(MapElement.MapLineList[index].SelectLine);
+        }
+
 
         /*-------路径分叉线---------------*/
         /// <summary>
@@ -287,25 +372,25 @@ namespace WpfMap
         /// </summary>
         public static void DrawForkLine(int index)
         {
-            //站点
-            float Radius = 20;
-            //绘制
-            MapRFIDList[index].ellipse.Height = Radius * 2;
-            MapRFIDList[index].ellipse.Width = Radius * 2;
-            //item.ellipse.Margin = new Thickness(item.point.X - Radius, item.point.Y - Radius, 0, 0);
-            MapRFIDList[index].ellipse.StrokeThickness = 1;
-            MapRFIDList[index].ellipse.Fill = System.Windows.Media.Brushes.Yellow;
-            MapRFIDList[index].ellipse.Stroke = System.Windows.Media.Brushes.Gray;
-            MapElement.CvForkLine.Children.Add(MapRFIDList[index].ellipse);
-            //显示编号
-            CavnvasBase.DrawText(
-                MapRFIDList[index].ellipse.Margin.Left + 15, 
-                MapRFIDList[index].ellipse.Margin.Top + 10, 
-                MapRFIDList[index].Num.ToString(), 
-                Colors.Black, 
-                MapElement.CvForkLine, 
-                MapRFIDList[index].textBlock
-                );
+            ////站点
+            //float Radius = 20;
+            ////绘制
+            //MapRFIDList[index].ellipse.Height = Radius * 2;
+            //MapRFIDList[index].ellipse.Width = Radius * 2;
+            ////item.ellipse.Margin = new Thickness(item.point.X - Radius, item.point.Y - Radius, 0, 0);
+            //MapRFIDList[index].ellipse.StrokeThickness = 1;
+            //MapRFIDList[index].ellipse.Fill = System.Windows.Media.Brushes.Yellow;
+            //MapRFIDList[index].ellipse.Stroke = System.Windows.Media.Brushes.Gray;
+            //MapElement.CvForkLine.Children.Add(MapRFIDList[index].ellipse);
+            ////显示编号
+            //CavnvasBase.DrawText(
+            //    MapRFIDList[index].ellipse.Margin.Left + 15, 
+            //    MapRFIDList[index].ellipse.Margin.Top + 10, 
+            //    MapRFIDList[index].Num.ToString(), 
+            //    Colors.Black, 
+            //    MapElement.CvForkLine, 
+            //    MapRFIDList[index].textBlock
+            //    );
         }
 
         /// <summary>
@@ -313,12 +398,12 @@ namespace WpfMap
         /// </summary>
         public static void DrawForkLineList()
         {
-            if (MapRFIDList.Count == 0)
-                return;
-            for (int i = 0; i < MapRFIDList.Count; i++)
-            {
-                DrawRFID(i);
-            }
+            //if (MapRFIDList.Count == 0)
+            //    return;
+            //for (int i = 0; i < MapRFIDList.Count; i++)
+            //{
+            //    DrawRFID(i);
+            //}
         }
 
         /// <summary>
@@ -328,14 +413,15 @@ namespace WpfMap
         /// <returns>返回该RFID的索引</returns>
         public static int AddForkLineAndShow()
         {
-            //添加一个RFID
-            MapElement.RFID rfid = new MapElement.RFID();
-            rfid.Num = MapElement.MapRFIDList.Count + 1;
-            MapElement.MapRFIDList.Add(rfid);
-            //绘制到界面
-            MapElement.DrawRFID(MapElement.MapRFIDList.Count - 1);
-            //设置该RFID为当前正在操作的RFID
-            return MapElement.MapRFIDList.Count - 1;
+            ////添加一个RFID
+            //MapElement.RFID rfid = new MapElement.RFID();
+            //rfid.Num = MapElement.MapRFIDList.Count + 1;
+            //MapElement.MapRFIDList.Add(rfid);
+            ////绘制到界面
+            //MapElement.DrawRFID(MapElement.MapRFIDList.Count - 1);
+            ////设置该RFID为当前正在操作的RFID
+            //return MapElement.MapRFIDList.Count - 1;
+            return 0;
         }
     }
 }
