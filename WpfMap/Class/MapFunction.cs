@@ -307,8 +307,8 @@ namespace WpfMap
 
             //移动线
             Thickness tk = new Thickness();
-            tk.Left = GlobalVar.RouteLineMarginLast.Left;
-            tk.Top = GlobalVar.RouteLineMarginLast.Top;
+            tk.Left = GlobalVar.ElementMarginLast.Left;
+            tk.Top = GlobalVar.ElementMarginLast.Top;
 
             tk.Left += difx;
             tk.Top += dify;
@@ -368,6 +368,99 @@ namespace WpfMap
         }
 
         /*-----------------分叉线-----------------------------*/
+        /// <summary>
+        /// 判断坐标是否在圆弧上
+        /// </summary>
+        /// <param name="point">光标坐标</param>
+        /// <returns>在：返回标签索引，不在：返回-1</returns>
+        public static int IsOnForkLine(Point point)
+        {
+            if (MapElement.MapForkLineList.Count == 0)
+                return -1;
+
+            //遍历
+            for (int i = 0; i < MapElement.MapForkLineList.Count; i++)
+            {
+                //取当前坐标【需要margin对齐】
+                point.X -= MapElement.MapForkLineList[i].Path.Margin.Left;
+                point.Y -= MapElement.MapForkLineList[i].Path.Margin.Top;
+                //找到圆弧起点和终点坐标
+                PathGeometry pathGeometry = MapElement.MapForkLineList[i].Path.Data as PathGeometry;
+                PathFigure figure = pathGeometry.Figures.First();
+                ArcSegment arc = figure.Segments.First() as ArcSegment;
+                //圆弧起点
+                Point start = figure.StartPoint;
+                //圆弧终点
+                Point end = arc.Point;
+                //圆弧半径
+                double radius = arc.Size.Width;
+                //找到圆心坐标
+                Point center = new Point();
+                //逆时针
+                if (arc.SweepDirection == SweepDirection.Counterclockwise)
+                {
+                    if (end.X > start.X && end.Y > start.Y)
+                    {
+                        center.X = start.X;
+                        center.Y = end.Y;
+                    }
+                    else
+                    if (end.X < start.X && end.Y > start.Y)
+                    {
+                        center.X = end.X;
+                        center.Y = start.Y;
+                    }
+                    else
+                    if (end.X < start.X && end.Y < start.Y)
+                    {
+                        center.X = start.X;
+                        center.Y = end.Y;
+                    }
+                    else
+                    if (end.X > start.X && end.Y < start.Y)
+                    {
+                        center.X = end.X;
+                        center.Y = start.Y;
+                    }
+                }
+                //顺时针
+                if (arc.SweepDirection == SweepDirection.Clockwise)
+                {
+                    if (end.X > start.X && end.Y > start.Y)
+                    {
+                        center.X = end.X;
+                        center.Y = start.Y;
+                    }
+                    else
+                    if (end.X < start.X && end.Y > start.Y)
+                    {
+                        center.X = start.X;
+                        center.Y = end.Y;
+                    }
+                    else
+                    if (end.X < start.X && end.Y < start.Y)
+                    {
+                        center.X = end.X;
+                        center.Y = start.Y;
+                    }
+                    else
+                    if (end.X > start.X && end.Y < start.Y)
+                    {
+                        center.X = start.X;
+                        center.Y = end.Y;
+                    }
+                }
+                //计算到圆心距离
+                double dis = MathHelper.Distance(center,point);
+                //判断是否在圆上【允许偏差 5】
+                if (dis < 5)
+                {
+                    //判断是否在圆弧范围内【X、Y都在起点和终点的XY之间】【允许偏差 5】
+                    return i;
+                }
+            }
+            return -1;
+        }
 
         /// <summary>
         /// 设置标到正常状态
@@ -444,7 +537,7 @@ namespace WpfMap
             //isStroked
             arc.IsStroked = true;
             //给Y轴反向，画面坐标和XY坐标系不一致
-            diffy =-diffy;
+            diffy = -diffy;
             //圆弧终点坐标
             if (diffx >= 10 && diffy <= -10)
             {
@@ -478,6 +571,31 @@ namespace WpfMap
             figure.Segments.Add(arc);
             pathGeometry.Figures.Add(figure);
             MapElement.MapForkLineList[index].Path.Data = pathGeometry;
+        }
+        /// <summary>
+        /// 设置标到选中状态
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="canvas"></param>
+        public static void SetForkLineIsSelected(int index)
+        {
+            if (index == -1)
+                return;
+            //显示选择虚线
+            if (MapElement.CvForkLine.Children.Contains(MapElement.MapForkLineList[index].SelectPath) == false)
+            {
+                MapElement.ForkLineShowSelect(index);
+            }
+            //显示起点编辑器
+            if (MapElement.CvForkLine.Children.Contains(MapElement.MapForkLineList[index].StartRect) == false)
+            {
+                MapElement.ForkLineShowStart(index);
+            }
+            //显示终点编辑器
+            if (MapElement.CvForkLine.Children.Contains(MapElement.MapForkLineList[index].EndRect) == false)
+            {
+                MapElement.ForkLineShowEnd(index);
+            }
         }
 
         /*-----------------综合-----------------------------*/

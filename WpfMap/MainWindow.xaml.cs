@@ -170,7 +170,7 @@ namespace WpfMap
                     if (MapFunction.IsOnOneLineStart(GlobalVar.NowSelectIndex, GlobalVar.mouseLeftBtnDownToMap))
                     {
                         //切换到调整直线起点
-                        GlobalVar.RouteLineEditMode = GlobalVar.EnumLineEditMode.Start;
+                        GlobalVar.ElementEditMode = GlobalVar.EnumElementEditMode.Start;
                         return;
                     }
                     else
@@ -178,12 +178,12 @@ namespace WpfMap
                     if (MapFunction.IsOnOneLineEnd(GlobalVar.NowSelectIndex, GlobalVar.mouseLeftBtnDownToMap))
                     {
                         //切换到调整直线终点
-                        GlobalVar.RouteLineEditMode = GlobalVar.EnumLineEditMode.End;
+                        GlobalVar.ElementEditMode = GlobalVar.EnumElementEditMode.End;
                         return;
                     }
                     else
                         //切换到调整整体
-                        GlobalVar.RouteLineEditMode = GlobalVar.EnumLineEditMode.All;
+                        GlobalVar.ElementEditMode = GlobalVar.EnumElementEditMode.All;
                 }
 
                 //情况1：判断光标是否在直线上
@@ -191,7 +191,7 @@ namespace WpfMap
                 if (rs != -1)
                 {
                     //记录当前margin
-                    GlobalVar.RouteLineMarginLast = MapElement.MapLineList[rs].line.Margin;
+                    GlobalVar.ElementMarginLast = MapElement.MapLineList[rs].line.Margin;
 
                     //如果选中的和之前是同一个元素
                     if (rs == GlobalVar.NowSelectIndex && GlobalVar.NowType == GlobalVar.EnumElementType.RouteLine)
@@ -210,12 +210,41 @@ namespace WpfMap
                         //更新当前元素
                         GlobalVar.NowType = GlobalVar.EnumElementType.RouteLine;
                         //设置调整模式为整体调节【默认】
-                        GlobalVar.RouteLineEditMode = GlobalVar.EnumLineEditMode.All;
+                        GlobalVar.ElementEditMode = GlobalVar.EnumElementEditMode.All;
                         return;
                     }
                 }
 
-                //情况2：判断光标是否在标签上
+                //情况2：判断光标是否在分叉线【圆弧】上
+                rs = MapFunction.IsOnForkLine(GlobalVar.mouseLeftBtnDownToMap);
+                if (rs != -1)
+                {
+                    //记录当前margin
+                    GlobalVar.ElementMarginLast = MapElement.MapForkLineList[rs].Path.Margin;
+
+                    //如果选中的和之前是同一个元素
+                    if (rs == GlobalVar.NowSelectIndex && GlobalVar.NowType == GlobalVar.EnumElementType.RouteForkLine)
+                    {
+                        //不做任何处理
+                        return;
+                    }
+                    else
+                    {
+                        //清除选中
+                        MapFunction.ClearAllSelect();
+                        //设置该点选中
+                        MapFunction.SetForkLineIsSelected(rs);
+                        //更新当前选中索引
+                        GlobalVar.NowSelectIndex = rs;
+                        //更新当前元素
+                        GlobalVar.NowType = GlobalVar.EnumElementType.RouteForkLine;
+                        //设置调整模式为整体调节【默认】
+                        GlobalVar.ElementEditMode = GlobalVar.EnumElementEditMode.All;
+                        return;
+                    }
+                }
+
+                //情况3：判断光标是否在标签上
                 rs = MapFunction.IsOnRFID(GlobalVar.mouseLeftBtnDownToMap);
                 if (rs != -1)
                 {
@@ -374,15 +403,15 @@ namespace WpfMap
                     else
                     if (GlobalVar.NowType == GlobalVar.EnumElementType.RouteLine)
                     {
-                        switch (GlobalVar.RouteLineEditMode)
+                        switch (GlobalVar.ElementEditMode)
                         {
-                            case GlobalVar.EnumLineEditMode.Start:
+                            case GlobalVar.EnumElementEditMode.Start:
                                 MapFunction.MoveRouteLineStart(GlobalVar.NowSelectIndex, nowPoint);
                                 break;
-                            case GlobalVar.EnumLineEditMode.End:
+                            case GlobalVar.EnumElementEditMode.End:
                                 MapFunction.MoveRouteLineEnd(GlobalVar.NowSelectIndex, nowPoint);
                                 break;
-                            case GlobalVar.EnumLineEditMode.All:
+                            case GlobalVar.EnumElementEditMode.All:
                                 MapFunction.MoveRouteLineAll(GlobalVar.NowSelectIndex, nowPoint);
                                 break;
                             default:

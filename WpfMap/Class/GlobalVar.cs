@@ -12,7 +12,7 @@ namespace WpfMap
         /// <summary>
         /// 直线调节模式式
         /// </summary>
-        public enum EnumLineEditMode
+        public enum EnumElementEditMode
         {
             /// <summary>
             /// 起点
@@ -76,7 +76,7 @@ namespace WpfMap
         /// <summary>
         /// 【调整直线用】编辑直线的方式，调节起点，调节终点，整体调节
         /// </summary>
-        public static EnumLineEditMode RouteLineEditMode = EnumLineEditMode.All;
+        public static EnumElementEditMode ElementEditMode = EnumElementEditMode.All;
 
         /// <summary>
         /// 正在操作元素的索引
@@ -101,9 +101,9 @@ namespace WpfMap
         public static System.Windows.Point mouseLeftBtnDownMoveDiff = new System.Windows.Point();
         
         /// <summary>
-        /// 记录直线margin【整体移动直线时使用】
+        /// 记录margin【整体移动时使用】
         /// </summary>
-        public static Thickness RouteLineMarginLast = new Thickness();
+        public static Thickness ElementMarginLast = new Thickness();
 
         //右键按下
         public static System.Windows.Point mouseRightBtnDownPoint = new System.Windows.Point();

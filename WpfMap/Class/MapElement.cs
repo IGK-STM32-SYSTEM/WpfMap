@@ -369,7 +369,7 @@ namespace WpfMap
 
         /*-------路径分叉线---------------*/
         /// <summary>
-        /// 绘制分叉
+        /// 绘制分叉【圆弧】
         /// </summary>
         public static void DrawForkLine(int index, Point StartPoint)
         {
@@ -377,13 +377,6 @@ namespace WpfMap
             StartPoint.Y -= MapElement.GridSize / 2;
             double diff_x = StartPoint.X - StartPoint.X % MapElement.GridSize + MapElement.GridSize;
             double diff_y = StartPoint.Y - StartPoint.Y % MapElement.GridSize + MapElement.GridSize;
-
-            ////绘制
-            //MapElement.MapLineList[index].line.Stroke = Brushes.Black;
-            //MapElement.MapLineList[index].line.StrokeThickness = 5;//线的宽度
-            //MapElement.MapLineList[index].line.Margin = new Thickness(diff_x, diff_y, 0, 0);
-
-            //MapElement.CvRouteLine.Children.Add(MapElement.MapLineList[index].line);
 
             //定义圆弧半径
             int radius = MapElement.ForkLineArc_Radius;
@@ -412,25 +405,7 @@ namespace WpfMap
         /// </summary>
         public static void DrawForkLine(int index)
         {
-            ////站点
-            //float Radius = 20;
-            ////绘制
-            //MapRFIDList[index].ellipse.Height = Radius * 2;
-            //MapRFIDList[index].ellipse.Width = Radius * 2;
-            ////item.ellipse.Margin = new Thickness(item.point.X - Radius, item.point.Y - Radius, 0, 0);
-            //MapRFIDList[index].ellipse.StrokeThickness = 1;
-            //MapRFIDList[index].ellipse.Fill = System.Windows.Media.Brushes.Yellow;
-            //MapRFIDList[index].ellipse.Stroke = System.Windows.Media.Brushes.Gray;
-            //MapElement.CvForkLine.Children.Add(MapRFIDList[index].ellipse);
-            ////显示编号
-            //CavnvasBase.DrawText(
-            //    MapRFIDList[index].ellipse.Margin.Left + 15, 
-            //    MapRFIDList[index].ellipse.Margin.Top + 10, 
-            //    MapRFIDList[index].Num.ToString(), 
-            //    Colors.Black, 
-            //    MapElement.CvForkLine, 
-            //    MapRFIDList[index].textBlock
-            //    );
+
         }
         /// <summary>
         /// 显示起点编辑器
@@ -456,6 +431,20 @@ namespace WpfMap
             MapElement.MapForkLineList[index].EndRect.Height = MapElement.GridSize;
             MapElement.CvForkLine.Children.Add(MapElement.MapForkLineList[index].EndRect);
         }
+        /// <summary>
+        /// 显示选择状
+        /// </summary>
+        public static void ForkLineShowSelect(int index)
+        {
+            //同步曲线
+            MapElement.MapForkLineList[index].SelectPath.Data = MapElement.MapForkLineList[index].Path.Data.Clone();
+            //设置为虚线
+            MapElement.MapForkLineList[index].SelectPath.StrokeDashArray = new DoubleCollection() { 3, 5 };
+            //更改颜色
+            MapElement.MapForkLineList[index].SelectPath.Stroke = Brushes.Yellow;
+            MapElement.CvForkLine.Children.Add(MapElement.MapForkLineList[index].SelectPath);
+        }
+
         /// <summary>
         /// 绘制列表
         /// </summary>
