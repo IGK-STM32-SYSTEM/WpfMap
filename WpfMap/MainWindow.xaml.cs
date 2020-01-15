@@ -146,23 +146,27 @@ namespace WpfMap
             if (GlobalVar.NowMode == GlobalVar.EnumMode.EditElement)
             {
                 //情况0：如果目前是有选中的直线
-                //if (GlobalVar.NowSelectIndex!=-1&& GlobalVar.NowType == GlobalVar.EnumElementType.RouteLine)
-                //{
-                //    //1.判断光标是否在直线的起点编辑器
-                //    if(true)
-                //    {
-                //        //切换到调整直线起点
-                //        GlobalVar.RouteLineEditMode = GlobalVar.EnumLineEditMode.Start;
-                //        return;
-                //    }
-                //    //2.判断光标是否落在直线的终点编辑器
-                //    if (true)
-                //    {
-                //        //切换到调整直线终点
-                //        GlobalVar.RouteLineEditMode = GlobalVar.EnumLineEditMode.End;
-                //        return;
-                //    }
-                //}
+                if (GlobalVar.NowSelectIndex != -1 && GlobalVar.NowType == GlobalVar.EnumElementType.RouteLine)
+                {
+                    //1.判断光标是否在直线的起点编辑器
+                    if (MapFunction.IsOnOneLineStart(GlobalVar.NowSelectIndex, GlobalVar.mouseLeftBtnDownToMap))
+                    {
+                        //切换到调整直线起点
+                        GlobalVar.RouteLineEditMode = GlobalVar.EnumLineEditMode.Start;
+                        return;
+                    }
+                    else
+                    //2.判断光标是否落在直线的终点编辑器
+                    if (MapFunction.IsOnOneLineEnd(GlobalVar.NowSelectIndex, GlobalVar.mouseLeftBtnDownToMap))
+                    {
+                        //切换到调整直线终点
+                        GlobalVar.RouteLineEditMode = GlobalVar.EnumLineEditMode.End;
+                        return;
+                    }
+                    else
+                        //切换到调整整体
+                        GlobalVar.RouteLineEditMode = GlobalVar.EnumLineEditMode.All;
+                }
 
                 //情况1：判断光标是否在直线上
                 int rs = MapFunction.IsOnRouteLine(GlobalVar.mouseLeftBtnDownToMap);
@@ -333,10 +337,6 @@ namespace WpfMap
                                 break;
 
                         }
-                        // MapFunction.MoveRouteLineStart(GlobalVar.NowSelectIndex, nowPoint);
-                       // MapFunction.MoveRouteLineEnd(GlobalVar.NowSelectIndex, nowPoint);
-
-                        //  MapFunction.MoveRouteLineForEdit(GlobalVar.NowSelectIndex, nowPoint);
                     }
                 }
             }
@@ -351,7 +351,7 @@ namespace WpfMap
                 {
                     if (GlobalVar.AddRouteLineStep == 1)
                     {
-                        MapFunction.MoveRouteLineForAdd(GlobalVar.NowSelectIndex, nowPoint);
+                        MapFunction.MoveRouteLineStartForAdd(GlobalVar.NowSelectIndex, nowPoint);
                     }
                     else
                     {
