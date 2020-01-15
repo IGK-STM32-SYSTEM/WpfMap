@@ -382,8 +382,9 @@ namespace WpfMap
             for (int i = 0; i < MapElement.MapForkLineList.Count; i++)
             {
                 //取当前坐标【需要margin对齐】
-                point.X -= MapElement.MapForkLineList[i].Path.Margin.Left;
-                point.Y -= MapElement.MapForkLineList[i].Path.Margin.Top;
+                Point nowPoint = point;
+                nowPoint.X -= MapElement.MapForkLineList[i].Path.Margin.Left;
+                nowPoint.Y -= MapElement.MapForkLineList[i].Path.Margin.Top;
                 //找到圆弧起点和终点坐标
                 PathGeometry pathGeometry = MapElement.MapForkLineList[i].Path.Data as PathGeometry;
                 PathFigure figure = pathGeometry.Figures.First();
@@ -392,6 +393,8 @@ namespace WpfMap
                 Point start = figure.StartPoint;
                 //圆弧终点
                 Point end = arc.Point;
+                end.Y = -end.Y;
+
                 //圆弧半径
                 double radius = arc.Size.Width;
                 //找到圆心坐标
@@ -451,7 +454,8 @@ namespace WpfMap
                     }
                 }
                 //计算到圆心距离
-                double dis = MathHelper.Distance(center,point);
+                double dis = MathHelper.Distance(center, nowPoint);
+                Console.WriteLine("dis:{0}",dis);
                 //判断是否在圆上【允许偏差 5】
                 if (dis < 5)
                 {
@@ -467,7 +471,7 @@ namespace WpfMap
         /// </summary>
         /// <param name="index"></param>
         /// <param name="canvas"></param>
-        public static void SetRouteForkLineIsNormal(int index)
+        public static void SetRouteForkLineIsNormal(int index) 
         {
             if (index == -1)
                 return;
