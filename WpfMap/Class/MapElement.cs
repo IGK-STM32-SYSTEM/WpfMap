@@ -415,8 +415,8 @@ namespace WpfMap
             MapElement.MapForkLineList[index].StartRect.Fill = CavnvasBase.GetSolid(100, Colors.Pink);//半透明
             MapElement.MapForkLineList[index].StartRect.StrokeThickness = 0.5;
             MapElement.MapForkLineList[index].StartRect.Stroke = Brushes.Gray;
-            MapElement.MapForkLineList[index].StartRect.Width = MapElement.GridSize/2;
-            MapElement.MapForkLineList[index].StartRect.Height = MapElement.GridSize/2;
+            MapElement.MapForkLineList[index].StartRect.Width = MapElement.GridSize;
+            MapElement.MapForkLineList[index].StartRect.Height = MapElement.GridSize;
             MapElement.CvForkLine.Children.Add(MapElement.MapForkLineList[index].StartRect);
         }
         /// <summary>
@@ -430,16 +430,16 @@ namespace WpfMap
             ArcSegment arc = figure.Segments.First() as ArcSegment;
             //圆弧终点
             Point end = arc.Point;
-            end.X += MapElement.MapForkLineList[index].Path.Margin.Left - MapElement.GridSize / 4;
-            end.Y += MapElement.MapForkLineList[index].Path.Margin.Top - MapElement.GridSize / 4;
+            end.X += MapElement.MapForkLineList[index].Path.Margin.Left - MapElement.GridSize / 2;
+            end.Y += MapElement.MapForkLineList[index].Path.Margin.Top - MapElement.GridSize / 2;
             //终点编辑器的位置和圆弧终点坐标同步
             MapElement.MapForkLineList[index].EndRect.Margin = new Thickness(end.X, end.Y, 0, 0);
 
             MapElement.MapForkLineList[index].EndRect.Fill = CavnvasBase.GetSolid(100, Colors.Pink); //半透明
             MapElement.MapForkLineList[index].EndRect.StrokeThickness = 0.5;
             MapElement.MapForkLineList[index].EndRect.Stroke = Brushes.Gray;
-            MapElement.MapForkLineList[index].EndRect.Width = MapElement.GridSize/2;
-            MapElement.MapForkLineList[index].EndRect.Height = MapElement.GridSize/2;
+            MapElement.MapForkLineList[index].EndRect.Width = MapElement.GridSize;
+            MapElement.MapForkLineList[index].EndRect.Height = MapElement.GridSize;
             MapElement.CvForkLine.Children.Add(MapElement.MapForkLineList[index].EndRect);
         }
         /// <summary>

@@ -493,8 +493,8 @@ namespace WpfMap
         /// <param name="point">目标位置</param>
         public static void MoveForkLineStartForAdd(int index, Point point)
         {
-            point.X -= MapElement.GridSize / 4;
-            point.Y -= MapElement.GridSize / 4;
+            point.X -= MapElement.GridSize / 2;
+            point.Y -= MapElement.GridSize / 2;
 
             //对MapElement.GridSize取余，实现移动时按照栅格移动效果
             Thickness thickness = MapElement.MapForkLineList[index].Path.Margin;
@@ -502,8 +502,8 @@ namespace WpfMap
             thickness.Top = point.Y - point.Y % MapElement.GridSize;
 
             //起点编辑器跟随
-            thickness.Left += MapElement.GridSize * 3 / 4;
-            thickness.Top += MapElement.GridSize * 3 / 4;
+            thickness.Left += MapElement.GridSize / 2;
+            thickness.Top += MapElement.GridSize / 2;
             MapElement.MapForkLineList[index].StartRect.Margin = thickness;
         }
         /// <summary>
@@ -513,8 +513,8 @@ namespace WpfMap
         /// <param name="point">目标位置</param>
         public static void MoveForkLineEnd(int index, Point point)
         {
-            point.X -= MapElement.GridSize / 4;
-            point.Y -= MapElement.GridSize / 4;
+            point.X -= MapElement.GridSize / 2;
+            point.Y -= MapElement.GridSize / 2;
 
             //对MapElement.GridSize取余，实现移动时按照栅格移动效果
             Thickness thickness = MapElement.MapForkLineList[index].Path.Margin;
@@ -522,8 +522,8 @@ namespace WpfMap
             thickness.Top = point.Y - point.Y % MapElement.GridSize;
 
             //终点编辑器跟随
-            thickness.Left += MapElement.GridSize * 3 / 4;
-            thickness.Top += MapElement.GridSize * 3 / 4;
+            thickness.Left += MapElement.GridSize / 2;
+            thickness.Top += MapElement.GridSize / 2;
             MapElement.MapForkLineList[index].EndRect.Margin = thickness;
 
             //计算当前点【终点编辑器】和起点的偏差
