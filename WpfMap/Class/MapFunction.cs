@@ -277,7 +277,6 @@ namespace WpfMap
         /// </summary>
         /// <param name="index">索引</param>
         /// <param name="point">目标位置</param>
-        /// <param name="canvas">画布</param>
         public static void MoveRouteLineAll(int index, Point point)
         {
             //获取移动偏差
@@ -454,8 +453,8 @@ namespace WpfMap
                 }
                 //计算到圆心距离
                 double dis = MathHelper.Distance(center, nowPoint);
-                //判断是否在圆上【允许偏差 2】
-                if ((dis < (radius + 2)) && (dis > (radius - 2)))
+                //判断是否在圆上【允许偏差 5】
+                if ((dis < (radius + 5)) && (dis > (radius - 5)))
                 {
                     //恢复Y轴方向
                     end.Y = -end.Y;
@@ -471,6 +470,42 @@ namespace WpfMap
                 }
             }
             return -1;
+        }
+        /// <summary>
+        /// 判断坐标是否在指定【起点】编辑器上
+        /// </summary>
+        /// <param name="point">光标坐标</param>
+        /// <returns>在：返回标签索引，不在：返回-1</returns>
+        public static bool IsOnOneForkLineStart(int index, Point point)
+        {
+            if (index < 0)
+                return false;
+            //拿到编辑器的矩形
+            Rectangle rectangle = MapElement.MapForkLineList[index].StartRect;
+            Point pt = point;
+            //平移margin，让当前点和矩形在同一坐标系
+            pt.X -= rectangle.Margin.Left;
+            pt.Y -= rectangle.Margin.Top;
+            bool rs = MathHelper.PointInRect(new Rect(0, 0, rectangle.Width, rectangle.Height), pt);
+            return rs;
+        }
+        /// <summary>
+        /// 判断坐标是否在指定【终点】编辑器上
+        /// </summary>
+        /// <param name="point">光标坐标</param>
+        /// <returns>在：返回标签索引，不在：返回-1</returns>
+        public static bool IsOnOneForkLineEnd(int index, Point point)
+        {
+            if (index < 0)
+                return false;
+            //拿到编辑器的矩形
+            Rectangle rectangle = MapElement.MapForkLineList[index].EndRect;
+            Point pt = point;
+            //平移margin，让当前点和矩形在同一坐标系
+            pt.X -= rectangle.Margin.Left;
+            pt.Y -= rectangle.Margin.Top;
+            bool rs = MathHelper.PointInRect(new Rect(0, 0, rectangle.Width, rectangle.Height), pt);
+            return rs;
         }
         /// <summary>
         /// 设置标到正常状态
@@ -581,6 +616,68 @@ namespace WpfMap
             figure.Segments.Add(arc);
             pathGeometry.Figures.Add(figure);
             MapElement.MapForkLineList[index].Path.Data = pathGeometry;
+            //同步选择曲线
+            MapElement.MapForkLineList[index].SelectPath.Data = MapElement.MapForkLineList[index].Path.Data.Clone();
+            //终点跟随到圆弧末端
+            Point end = arc.Point;
+            end.X += MapElement.MapForkLineList[index].Path.Margin.Left-MapElement.GridSize/2;
+            end.Y += MapElement.MapForkLineList[index].Path.Margin.Top - MapElement.GridSize / 2;
+            MapElement.MapForkLineList[index].EndRect.Margin = new Thickness(end.X,end.Y,0,0);
+        }
+        /// <summary>
+        /// 移动分叉【圆弧】到指定位置【编辑状态】
+        /// </summary>
+        /// <param name="index">索引</param>
+        /// <param name="point">目标位置</param>
+        public static void MoveForkLineAll(int index, Point point)
+        {
+            //获取移动偏差
+            double difx = GlobalVar.mouseLeftBtnDownMoveDiff.X;
+            double dify = GlobalVar.mouseLeftBtnDownMoveDiff.Y;
+
+            //提高变化阈值【当光标超过半个栅格就发生跳格】
+            if (difx > 0)
+                difx += MapElement.GridSize / 2;
+            else
+                difx -= MapElement.GridSize / 2;
+            if (dify > 0)
+                dify += MapElement.GridSize / 2;
+            else
+                dify -= MapElement.GridSize / 2;
+
+            //对齐栅格
+            difx -= difx % MapElement.GridSize;
+            dify -= dify % MapElement.GridSize;
+            //未达到移动标准，退出，提高效率
+            if (Math.Abs(difx) == 0 && Math.Abs(dify) == 0)
+                return;
+
+            //移动线
+            Thickness tk = new Thickness();
+            tk.Left = GlobalVar.ElementMarginLast.Left;
+            tk.Top = GlobalVar.ElementMarginLast.Top;
+
+            tk.Left += difx;
+            tk.Top += dify;
+
+            MapElement.MapForkLineList[index].Path.Margin = tk;
+            //选择线跟随
+            MapElement.MapForkLineList[index].SelectPath.Margin = tk;
+            //起点编辑器跟随【减X1和Y1是因为在移动起点时修改了X1和Y1，而不是整体移动Margin】
+            tk.Left -= MapElement.GridSize / 2;
+            tk.Top -= MapElement.GridSize / 2;
+            MapElement.MapForkLineList[index].StartRect.Margin = tk;
+            //终点编辑器跟随
+            //找到圆弧终点坐标
+            PathGeometry pathGeometry = MapElement.MapForkLineList[index].Path.Data as PathGeometry;
+            PathFigure figure = pathGeometry.Figures.First();
+            ArcSegment arc = figure.Segments.First() as ArcSegment;
+            //圆弧终点
+            Point end = arc.Point;
+            end.X += MapElement.MapForkLineList[index].Path.Margin.Left - MapElement.GridSize / 2;
+            end.Y += MapElement.MapForkLineList[index].Path.Margin.Top - MapElement.GridSize / 2;
+            //终点编辑器的位置和圆弧终点坐标同步
+            MapElement.MapForkLineList[index].EndRect.Margin = new Thickness(end.X, end.Y, 0, 0);
         }
         /// <summary>
         /// 设置标到选中状态
@@ -596,11 +693,11 @@ namespace WpfMap
             {
                 MapElement.ForkLineShowSelect(index);
             }
-            //显示起点编辑器
-            if (MapElement.CvForkLine.Children.Contains(MapElement.MapForkLineList[index].StartRect) == false)
-            {
-                MapElement.ForkLineShowStart(index);
-            }
+            ////显示起点编辑器
+            //if (MapElement.CvForkLine.Children.Contains(MapElement.MapForkLineList[index].StartRect) == false)
+            //{
+            //    MapElement.ForkLineShowStart(index);
+            //}
             //显示终点编辑器
             if (MapElement.CvForkLine.Children.Contains(MapElement.MapForkLineList[index].EndRect) == false)
             {
