@@ -216,14 +216,28 @@ namespace WpfMap
             thickness.Left = point.X - point.X % MapElement.GridSize;
             thickness.Top = point.Y - point.Y % MapElement.GridSize;
 
-            //更新线起点坐标
-            MapElement.MapLineList[index].line.X1 = point.X - point.X % MapElement.GridSize + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Left;
-            MapElement.MapLineList[index].line.Y1 = point.Y - point.Y % MapElement.GridSize + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Top;
+            ////更新线起点坐标
+            //MapElement.MapLineList[index].line.X1 = thickness.Left + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Left;
+            //MapElement.MapLineList[index].line.Y1 = thickness.Top + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Top;
 
-            //选择线跟随
-            MapElement.MapLineList[index].SelectLine.X1 = MapElement.MapLineList[index].line.X1;
-            MapElement.MapLineList[index].SelectLine.Y1 = MapElement.MapLineList[index].line.Y1;
+            ////选择线跟随
+            //MapElement.MapLineList[index].SelectLine.X1 = MapElement.MapLineList[index].line.X1;
+            //MapElement.MapLineList[index].SelectLine.Y1 = MapElement.MapLineList[index].line.Y1;
 
+            //更新终点坐标
+            MapElement.MapLineList[index].line.X2 -= thickness.Left + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Left;
+            MapElement.MapLineList[index].line.Y2 -= thickness.Top + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Top;
+            //选择先跟随
+            MapElement.MapLineList[index].SelectLine.X2 = MapElement.MapLineList[index].line.X2;
+            MapElement.MapLineList[index].SelectLine.Y2 = MapElement.MapLineList[index].line.Y2;
+            
+            //调整直线margin
+            Thickness tk = MapElement.MapLineList[index].line.Margin;
+            tk.Left+= thickness.Left + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Left;
+            tk.Top+= thickness.Top + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Top;
+            MapElement.MapLineList[index].line.Margin = tk;
+            //调整选择线margin
+            MapElement.MapLineList[index].SelectLine.Margin = tk;
 
             //起点编辑器跟随
             thickness.Left += MapElement.GridSize / 2;
@@ -246,13 +260,12 @@ namespace WpfMap
             thickness.Top = point.Y - point.Y % MapElement.GridSize;
 
             //更新线终点坐标
-            MapElement.MapLineList[index].line.X2 = point.X - point.X % MapElement.GridSize + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Left;
-            MapElement.MapLineList[index].line.Y2 = point.Y - point.Y % MapElement.GridSize + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Top;
+            MapElement.MapLineList[index].line.X2 = thickness.Left + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Left;
+            MapElement.MapLineList[index].line.Y2 = thickness.Top + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Top;
 
             //选择线跟随
             MapElement.MapLineList[index].SelectLine.X2 = MapElement.MapLineList[index].line.X2;
             MapElement.MapLineList[index].SelectLine.Y2 = MapElement.MapLineList[index].line.Y2;
-
 
             //终点编辑器跟随
             thickness.Left += MapElement.GridSize / 2;
@@ -304,8 +317,10 @@ namespace WpfMap
             //选择线跟随
             MapElement.MapLineList[index].SelectLine.Margin = tk;
             //起点编辑器跟随【减X1和Y1是因为在移动起点时修改了X1和Y1，而不是整体移动Margin】
-            tk.Left = tk.Left - MapElement.GridSize / 2 - MapElement.MapLineList[index].line.X1;
-            tk.Top = tk.Top - MapElement.GridSize / 2 - MapElement.MapLineList[index].line.Y1;
+            tk.Left -= MapElement.GridSize / 2;
+            tk.Top -= MapElement.GridSize / 2;
+            //tk.Left = tk.Left - MapElement.GridSize / 2 - MapElement.MapLineList[index].line.X1;
+            //tk.Top = tk.Top - MapElement.GridSize / 2 - MapElement.MapLineList[index].line.Y1;
             MapElement.MapLineList[index].StartRect.Margin = tk;
             //终点编辑器跟随
             tk.Left += margin_Diff_Left;
