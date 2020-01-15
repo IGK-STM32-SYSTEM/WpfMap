@@ -227,16 +227,16 @@ namespace WpfMap
             //更新终点坐标
             MapElement.MapLineList[index].line.X2 -= thickness.Left + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Left;
             MapElement.MapLineList[index].line.Y2 -= thickness.Top + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Top;
-            //选择先跟随
+            //选择线跟随
             MapElement.MapLineList[index].SelectLine.X2 = MapElement.MapLineList[index].line.X2;
             MapElement.MapLineList[index].SelectLine.Y2 = MapElement.MapLineList[index].line.Y2;
-            
-            //调整直线margin
+
+            //修正直线margin
             Thickness tk = MapElement.MapLineList[index].line.Margin;
-            tk.Left+= thickness.Left + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Left;
-            tk.Top+= thickness.Top + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Top;
+            tk.Left += thickness.Left + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Left;
+            tk.Top += thickness.Top + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Top;
             MapElement.MapLineList[index].line.Margin = tk;
-            //调整选择线margin
+            //选择线margin跟随
             MapElement.MapLineList[index].SelectLine.Margin = tk;
 
             //起点编辑器跟随
@@ -378,7 +378,106 @@ namespace WpfMap
         {
             if (index == -1)
                 return;
-            MapElement.CvForkLine.Children.Remove(MapElement.MapForkLineList[index].selectRectangle);
+            MapElement.CvForkLine.Children.Remove(MapElement.MapForkLineList[index].StartRect);
+            MapElement.CvForkLine.Children.Remove(MapElement.MapForkLineList[index].EndRect);
+            MapElement.CvForkLine.Children.Remove(MapElement.MapForkLineList[index].textBlock);
+            MapElement.CvForkLine.Children.Remove(MapElement.MapForkLineList[index].SelectPath);
+        }
+        /// <summary>
+        /// 移动起点编辑器到指定位置【添加模式】
+        /// </summary>
+        /// <param name="index">索引</param>
+        /// <param name="point">目标位置</param>
+        public static void MoveForkLineStartForAdd(int index, Point point)
+        {
+            point.X -= MapElement.GridSize / 2;
+            point.Y -= MapElement.GridSize / 2;
+
+            //对MapElement.GridSize取余，实现移动时按照栅格移动效果
+            Thickness thickness = MapElement.MapForkLineList[index].Path.Margin;
+            thickness.Left = point.X - point.X % MapElement.GridSize;
+            thickness.Top = point.Y - point.Y % MapElement.GridSize;
+
+            //起点编辑器跟随
+            thickness.Left += MapElement.GridSize / 2;
+            thickness.Top += MapElement.GridSize / 2;
+            MapElement.MapForkLineList[index].StartRect.Margin = thickness;
+        }
+        /// <summary>
+        /// 移动终点位置
+        /// </summary>
+        /// <param name="index">索引</param>
+        /// <param name="point">目标位置</param>
+        public static void MoveForkLineEnd(int index, Point point)
+        {
+            point.X -= MapElement.GridSize / 2;
+            point.Y -= MapElement.GridSize / 2;
+
+            //对MapElement.GridSize取余，实现移动时按照栅格移动效果
+            Thickness thickness = MapElement.MapForkLineList[index].Path.Margin;
+            thickness.Left = point.X - point.X % MapElement.GridSize;
+            thickness.Top = point.Y - point.Y % MapElement.GridSize;
+
+            //终点编辑器跟随
+            thickness.Left += MapElement.GridSize / 2;
+            thickness.Top += MapElement.GridSize / 2;
+            MapElement.MapForkLineList[index].EndRect.Margin = thickness;
+
+            //计算当前点【终点编辑器】和起点的偏差
+            double diffx = thickness.Left - MapElement.MapForkLineList[index].Path.Margin.Left;
+            double diffy = thickness.Top - MapElement.MapForkLineList[index].Path.Margin.Top;
+
+            //定义圆弧半径
+            int radius = MapElement.ForkLineArc_Radius;
+
+            PathGeometry pathGeometry = new PathGeometry();
+            PathFigure figure = new PathFigure();
+            //路径图起点坐标
+            figure.StartPoint = new Point();
+            ArcSegment arc = new ArcSegment();
+            //半径
+            arc.Size = new Size(radius, radius);
+            //旋转角度
+            arc.RotationAngle = 0;
+            //false
+            arc.IsLargeArc = false;
+            //isStroked
+            arc.IsStroked = true;
+            //给Y轴反向，画面坐标和XY坐标系不一致
+            diffy =-diffy;
+            //圆弧终点坐标
+            if (diffx >= 10 && diffy <= -10)
+            {
+                //扫描方向
+                arc.SweepDirection = SweepDirection.Counterclockwise;
+                arc.Point = new Point(radius, radius);
+            }
+            else
+            if (diffx >= 10 && diffy >= 10)
+            {
+                //扫描方向
+                arc.SweepDirection = SweepDirection.Clockwise;
+                arc.Point = new Point(radius, -radius);
+            }
+            else
+            if (diffx <= -10 && diffy <= -10)
+            {
+                //扫描方向
+                arc.SweepDirection = SweepDirection.Clockwise;
+                arc.Point = new Point(-radius, radius);
+            }
+            else
+            if (diffx <= -10 && diffy >= 10)
+            {
+                //扫描方向
+                arc.SweepDirection = SweepDirection.Counterclockwise;
+                arc.Point = new Point(-radius, -radius);
+            }
+            else
+                return;
+            figure.Segments.Add(arc);
+            pathGeometry.Figures.Add(figure);
+            MapElement.MapForkLineList[index].Path.Data = pathGeometry;
         }
 
         /*-----------------综合-----------------------------*/

@@ -70,9 +70,9 @@ namespace WpfMap
             RouteForkLine
         }
         /// <summary>
-        /// 【添加直线用】正在添加的线条的步骤，指示正在进行第几步，从1开始，共2步
+        /// 【添加通用】正在添加的线条的步骤，指示正在进行第几步，从1开始
         /// </summary>
-        public static int AddRouteLineStep = 1;
+        public static int AddStep = 1;
         /// <summary>
         /// 【调整直线用】编辑直线的方式，调节起点，调节终点，整体调节
         /// </summary>
