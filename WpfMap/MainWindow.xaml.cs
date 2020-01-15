@@ -484,7 +484,7 @@ namespace WpfMap
                     }
                     else
                     {
-                         MapFunction.MoveForkLineEnd(GlobalVar.NowSelectIndex, nowPoint);
+                        MapFunction.MoveForkLineEnd(GlobalVar.NowSelectIndex, nowPoint);
                     }
                 }
             }
@@ -495,9 +495,37 @@ namespace WpfMap
         private void drawViewScroll_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             //快捷键VF，重置视图
-            if (e.Key == Key.F && GlobalVar.Userkey.Key == Key.V)
+            if (GlobalVar.Userkey.Key == Key.V && e.Key == Key.F)
             {
                 RestView();
+            }
+            else
+            if (e.Key == Key.Delete)
+            {
+                //是否有选中的
+                if(GlobalVar.NowSelectIndex!=-1)
+                {
+                    switch (GlobalVar.NowType)
+                    {
+                        case GlobalVar.EnumElementType.None:
+                            break;
+                        //选中了RFID
+                        case GlobalVar.EnumElementType.RFID:
+                            MapFunction.RemoveRFID(GlobalVar.NowSelectIndex);
+                            GlobalVar.NowSelectIndex = -1;
+                            break;
+                        case GlobalVar.EnumElementType.RouteLine:
+                            MapFunction.RemoveRouteLine(GlobalVar.NowSelectIndex);
+                            GlobalVar.NowSelectIndex = -1;
+                            break;
+                        case GlobalVar.EnumElementType.RouteForkLine:
+                            MapFunction.RemoveForkLine(GlobalVar.NowSelectIndex);
+                            GlobalVar.NowSelectIndex = -1;
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
             //记录当前按键
             GlobalVar.Userkey.Key = e.Key;

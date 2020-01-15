@@ -121,6 +121,19 @@ namespace WpfMap
                 return;
             MapElement.CvRFID.Children.Remove(MapElement.MapRFIDList[index].selectRectangle);
         }
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="index"></param>
+        public static void RemoveRFID(int index)
+        {
+            //从画布移除
+            MapElement.CvRFID.Children.Remove(MapElement.MapRFIDList[index].ellipse);
+            MapElement.CvRFID.Children.Remove(MapElement.MapRFIDList[index].textBlock);
+            MapElement.CvRFID.Children.Remove(MapElement.MapRFIDList[index].selectRectangle);
+            //从列表移除
+            MapElement.MapRFIDList.RemoveAt(index);
+        }
         /*-----------------直线-------------------------------*/
         /// <summary>
         /// 判断坐标是否在某条直线上
@@ -364,6 +377,21 @@ namespace WpfMap
             MapElement.CvRouteLine.Children.Remove(MapElement.MapLineList[index].StartRect);
             MapElement.CvRouteLine.Children.Remove(MapElement.MapLineList[index].EndRect);
             MapElement.CvRouteLine.Children.Remove(MapElement.MapLineList[index].textBlock);
+        }
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="index"></param>
+        public static void RemoveRouteLine(int index)
+        {
+            //从画布移除
+            MapElement.CvRouteLine.Children.Remove(MapElement.MapLineList[index].line);
+            MapElement.CvRouteLine.Children.Remove(MapElement.MapLineList[index].textBlock);
+            MapElement.CvRouteLine.Children.Remove(MapElement.MapLineList[index].SelectLine);
+            MapElement.CvRouteLine.Children.Remove(MapElement.MapLineList[index].StartRect);
+            MapElement.CvRouteLine.Children.Remove(MapElement.MapLineList[index].EndRect);
+            //从列表移除
+            MapElement.MapLineList.RemoveAt(index);
         }
         /*-----------------分叉线-----------------------------*/
         /// <summary>
@@ -704,7 +732,21 @@ namespace WpfMap
                 MapElement.ForkLineShowEnd(index);
             }
         }
-
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="index"></param>
+        public static void RemoveForkLine(int index)
+        {
+            //从画布移除
+            MapElement.CvForkLine.Children.Remove(MapElement.MapForkLineList[index].Path);
+            MapElement.CvForkLine.Children.Remove(MapElement.MapForkLineList[index].textBlock);
+            MapElement.CvForkLine.Children.Remove(MapElement.MapForkLineList[index].SelectPath);
+            MapElement.CvForkLine.Children.Remove(MapElement.MapForkLineList[index].StartRect);
+            MapElement.CvForkLine.Children.Remove(MapElement.MapForkLineList[index].EndRect);
+            //从列表移除
+            MapElement.MapForkLineList.RemoveAt(index);
+        }
         /*-----------------综合-----------------------------*/
         public static void ClearAllSelect()
         {
