@@ -366,7 +366,6 @@ namespace WpfMap
             MapElement.CvRouteLine.Children.Remove(MapElement.MapLineList[index].EndRect);
             MapElement.CvRouteLine.Children.Remove(MapElement.MapLineList[index].textBlock);
         }
-
         /*-----------------分叉线-----------------------------*/
         /// <summary>
         /// 判断坐标是否在圆弧上
@@ -455,23 +454,30 @@ namespace WpfMap
                 }
                 //计算到圆心距离
                 double dis = MathHelper.Distance(center, nowPoint);
-                Console.WriteLine("dis:{0}",dis);
-                //判断是否在圆上【允许偏差 5】
-                if (dis < 5)
+                //判断是否在圆上【允许偏差 2】
+                if ((dis < (radius + 2)) && (dis > (radius - 2)))
                 {
-                    //判断是否在圆弧范围内【X、Y都在起点和终点的XY之间】【允许偏差 5】
-                    return i;
+                    //恢复Y轴方向
+                    end.Y = -end.Y;
+                    //判断是否在圆弧范围内【X、Y都在起点和终点的XY之间】
+                    double xMax = start.X > end.X ? start.X : end.X;
+                    double xMin = start.X < end.X ? start.X : end.X;
+
+                    double yMax = start.Y > end.Y ? start.Y : end.Y;
+                    double yMin = start.Y < end.Y ? start.Y : end.Y;
+
+                    if (nowPoint.X > xMin && nowPoint.X < xMax && nowPoint.Y > yMin && nowPoint.Y < yMax)
+                        return i;
                 }
             }
             return -1;
         }
-
         /// <summary>
         /// 设置标到正常状态
         /// </summary>
         /// <param name="index"></param>
         /// <param name="canvas"></param>
-        public static void SetRouteForkLineIsNormal(int index) 
+        public static void SetRouteForkLineIsNormal(int index)
         {
             if (index == -1)
                 return;
@@ -487,8 +493,8 @@ namespace WpfMap
         /// <param name="point">目标位置</param>
         public static void MoveForkLineStartForAdd(int index, Point point)
         {
-            point.X -= MapElement.GridSize / 2;
-            point.Y -= MapElement.GridSize / 2;
+            point.X -= MapElement.GridSize / 4;
+            point.Y -= MapElement.GridSize / 4;
 
             //对MapElement.GridSize取余，实现移动时按照栅格移动效果
             Thickness thickness = MapElement.MapForkLineList[index].Path.Margin;
@@ -496,8 +502,8 @@ namespace WpfMap
             thickness.Top = point.Y - point.Y % MapElement.GridSize;
 
             //起点编辑器跟随
-            thickness.Left += MapElement.GridSize / 2;
-            thickness.Top += MapElement.GridSize / 2;
+            thickness.Left += MapElement.GridSize * 3 / 4;
+            thickness.Top += MapElement.GridSize * 3 / 4;
             MapElement.MapForkLineList[index].StartRect.Margin = thickness;
         }
         /// <summary>
@@ -507,8 +513,8 @@ namespace WpfMap
         /// <param name="point">目标位置</param>
         public static void MoveForkLineEnd(int index, Point point)
         {
-            point.X -= MapElement.GridSize / 2;
-            point.Y -= MapElement.GridSize / 2;
+            point.X -= MapElement.GridSize / 4;
+            point.Y -= MapElement.GridSize / 4;
 
             //对MapElement.GridSize取余，实现移动时按照栅格移动效果
             Thickness thickness = MapElement.MapForkLineList[index].Path.Margin;
@@ -516,8 +522,8 @@ namespace WpfMap
             thickness.Top = point.Y - point.Y % MapElement.GridSize;
 
             //终点编辑器跟随
-            thickness.Left += MapElement.GridSize / 2;
-            thickness.Top += MapElement.GridSize / 2;
+            thickness.Left += MapElement.GridSize * 3 / 4;
+            thickness.Top += MapElement.GridSize * 3 / 4;
             MapElement.MapForkLineList[index].EndRect.Margin = thickness;
 
             //计算当前点【终点编辑器】和起点的偏差

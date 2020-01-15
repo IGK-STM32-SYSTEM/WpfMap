@@ -415,8 +415,8 @@ namespace WpfMap
             MapElement.MapForkLineList[index].StartRect.Fill = CavnvasBase.GetSolid(100, Colors.Pink);//半透明
             MapElement.MapForkLineList[index].StartRect.StrokeThickness = 0.5;
             MapElement.MapForkLineList[index].StartRect.Stroke = Brushes.Gray;
-            MapElement.MapForkLineList[index].StartRect.Width = MapElement.GridSize;
-            MapElement.MapForkLineList[index].StartRect.Height = MapElement.GridSize;
+            MapElement.MapForkLineList[index].StartRect.Width = MapElement.GridSize/2;
+            MapElement.MapForkLineList[index].StartRect.Height = MapElement.GridSize/2;
             MapElement.CvForkLine.Children.Add(MapElement.MapForkLineList[index].StartRect);
         }
         /// <summary>
@@ -424,11 +424,22 @@ namespace WpfMap
         /// </summary>
         public static void ForkLineShowEnd(int index)
         {
+            //找到圆弧起点和终点坐标
+            PathGeometry pathGeometry = MapElement.MapForkLineList[index].Path.Data as PathGeometry;
+            PathFigure figure = pathGeometry.Figures.First();
+            ArcSegment arc = figure.Segments.First() as ArcSegment;
+            //圆弧终点
+            Point end = arc.Point;
+            end.X += MapElement.MapForkLineList[index].Path.Margin.Left - MapElement.GridSize / 4;
+            end.Y += MapElement.MapForkLineList[index].Path.Margin.Top - MapElement.GridSize / 4;
+            //终点编辑器的位置和圆弧终点坐标同步
+            MapElement.MapForkLineList[index].EndRect.Margin = new Thickness(end.X, end.Y, 0, 0);
+
             MapElement.MapForkLineList[index].EndRect.Fill = CavnvasBase.GetSolid(100, Colors.Pink); //半透明
             MapElement.MapForkLineList[index].EndRect.StrokeThickness = 0.5;
             MapElement.MapForkLineList[index].EndRect.Stroke = Brushes.Gray;
-            MapElement.MapForkLineList[index].EndRect.Width = MapElement.GridSize;
-            MapElement.MapForkLineList[index].EndRect.Height = MapElement.GridSize;
+            MapElement.MapForkLineList[index].EndRect.Width = MapElement.GridSize/2;
+            MapElement.MapForkLineList[index].EndRect.Height = MapElement.GridSize/2;
             MapElement.CvForkLine.Children.Add(MapElement.MapForkLineList[index].EndRect);
         }
         /// <summary>
@@ -442,6 +453,11 @@ namespace WpfMap
             MapElement.MapForkLineList[index].SelectPath.StrokeDashArray = new DoubleCollection() { 3, 5 };
             //更改颜色
             MapElement.MapForkLineList[index].SelectPath.Stroke = Brushes.Yellow;
+            //同步位置
+            MapElement.MapForkLineList[index].SelectPath.Margin = MapElement.MapForkLineList[index].Path.Margin;
+            //设置线宽
+            MapElement.MapForkLineList[index].SelectPath.StrokeThickness = 1;
+            //添加到画板
             MapElement.CvForkLine.Children.Add(MapElement.MapForkLineList[index].SelectPath);
         }
 
