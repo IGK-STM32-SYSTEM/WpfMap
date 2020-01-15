@@ -10,6 +10,24 @@ namespace WpfMap
     public class GlobalVar
     {
         /// <summary>
+        /// 直线调节模式式
+        /// </summary>
+        public enum EnumLineEditMode
+        {
+            /// <summary>
+            /// 起点
+            /// </summary>
+            Start,
+            /// <summary>
+            /// 终点
+            /// </summary>
+            End,
+            /// <summary>
+            /// 整体
+            /// </summary>
+            All
+        }
+        /// <summary>
         /// 当前操作模式
         /// </summary>
         public enum EnumMode
@@ -52,9 +70,14 @@ namespace WpfMap
             RouteForkLine
         }
         /// <summary>
-        /// 正在添加的线条的步骤，指示正在进行第几步，从1开始
+        /// 【添加直线用】正在添加的线条的步骤，指示正在进行第几步，从1开始，共2步
         /// </summary>
         public static int AddRouteLineStep = 1;
+        /// <summary>
+        /// 【调整直线用】编辑直线的方式，调节起点，调节终点，整体调节
+        /// </summary>
+        public static EnumLineEditMode RouteLineEditMode = EnumLineEditMode.All;
+
         /// <summary>
         /// 正在操作元素的索引
         /// </summary>
@@ -67,16 +90,18 @@ namespace WpfMap
         //鼠标左键按下，记录按下的位置
         public static System.Windows.Point mouseLeftBtnDownToMap = new System.Windows.Point();
         public static System.Windows.Point mouseLeftBtnDownToView = new System.Windows.Point();
+       
         /// <summary>
-        /// 鼠标左键按下移动历史值
+        /// 鼠标左键按下移动历史值【整体移动直线时使用】
         /// </summary>
         public static System.Windows.Point mouseLeftBtnDownMoveLast = new System.Windows.Point();
         /// <summary>
-        /// 鼠标左键按下移动偏差，左键按下后清空
+        /// 鼠标左键按下移动偏差，左键按下后清空【整体移动直线时使用】
         /// </summary>
         public static System.Windows.Point mouseLeftBtnDownMoveDiff = new System.Windows.Point();
+        
         /// <summary>
-        /// 临时变量，记录直线margin
+        /// 记录直线margin【整体移动直线时使用】
         /// </summary>
         public static Thickness RouteLineMarginLast = new Thickness();
 

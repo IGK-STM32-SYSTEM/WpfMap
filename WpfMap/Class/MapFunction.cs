@@ -146,45 +146,6 @@ namespace WpfMap
             return -1;
         }
         /// <summary>
-        /// 更新直线终点位置
-        /// </summary>
-        /// <param name="index">索引</param>
-        /// <param name="point">目标位置</param>
-        public static void UpdateRouteLineEndPoint(int index, Point point)
-        {
-            point.X -= MapElement.GridSize / 2;
-            point.Y -= MapElement.GridSize / 2;
-
-            //计算xy方向偏差
-            Thickness thickness = MapElement.MapLineList[index].line.Margin;
-            //对MapElement.GridSize取余，实现移动时按照栅格移动效果
-            double diff_x = thickness.Left - (point.X - point.X % MapElement.GridSize);
-            double diff_y = thickness.Top - (point.Y - point.Y % MapElement.GridSize);
-
-            //移动线
-            thickness.Left -= diff_x;
-            thickness.Top -= diff_y;
-
-
-            //更新线终点坐标
-            MapElement.MapLineList[index].line.X2 = point.X - point.X % MapElement.GridSize + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Left;
-            MapElement.MapLineList[index].line.Y2 = point.Y - point.Y % MapElement.GridSize + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Top;
-            //MapElement.MapLineList[index].line.Margin = thickness;
-
-            //选择线跟随
-            //MapElement.MapLineList[index].SelectLine.X2 = px;
-            //MapElement.MapLineList[index].SelectLine.Y2 = py;
-
-            //终点编辑器跟随
-            thickness.Left += MapElement.GridSize / 2;
-            thickness.Top += MapElement.GridSize / 2;
-            MapElement.MapLineList[index].EndRect.Margin = thickness;
-
-            //文字跟随即可
-            //MapElement.MapLineList[index].textBlock.Margin = thickness;
-
-        }
-        /// <summary>
         /// 更新直线到指定位置【添加状态】
         /// </summary>
         /// <param name="index">索引</param>
@@ -258,12 +219,6 @@ namespace WpfMap
             thickness.Left += MapElement.GridSize / 2;
             thickness.Top += MapElement.GridSize / 2;
             MapElement.MapLineList[index].StartRect.Margin = thickness;
-
-            ////文字跟随即可
-            //thickness.Left -= diff_x - 15;
-            //thickness.Top -= diff_y - 10;
-            //MapElement.MapLineList[index].textBlock.Margin = thickness;
-
         }
         /// <summary>
         /// 移动直线终点位置【编辑状态】
@@ -284,37 +239,27 @@ namespace WpfMap
             thickness.Left -= diff_x;
             thickness.Top -= diff_y;
 
-            //移动线
-            //MapElement.MapLineList[index].line.Margin = thickness;
+            //更新线终点坐标
+            MapElement.MapLineList[index].line.X2 = point.X - point.X % MapElement.GridSize + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Left;
+            MapElement.MapLineList[index].line.Y2 = point.Y - point.Y % MapElement.GridSize + MapElement.GridSize - MapElement.MapLineList[index].line.Margin.Top;
 
             //选择线跟随
-            //  MapElement.MapLineList[index].SelectLine.Margin = thickness;
+            MapElement.MapLineList[index].SelectLine.X2 = MapElement.MapLineList[index].line.X2;
+            MapElement.MapLineList[index].SelectLine.Y2 = MapElement.MapLineList[index].line.Y2;
 
-            //起点编辑器跟随
+
+            //终点编辑器跟随
             thickness.Left += MapElement.GridSize / 2;
             thickness.Top += MapElement.GridSize / 2;
-            MapElement.MapLineList[index].StartRect.Margin = thickness;
-
-            ////终点编辑器跟随
-            //thickness.Left += MapElement.GridSize / 2;
-            //thickness.Top += MapElement.GridSize / 2;
-            //MapElement.MapLineList[index].EndRect.Margin = thickness;
-
-
-            ////文字跟随即可
-            //thickness.Left -= diff_x - 15;
-            //thickness.Top -= diff_y - 10;
-            //MapElement.MapLineList[index].textBlock.Margin = thickness;
-
+            MapElement.MapLineList[index].EndRect.Margin = thickness;
         }
-
         /// <summary>
         /// 更新直线到指定位置【编辑状态】
         /// </summary>
         /// <param name="index">索引</param>
         /// <param name="point">目标位置</param>
         /// <param name="canvas">画布</param>
-        public static void MoveRouteLineForEdit(int index, Point point)
+        public static void MoveRouteLineAll(int index, Point point)
         {
             //获取移动偏差
             double difx = GlobalVar.mouseLeftBtnDownMoveDiff.X;
@@ -360,7 +305,6 @@ namespace WpfMap
             tk.Top += margin_Diff_Top;
             MapElement.MapLineList[index].EndRect.Margin = tk;
         }
-
         /// <summary>
         /// 设置标到选中状态
         /// </summary>
