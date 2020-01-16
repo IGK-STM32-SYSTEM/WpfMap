@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,6 +41,7 @@ namespace WpfMap
             /// <summary>
             /// 绘文字对象
             /// </summary>
+            //[JsonIgnore]
             public TextBlock textBlock = new TextBlock();
             /// <summary>
             /// 选中框

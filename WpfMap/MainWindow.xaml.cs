@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,7 +18,107 @@ namespace WpfMap
         {
             InitializeComponent();
         }
-
+        public class SubeEllipse
+        {
+            /// <summary>
+            /// margin
+            /// </summary>
+            public Thickness Thickness { get; set; }
+            /// <summary>
+            /// 高度
+            /// </summary>
+            public double Height { get; set; }
+            /// <summary>
+            /// 宽度
+            /// </summary>
+            public double Width { get; set; }
+            /// <summary>
+            /// 轮廓厚度
+            /// </summary>
+            public double StrokeThickness { get; set; }
+            /// <summary>
+            /// 填充颜色
+            /// </summary>
+            public Brush Fill { get; set; }
+            /// <summary>
+            /// 轮廓颜色
+            /// </summary>
+            public Brush Stroke { get; set; }
+        }
+        public class SubeTextBlock
+        {
+            /// <summary>
+            /// margin
+            /// </summary>
+            public Thickness Thickness { get; set; }
+            /// <summary>
+            /// 颜色
+            /// </summary>
+            public Brush Foreground { get; set; }
+            /// <summary>
+            /// 文字
+            /// </summary>
+            public string Text { get; set; }
+            /// <summary>
+            /// 字体
+            /// </summary>
+            public double FontSize { get; set; }
+        }
+        public class SubeRectangle
+        {
+            /// <summary>
+            /// margin
+            /// </summary>
+            public Thickness Thickness { get; set; }
+            /// <summary>
+            /// 填充颜色
+            /// </summary>
+            public Brush Fill { get; set; }
+            /// <summary>
+            /// 轮廓厚度
+            /// </summary>
+            public double StrokeThickness { get; set; }
+            /// <summary>
+            /// 轮廓颜色
+            /// </summary>
+            public Brush Stroke { get; set; }
+            /// <summary>
+            /// 高度
+            /// </summary>
+            public double Height { get; set; }
+            /// <summary>
+            /// 宽度
+            /// </summary>
+            public double Width { get; set; }
+            /// <summary>
+            /// StrokeDashArray
+            /// </summary>
+            public DoubleCollection StrokeDashArray { get; set; }
+            /// <summary>
+            /// StrokeDashCap
+            /// </summary>
+            public PenLineCap StrokeDashCap { get; set; }
+        }
+        public class RFIDSave
+        {
+            /// <summary>
+            /// 编号
+            /// </summary>
+            public int Num { get; set; }
+            /// <summary>
+            /// 绘图对象
+            /// </summary>
+            public SubeEllipse Ellipse { get; set; } = new SubeEllipse();
+            /// <summary>
+            /// 绘文字对象
+            /// </summary>
+            //[JsonIgnore]
+            public SubeTextBlock TextBlock { get; set; } = new SubeTextBlock();
+            /// <summary>
+            /// 选中框
+            /// </summary>
+            public SubeRectangle SelectRectangle { get; set; } = new SubeRectangle();
+        }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //绑定视图元素到界面
@@ -48,7 +150,37 @@ namespace WpfMap
             //画背景栅格，大小为20*20
             MapElement.DrawGrid(1024 * 2, 768 * 2);
             //绘制所有标签
-            MapElement.DrawRFIDList();
+             MapElement.DrawRFIDList();
+
+            //对象与json互相转换测试
+            //将对象转为字符串
+            List<RFIDSave> RFIDSaveList = new List<RFIDSave>();
+            foreach (var item in MapElement.MapRFIDList)
+            {
+                RFIDSave save = new RFIDSave();
+                save.Num = item.Num;
+                save.Ellipse.Fill = item.ellipse.Fill;
+                save.Ellipse.Thickness = item.ellipse.Margin;
+                save.Ellipse.Stroke = item.ellipse.Stroke;
+                save.Ellipse.StrokeThickness = item.ellipse.StrokeThickness;
+                save.Ellipse.Width = item.ellipse.Width;
+                save.Ellipse.Height = item.ellipse.Height;
+                save.TextBlock.FontSize = item.textBlock.FontSize;
+                save.TextBlock.Foreground = item.textBlock.Foreground;
+                save.TextBlock.Text = item.textBlock.Text;
+                save.TextBlock.Thickness = item.textBlock.Margin;
+
+                save.SelectRectangle.Height = item.selectRectangle.Height;
+                save.SelectRectangle.Stroke = item.selectRectangle.Stroke;
+                save.SelectRectangle.StrokeDashArray = item.selectRectangle.StrokeDashArray;
+                save.SelectRectangle.StrokeDashCap = item.selectRectangle.StrokeDashCap;
+                save.SelectRectangle.StrokeThickness = item.selectRectangle.StrokeThickness;
+                save.SelectRectangle.Thickness = item.selectRectangle.Margin;
+                save.SelectRectangle.Width = item.selectRectangle.Width;
+                RFIDSaveList.Add(save);
+            }
+            string str = JsonConvert.SerializeObject(RFIDSaveList, Formatting.Indented);
+            Console.WriteLine(str);
         }
 
         private void UpdateBottomInfo()
@@ -503,7 +635,7 @@ namespace WpfMap
             if (e.Key == Key.Delete)
             {
                 //是否有选中的
-                if(GlobalVar.NowSelectIndex!=-1)
+                if (GlobalVar.NowSelectIndex != -1)
                 {
                     switch (GlobalVar.NowType)
                     {
