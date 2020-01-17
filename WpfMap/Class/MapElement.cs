@@ -159,6 +159,7 @@ namespace WpfMap
         }
         public static MapObjectClass MapObject = new MapObjectClass();
 
+
         /*-------背景栅格---------------*/
         /// <summary>
         /// 绘制画布栅格
@@ -494,7 +495,6 @@ namespace WpfMap
             //添加到画板
             MapElement.CvForkLine.Children.Add(MapElement.MapObject.MapForkLineList[index].SelectPath);
         }
-
         /// <summary>
         /// 绘制列表
         /// </summary>
@@ -507,7 +507,6 @@ namespace WpfMap
                 DrawForkLine(i);
             }
         }
-
         /// <summary>
         /// 添加一个并显示
         /// </summary>

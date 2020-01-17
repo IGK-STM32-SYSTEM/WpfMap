@@ -7,7 +7,7 @@ using System.Windows.Shapes;
 
 namespace WpfMap
 {
-    public class GlobalVar
+    public class MapOperate
     {
         /// <summary>
         /// 直线调节模式式

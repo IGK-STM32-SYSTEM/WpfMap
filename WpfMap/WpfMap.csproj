@@ -65,6 +65,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Class\MapCommon.cs" />
+    <Compile Include="Class\MapProperty.cs" />
     <Compile Include="SaveMap\Convert.cs" />
     <Compile Include="SaveMap\Helper.cs" />
     <Compile Include="SaveMap\MapElementBase.cs" />
@@ -79,7 +81,7 @@
     </Compile>
     <Compile Include="BindHelper.cs" />
     <Compile Include="Class\CavnvasBase.cs" />
-    <Compile Include="Class\GlobalVar.cs" />
+    <Compile Include="Class\MapOperate.cs" />
     <Compile Include="Class\MapElement.cs" />
     <Compile Include="Class\MapFunction.cs" />
     <Compile Include="Class\MathHelper.cs" />

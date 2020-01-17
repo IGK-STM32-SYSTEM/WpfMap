@@ -293,8 +293,8 @@ namespace WpfMap
         public static void MoveRouteLineAll(int index, Point point)
         {
             //获取移动偏差
-            double difx = GlobalVar.mouseLeftBtnDownMoveDiff.X;
-            double dify = GlobalVar.mouseLeftBtnDownMoveDiff.Y;
+            double difx = MapOperate.mouseLeftBtnDownMoveDiff.X;
+            double dify = MapOperate.mouseLeftBtnDownMoveDiff.Y;
 
             //提高变化阈值【当光标超过半个栅格就发生跳格】
             if (difx > 0)
@@ -319,8 +319,8 @@ namespace WpfMap
 
             //移动线
             Thickness tk = new Thickness();
-            tk.Left = GlobalVar.ElementMarginLast.Left;
-            tk.Top = GlobalVar.ElementMarginLast.Top;
+            tk.Left = MapOperate.ElementMarginLast.Left;
+            tk.Top = MapOperate.ElementMarginLast.Top;
 
             tk.Left += difx;
             tk.Top += dify;
@@ -660,8 +660,8 @@ namespace WpfMap
         public static void MoveForkLineAll(int index, Point point)
         {
             //获取移动偏差
-            double difx = GlobalVar.mouseLeftBtnDownMoveDiff.X;
-            double dify = GlobalVar.mouseLeftBtnDownMoveDiff.Y;
+            double difx = MapOperate.mouseLeftBtnDownMoveDiff.X;
+            double dify = MapOperate.mouseLeftBtnDownMoveDiff.Y;
 
             //提高变化阈值【当光标超过半个栅格就发生跳格】
             if (difx > 0)
@@ -682,8 +682,8 @@ namespace WpfMap
 
             //移动线
             Thickness tk = new Thickness();
-            tk.Left = GlobalVar.ElementMarginLast.Left;
-            tk.Top = GlobalVar.ElementMarginLast.Top;
+            tk.Left = MapOperate.ElementMarginLast.Left;
+            tk.Top = MapOperate.ElementMarginLast.Top;
 
             tk.Left += difx;
             tk.Top += dify;
@@ -750,24 +750,24 @@ namespace WpfMap
         /*-----------------综合-----------------------------*/
         public static void ClearAllSelect()
         {
-            switch (GlobalVar.NowType)
+            switch (MapOperate.NowType)
             {
-                case GlobalVar.EnumElementType.RFID:
-                    if (GlobalVar.NowSelectIndex != -1)
+                case MapOperate.EnumElementType.RFID:
+                    if (MapOperate.NowSelectIndex != -1)
                     {
-                        MapFunction.SetRFIDIsNormal(GlobalVar.NowSelectIndex);
+                        MapFunction.SetRFIDIsNormal(MapOperate.NowSelectIndex);
                     }
                     break;
-                case GlobalVar.EnumElementType.RouteLine:
-                    if (GlobalVar.NowSelectIndex != -1)
+                case MapOperate.EnumElementType.RouteLine:
+                    if (MapOperate.NowSelectIndex != -1)
                     {
-                        MapFunction.SetRouteLineIsNormal(GlobalVar.NowSelectIndex);
+                        MapFunction.SetRouteLineIsNormal(MapOperate.NowSelectIndex);
                     }
                     break;
-                case GlobalVar.EnumElementType.RouteForkLine:
-                    if (GlobalVar.NowSelectIndex != -1)
+                case MapOperate.EnumElementType.RouteForkLine:
+                    if (MapOperate.NowSelectIndex != -1)
                     {
-                        MapFunction.SetRouteForkLineIsNormal(GlobalVar.NowSelectIndex);
+                        MapFunction.SetRouteForkLineIsNormal(MapOperate.NowSelectIndex);
                     }
                     break;
                 default: break;

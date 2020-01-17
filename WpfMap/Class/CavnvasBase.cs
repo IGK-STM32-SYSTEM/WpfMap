@@ -23,7 +23,7 @@ namespace WpfMap
         public static void DrawText(double x, double y, string text, Color color, Canvas canvasObj, TextBlock textBlock)
         {
             textBlock.Text = text;
-            textBlock.FontSize = 16;
+            textBlock.FontSize = 14;
             textBlock.Foreground = new SolidColorBrush(color);
             textBlock.Margin = new Thickness(x, y, 0, 0);
             canvasObj.Children.Add(textBlock);
