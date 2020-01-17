@@ -62,14 +62,14 @@ namespace WpfMap.SaveMap
         public static string RFIDToJson()
         {
             //将标准对象转为Base
-            foreach (var item in MapElement.MapRFIDList)
+            foreach (var item in MapElement.MapObject.MapRFIDList)
             {
                 item.baseSelectRectangle = SaveMap.Convert.RectangleToBase(item.SelectRectangle);
                 item.baseTextBlock = SaveMap.Convert.TextBlockToBase(item.textBlock);
                 item.baseEllipse = SaveMap.Convert.EllipseToBase(item.ellipse);
             }
             //转为json
-            string str = JsonConvert.SerializeObject(MapElement.MapRFIDList, Formatting.Indented);
+            string str = JsonConvert.SerializeObject(MapElement.MapObject.MapRFIDList, Formatting.Indented);
             return str;
         }
         /// <summary>
@@ -77,11 +77,11 @@ namespace WpfMap.SaveMap
         /// </summary>
         public static void JsonToRFIDAndShow(string json)
         {
-            MapElement.MapRFIDList.Clear();
+            MapElement.MapObject.MapRFIDList.Clear();
             //json 转为对象
-            MapElement.MapRFIDList = JsonConvert.DeserializeObject<List<MapElement.RFID>>(json);
+            MapElement.MapObject.MapRFIDList = JsonConvert.DeserializeObject<List<MapElement.RFID>>(json);
             //将Base转为标准对象
-            foreach (var item in MapElement.MapRFIDList)
+            foreach (var item in MapElement.MapObject.MapRFIDList)
             {
                 item.SelectRectangle = SaveMap.Convert.BaseToRectangle(item.baseSelectRectangle);
                 item.textBlock = SaveMap.Convert.BaseToTextBlock(item.baseTextBlock);
@@ -91,7 +91,6 @@ namespace WpfMap.SaveMap
             MapElement.CvRFID.Children.Clear();
             //绘制所有
             MapElement.DrawRFIDList();
-
         }
         /// <summary>
         /// 直线转JSON字符串
@@ -99,7 +98,7 @@ namespace WpfMap.SaveMap
         public static string LineToJSON()
         {
             //将标准对象转为Base
-            foreach (var item in MapElement.MapLineList)
+            foreach (var item in MapElement.MapObject.MapLineList)
             {
                 item.baseEndRect = SaveMap.Convert.RectangleToBase(item.EndRect);
                 item.baseLine = SaveMap.Convert.LineToBase(item.line);
@@ -108,7 +107,7 @@ namespace WpfMap.SaveMap
                 item.baseTextBlock = SaveMap.Convert.TextBlockToBase(item.textBlock);
             }
             //转为json
-            string str = JsonConvert.SerializeObject(MapElement.MapLineList, Formatting.Indented);
+            string str = JsonConvert.SerializeObject(MapElement.MapObject.MapLineList, Formatting.Indented);
             return str;
         }
         /// <summary>
@@ -116,11 +115,11 @@ namespace WpfMap.SaveMap
         /// </summary>
         public static void JsonToLineAndShow(string str)
         {
-            MapElement.MapLineList.Clear();
+            MapElement.MapObject.MapLineList.Clear();
             //json 转为对象
-            MapElement.MapLineList = JsonConvert.DeserializeObject<List<MapElement.RouteLine>>(str);
+            MapElement.MapObject.MapLineList = JsonConvert.DeserializeObject<List<MapElement.RouteLine>>(str);
             //将Base转为标准对象
-            foreach (var item in MapElement.MapLineList)
+            foreach (var item in MapElement.MapObject.MapLineList)
             {
                 item.EndRect = SaveMap.Convert.BaseToRectangle(item.baseEndRect);
                 item.line = SaveMap.Convert.BaseToLine(item.baseLine);
@@ -139,7 +138,7 @@ namespace WpfMap.SaveMap
         public static string ForkLineToJson()
         {
             //将标准对象转为Base
-            foreach (var item in MapElement.MapForkLineList)
+            foreach (var item in  MapElement.MapObject.MapForkLineList)
             {
                 item.basePath = SaveMap.Convert.ForkLiePathToBase(item.Path);
                 item.baseSelectPath = SaveMap.Convert.ForkLiePathToBase(item.SelectPath);
@@ -148,7 +147,7 @@ namespace WpfMap.SaveMap
                 item.baseTextBlock = SaveMap.Convert.TextBlockToBase(item.textBlock);
             }
             //转为json
-            string str = JsonConvert.SerializeObject(MapElement.MapForkLineList, Formatting.Indented);
+            string str = JsonConvert.SerializeObject( MapElement.MapObject.MapForkLineList, Formatting.Indented);
             return str;
         }
         /// <summary>
@@ -156,11 +155,11 @@ namespace WpfMap.SaveMap
         /// </summary>
         public static void JsonToForkLineAndShow(string str)
         {
-            MapElement.MapForkLineList.Clear();
+             MapElement.MapObject.MapForkLineList.Clear();
             //json 转为对象
-            MapElement.MapForkLineList = JsonConvert.DeserializeObject<List<MapElement.RouteForkLine>>(str);
+             MapElement.MapObject.MapForkLineList = JsonConvert.DeserializeObject<List<MapElement.RouteForkLine>>(str);
             //将Base转为标准对象
-            foreach (var item in MapElement.MapForkLineList)
+            foreach (var item in  MapElement.MapObject.MapForkLineList)
             {
                 item.Path = SaveMap.Convert.BaseToForkLiePath(item.basePath);
                 item.SelectPath = SaveMap.Convert.BaseToForkLiePath(item.baseSelectPath);

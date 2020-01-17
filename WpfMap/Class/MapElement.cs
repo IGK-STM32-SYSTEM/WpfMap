@@ -28,7 +28,7 @@ namespace WpfMap
         public static Canvas CvForkLine;//分叉路线
 
         //标签类
-        public class RFID:SaveMap.ShapesBase
+        public class RFID : SaveMap.ShapesBase
         {
             /// <summary>
             /// 编号
@@ -53,10 +53,6 @@ namespace WpfMap
             public Rectangle SelectRectangle = new Rectangle();
             public BaseRectangle baseSelectRectangle = new BaseRectangle();
         }
-        /// <summary>
-        /// 标签绘图列表
-        /// </summary>
-        public static List<MapElement.RFID> MapRFIDList = new List<MapElement.RFID>();
         //直线
         public class RouteLine : SaveMap.ShapesBase
         {
@@ -95,10 +91,6 @@ namespace WpfMap
             public TextBlock textBlock = new TextBlock();
             public BaseTextBlock baseTextBlock = new BaseTextBlock();
         }
-        /// <summary>
-        /// 直线集合
-        /// </summary>
-        public static List<MapElement.RouteLine> MapLineList = new List<MapElement.RouteLine>();
         //分叉线
         public class RouteForkLine : SaveMap.ShapesBase
         {
@@ -147,9 +139,25 @@ namespace WpfMap
         }
 
         /// <summary>
-        /// 分叉线集合
+        /// 地图对象
         /// </summary>
-        public static List<MapElement.RouteForkLine> MapForkLineList = new List<MapElement.RouteForkLine>();
+        public class MapObjectClass
+        {
+            /// <summary>
+            /// 标签绘图列表
+            /// </summary>
+            public List<MapElement.RFID> MapRFIDList = new List<MapElement.RFID>();
+            /// <summary>
+            /// 直线集合
+            /// </summary>
+            public List<MapElement.RouteLine> MapLineList = new List<MapElement.RouteLine>();
+
+            /// <summary>
+            /// 分叉线集合
+            /// </summary>
+            public List<MapElement.RouteForkLine> MapForkLineList = new List<MapElement.RouteForkLine>();
+        }
+        public static MapObjectClass MapObject = new MapObjectClass();
 
         /*-------背景栅格---------------*/
         /// <summary>
@@ -214,21 +222,21 @@ namespace WpfMap
             //站点
             float Radius = MapElement.RFID_Radius;
             //绘制
-            MapRFIDList[index].ellipse.Height = Radius * 2;
-            MapRFIDList[index].ellipse.Width = Radius * 2;
+            MapObject.MapRFIDList[index].ellipse.Height = Radius * 2;
+            MapObject.MapRFIDList[index].ellipse.Width = Radius * 2;
             //item.ellipse.Margin = new Thickness(item.point.X - Radius, item.point.Y - Radius, 0, 0);
-            MapRFIDList[index].ellipse.StrokeThickness = 1;
-            MapRFIDList[index].ellipse.Fill = System.Windows.Media.Brushes.Yellow;
-            MapRFIDList[index].ellipse.Stroke = System.Windows.Media.Brushes.Gray;
-            MapElement.CvRFID.Children.Add(MapRFIDList[index].ellipse);
+            MapObject.MapRFIDList[index].ellipse.StrokeThickness = 1;
+            MapObject.MapRFIDList[index].ellipse.Fill = System.Windows.Media.Brushes.Yellow;
+            MapObject.MapRFIDList[index].ellipse.Stroke = System.Windows.Media.Brushes.Gray;
+            MapElement.CvRFID.Children.Add(MapObject.MapRFIDList[index].ellipse);
             //显示编号
             CavnvasBase.DrawText(
-                MapRFIDList[index].ellipse.Margin.Left + 15,
-                MapRFIDList[index].ellipse.Margin.Top + 10,
-                MapRFIDList[index].Num.ToString(),
+              MapObject.MapRFIDList[index].ellipse.Margin.Left + 15,
+               MapObject.MapRFIDList[index].ellipse.Margin.Top + 10,
+              MapObject.MapRFIDList[index].Num.ToString(),
                 Colors.Black,
                 MapElement.CvRFID,
-                MapRFIDList[index].textBlock
+              MapObject.MapRFIDList[index].textBlock
                 );
         }
 
@@ -237,9 +245,9 @@ namespace WpfMap
         /// </summary>
         public static void DrawRFIDList()
         {
-            if (MapRFIDList.Count == 0)
+            if (MapObject.MapRFIDList.Count == 0)
                 return;
-            for (int i = 0; i < MapRFIDList.Count; i++)
+            for (int i = 0; i < MapObject.MapRFIDList.Count; i++)
             {
                 DrawRFID(i);
             }
@@ -254,12 +262,12 @@ namespace WpfMap
         {
             //添加一个RFID
             MapElement.RFID rfid = new MapElement.RFID();
-            rfid.Num = MapElement.MapRFIDList.Count + 1;
-            MapElement.MapRFIDList.Add(rfid);
+            rfid.Num = MapElement.MapObject.MapRFIDList.Count + 1;
+            MapElement.MapObject.MapRFIDList.Add(rfid);
             //绘制到界面
-            MapElement.DrawRFID(MapElement.MapRFIDList.Count - 1);
+            MapElement.DrawRFID(MapElement.MapObject.MapRFIDList.Count - 1);
             //设置该RFID为当前正在操作的RFID
-            return MapElement.MapRFIDList.Count - 1;
+            return MapElement.MapObject.MapRFIDList.Count - 1;
         }
 
         /*-------路径直线---------------*/
@@ -274,11 +282,11 @@ namespace WpfMap
             double diff_y = StartPoint.Y - StartPoint.Y % MapElement.GridSize + MapElement.GridSize;
 
             //绘制
-            MapElement.MapLineList[index].line.Stroke = Brushes.Black;
-            MapElement.MapLineList[index].line.StrokeThickness = 3;//线的宽度
-            MapElement.MapLineList[index].line.Margin = new Thickness(diff_x, diff_y, 0, 0);
+            MapElement.MapObject.MapLineList[index].line.Stroke = Brushes.Black;
+            MapElement.MapObject.MapLineList[index].line.StrokeThickness = 3;//线的宽度
+            MapElement.MapObject.MapLineList[index].line.Margin = new Thickness(diff_x, diff_y, 0, 0);
 
-            MapElement.CvRouteLine.Children.Add(MapElement.MapLineList[index].line);
+            MapElement.CvRouteLine.Children.Add(MapElement.MapObject.MapLineList[index].line);
 
             ////显示编号
             //CavnvasBase.DrawText(
@@ -296,11 +304,11 @@ namespace WpfMap
         public static void DrawRouteLine(int index)
         {
             //绘制
-            MapElement.MapLineList[index].line.Stroke = Brushes.Black;
-            MapElement.MapLineList[index].line.StrokeThickness = 3;//线的宽度
-            //MapElement.MapLineList[index].line.HorizontalAlignment = HorizontalAlignment.Left;
-            //MapElement.MapLineList[index].line.VerticalAlignment = VerticalAlignment.Center;
-            MapElement.CvRouteLine.Children.Add(MapElement.MapLineList[index].line);
+            MapElement.MapObject.MapLineList[index].line.Stroke = Brushes.Black;
+            MapElement.MapObject.MapLineList[index].line.StrokeThickness = 3;//线的宽度
+            //MapElement.MapObject.MapLineList[index].line.HorizontalAlignment = HorizontalAlignment.Left;
+            //MapElement.MapObject.MapLineList[index].line.VerticalAlignment = VerticalAlignment.Center;
+            MapElement.CvRouteLine.Children.Add(MapElement.MapObject.MapLineList[index].line);
 
             ////显示编号
             //CavnvasBase.DrawText(
@@ -317,9 +325,9 @@ namespace WpfMap
         /// </summary>
         public static void DrawRouteLineList()
         {
-            if (MapLineList.Count == 0)
+            if (MapObject.MapLineList.Count == 0)
                 return;
-            for (int i = 0; i < MapLineList.Count; i++)
+            for (int i = 0; i < MapObject.MapLineList.Count; i++)
             {
                 DrawRouteLine(i);
             }
@@ -333,62 +341,62 @@ namespace WpfMap
         {
             //添加直线
             MapElement.RouteLine line = new MapElement.RouteLine();
-            line.Num = MapElement.MapLineList.Count + 1;
-            MapElement.MapLineList.Add(line);
+            line.Num = MapElement.MapObject.MapLineList.Count + 1;
+            MapElement.MapObject.MapLineList.Add(line);
             //返回索引
-            return MapElement.MapLineList.Count - 1;
+            return MapElement.MapObject.MapLineList.Count - 1;
         }
         /// <summary>
         /// 显示起点编辑器
         /// </summary>
         public static void RouteLineShowStart(int index)
         {
-            MapElement.MapLineList[index].StartRect.Fill = CavnvasBase.GetSolid(100, Colors.Green);//半透明
-            MapElement.MapLineList[index].StartRect.StrokeThickness = 0.5;
-            MapElement.MapLineList[index].StartRect.Stroke = Brushes.Gray;
-            MapElement.MapLineList[index].StartRect.Width = MapElement.GridSize;
-            MapElement.MapLineList[index].StartRect.Height = MapElement.GridSize;
-            MapElement.CvRouteLine.Children.Add(MapElement.MapLineList[index].StartRect);
+            MapElement.MapObject.MapLineList[index].StartRect.Fill = CavnvasBase.GetSolid(100, Colors.Green);//半透明
+            MapElement.MapObject.MapLineList[index].StartRect.StrokeThickness = 0.5;
+            MapElement.MapObject.MapLineList[index].StartRect.Stroke = Brushes.Gray;
+            MapElement.MapObject.MapLineList[index].StartRect.Width = MapElement.GridSize;
+            MapElement.MapObject.MapLineList[index].StartRect.Height = MapElement.GridSize;
+            MapElement.CvRouteLine.Children.Add(MapElement.MapObject.MapLineList[index].StartRect);
         }
         /// <summary>
         /// 显示终点编辑器
         /// </summary>
         public static void RouteLineShowEnd(int index)
         {
-            MapElement.MapLineList[index].EndRect.Fill = CavnvasBase.GetSolid(100, Colors.Green); //半透明
-            MapElement.MapLineList[index].EndRect.StrokeThickness = 0.5;
-            MapElement.MapLineList[index].EndRect.Stroke = Brushes.Gray;
-            MapElement.MapLineList[index].EndRect.Width = MapElement.GridSize;
-            MapElement.MapLineList[index].EndRect.Height = MapElement.GridSize;
-            MapElement.CvRouteLine.Children.Add(MapElement.MapLineList[index].EndRect);
+            MapElement.MapObject.MapLineList[index].EndRect.Fill = CavnvasBase.GetSolid(100, Colors.Green); //半透明
+            MapElement.MapObject.MapLineList[index].EndRect.StrokeThickness = 0.5;
+            MapElement.MapObject.MapLineList[index].EndRect.Stroke = Brushes.Gray;
+            MapElement.MapObject.MapLineList[index].EndRect.Width = MapElement.GridSize;
+            MapElement.MapObject.MapLineList[index].EndRect.Height = MapElement.GridSize;
+            MapElement.CvRouteLine.Children.Add(MapElement.MapObject.MapLineList[index].EndRect);
         }
         /// <summary>
         /// 显示选择状态线
         /// </summary>
         public static void RouteLineShowSelectLine(int index)
         {
-            MapElement.MapLineList[index].SelectLine.Stroke = Brushes.Yellow;
-            MapElement.MapLineList[index].SelectLine.X1 = MapElement.MapLineList[index].line.X1;
-            MapElement.MapLineList[index].SelectLine.X2 = MapElement.MapLineList[index].line.X2;
-            MapElement.MapLineList[index].SelectLine.Y1 = MapElement.MapLineList[index].line.Y1;
-            MapElement.MapLineList[index].SelectLine.Y2 = MapElement.MapLineList[index].line.Y2;
-            MapElement.MapLineList[index].SelectLine.Margin = MapElement.MapLineList[index].line.Margin;
-            MapElement.MapLineList[index].SelectLine.StrokeThickness = 1;//线的宽度
+            MapElement.MapObject.MapLineList[index].SelectLine.Stroke = Brushes.Yellow;
+            MapElement.MapObject.MapLineList[index].SelectLine.X1 = MapElement.MapObject.MapLineList[index].line.X1;
+            MapElement.MapObject.MapLineList[index].SelectLine.X2 = MapElement.MapObject.MapLineList[index].line.X2;
+            MapElement.MapObject.MapLineList[index].SelectLine.Y1 = MapElement.MapObject.MapLineList[index].line.Y1;
+            MapElement.MapObject.MapLineList[index].SelectLine.Y2 = MapElement.MapObject.MapLineList[index].line.Y2;
+            MapElement.MapObject.MapLineList[index].SelectLine.Margin = MapElement.MapObject.MapLineList[index].line.Margin;
+            MapElement.MapObject.MapLineList[index].SelectLine.StrokeThickness = 1;//线的宽度
             //虚线
-            MapElement.MapLineList[index].SelectLine.StrokeDashArray = new DoubleCollection() { 3, 5 };
-            //MapElement.MapRFIDList[index].selectRectangle.StrokeDashCap = PenLineCap.Triangle;
-            //MapElement.MapLineList[index].SelectLine.HorizontalAlignment = HorizontalAlignment.Left;
-            //MapElement.MapLineList[index].SelectLine.VerticalAlignment = VerticalAlignment.Center;
-            MapElement.CvRouteLine.Children.Add(MapElement.MapLineList[index].SelectLine);
+            MapElement.MapObject.MapLineList[index].SelectLine.StrokeDashArray = new DoubleCollection() { 3, 5 };
+            //MapElement.MapObject.MapRFIDList[index].selectRectangle.StrokeDashCap = PenLineCap.Triangle;
+            //MapElement.MapObject.MapLineList[index].SelectLine.HorizontalAlignment = HorizontalAlignment.Left;
+            //MapElement.MapObject.MapLineList[index].SelectLine.VerticalAlignment = VerticalAlignment.Center;
+            MapElement.CvRouteLine.Children.Add(MapElement.MapObject.MapLineList[index].SelectLine);
         }
         /// <summary>
         /// 绘制直线列表
         /// </summary>
         public static void DrawLineList()
         {
-            if (MapLineList.Count == 0)
+            if (MapObject.MapLineList.Count == 0)
                 return;
-            for (int i = 0; i < MapLineList.Count; i++)
+            for (int i = 0; i < MapObject.MapLineList.Count; i++)
             {
                 DrawRouteLine(i);
             }
@@ -419,31 +427,31 @@ namespace WpfMap
                true);
             figure.Segments.Add(arc);
             pathGeometry.Figures.Add(figure);
-            MapElement.MapForkLineList[index].Path.Data = pathGeometry;
-            MapElement.MapForkLineList[index].Path.Stroke = Brushes.Black;
-            MapElement.MapForkLineList[index].Path.StrokeThickness = 3;
+            MapElement.MapObject.MapForkLineList[index].Path.Data = pathGeometry;
+            MapElement.MapObject.MapForkLineList[index].Path.Stroke = Brushes.Black;
+            MapElement.MapObject.MapForkLineList[index].Path.StrokeThickness = 3;
 
-            MapElement.MapForkLineList[index].Path.Margin = new Thickness(diff_x, diff_y, 0, 0);
-            MapElement.CvForkLine.Children.Add(MapElement.MapForkLineList[index].Path);
+            MapElement.MapObject.MapForkLineList[index].Path.Margin = new Thickness(diff_x, diff_y, 0, 0);
+            MapElement.CvForkLine.Children.Add(MapElement.MapObject.MapForkLineList[index].Path);
         }
         /// <summary>
         /// 绘制单个
         /// </summary>
         public static void DrawForkLine(int index)
         {
-            MapElement.CvForkLine.Children.Add(MapElement.MapForkLineList[index].Path);
+            MapElement.CvForkLine.Children.Add(MapElement.MapObject.MapForkLineList[index].Path);
         }
         /// <summary>
         /// 显示起点编辑器
         /// </summary>
         public static void ForkLineShowStart(int index)
         {
-            MapElement.MapForkLineList[index].StartRect.Fill = CavnvasBase.GetSolid(100, Colors.Pink);//半透明
-            MapElement.MapForkLineList[index].StartRect.StrokeThickness = 0.5;
-            MapElement.MapForkLineList[index].StartRect.Stroke = Brushes.Gray;
-            MapElement.MapForkLineList[index].StartRect.Width = MapElement.GridSize;
-            MapElement.MapForkLineList[index].StartRect.Height = MapElement.GridSize;
-            MapElement.CvForkLine.Children.Add(MapElement.MapForkLineList[index].StartRect);
+            MapElement.MapObject.MapForkLineList[index].StartRect.Fill = CavnvasBase.GetSolid(100, Colors.Pink);//半透明
+            MapElement.MapObject.MapForkLineList[index].StartRect.StrokeThickness = 0.5;
+            MapElement.MapObject.MapForkLineList[index].StartRect.Stroke = Brushes.Gray;
+            MapElement.MapObject.MapForkLineList[index].StartRect.Width = MapElement.GridSize;
+            MapElement.MapObject.MapForkLineList[index].StartRect.Height = MapElement.GridSize;
+            MapElement.CvForkLine.Children.Add(MapElement.MapObject.MapForkLineList[index].StartRect);
         }
         /// <summary>
         /// 显示终点编辑器
@@ -451,22 +459,22 @@ namespace WpfMap
         public static void ForkLineShowEnd(int index)
         {
             //找到圆弧起点和终点坐标
-            PathGeometry pathGeometry = MapElement.MapForkLineList[index].Path.Data as PathGeometry;
+            PathGeometry pathGeometry = MapElement.MapObject.MapForkLineList[index].Path.Data as PathGeometry;
             PathFigure figure = pathGeometry.Figures.First();
             ArcSegment arc = figure.Segments.First() as ArcSegment;
             //圆弧终点
             Point end = arc.Point;
-            end.X += MapElement.MapForkLineList[index].Path.Margin.Left - MapElement.GridSize / 2;
-            end.Y += MapElement.MapForkLineList[index].Path.Margin.Top - MapElement.GridSize / 2;
+            end.X += MapElement.MapObject.MapForkLineList[index].Path.Margin.Left - MapElement.GridSize / 2;
+            end.Y += MapElement.MapObject.MapForkLineList[index].Path.Margin.Top - MapElement.GridSize / 2;
             //终点编辑器的位置和圆弧终点坐标同步
-            MapElement.MapForkLineList[index].EndRect.Margin = new Thickness(end.X, end.Y, 0, 0);
+            MapElement.MapObject.MapForkLineList[index].EndRect.Margin = new Thickness(end.X, end.Y, 0, 0);
 
-            MapElement.MapForkLineList[index].EndRect.Fill = CavnvasBase.GetSolid(100, Colors.Pink); //半透明
-            MapElement.MapForkLineList[index].EndRect.StrokeThickness = 0.5;
-            MapElement.MapForkLineList[index].EndRect.Stroke = Brushes.Gray;
-            MapElement.MapForkLineList[index].EndRect.Width = MapElement.GridSize;
-            MapElement.MapForkLineList[index].EndRect.Height = MapElement.GridSize;
-            MapElement.CvForkLine.Children.Add(MapElement.MapForkLineList[index].EndRect);
+            MapElement.MapObject.MapForkLineList[index].EndRect.Fill = CavnvasBase.GetSolid(100, Colors.Pink); //半透明
+            MapElement.MapObject.MapForkLineList[index].EndRect.StrokeThickness = 0.5;
+            MapElement.MapObject.MapForkLineList[index].EndRect.Stroke = Brushes.Gray;
+            MapElement.MapObject.MapForkLineList[index].EndRect.Width = MapElement.GridSize;
+            MapElement.MapObject.MapForkLineList[index].EndRect.Height = MapElement.GridSize;
+            MapElement.CvForkLine.Children.Add(MapElement.MapObject.MapForkLineList[index].EndRect);
         }
         /// <summary>
         /// 显示选择状
@@ -474,17 +482,17 @@ namespace WpfMap
         public static void ForkLineShowSelect(int index)
         {
             //同步曲线
-            MapElement.MapForkLineList[index].SelectPath.Data = MapElement.MapForkLineList[index].Path.Data.Clone();
+            MapElement.MapObject.MapForkLineList[index].SelectPath.Data = MapElement.MapObject.MapForkLineList[index].Path.Data.Clone();
             //设置为虚线
-            MapElement.MapForkLineList[index].SelectPath.StrokeDashArray = new DoubleCollection() { 3, 5 };
+            MapElement.MapObject.MapForkLineList[index].SelectPath.StrokeDashArray = new DoubleCollection() { 3, 5 };
             //更改颜色
-            MapElement.MapForkLineList[index].SelectPath.Stroke = Brushes.Yellow;
+            MapElement.MapObject.MapForkLineList[index].SelectPath.Stroke = Brushes.Yellow;
             //同步位置
-            MapElement.MapForkLineList[index].SelectPath.Margin = MapElement.MapForkLineList[index].Path.Margin;
+            MapElement.MapObject.MapForkLineList[index].SelectPath.Margin = MapElement.MapObject.MapForkLineList[index].Path.Margin;
             //设置线宽
-            MapElement.MapForkLineList[index].SelectPath.StrokeThickness = 1;
+            MapElement.MapObject.MapForkLineList[index].SelectPath.StrokeThickness = 1;
             //添加到画板
-            MapElement.CvForkLine.Children.Add(MapElement.MapForkLineList[index].SelectPath);
+            MapElement.CvForkLine.Children.Add(MapElement.MapObject.MapForkLineList[index].SelectPath);
         }
 
         /// <summary>
@@ -492,9 +500,9 @@ namespace WpfMap
         /// </summary>
         public static void DrawForkLineList()
         {
-            if (MapForkLineList.Count == 0)
+            if (MapObject.MapForkLineList.Count == 0)
                 return;
-            for (int i = 0; i < MapForkLineList.Count; i++)
+            for (int i = 0; i < MapObject.MapForkLineList.Count; i++)
             {
                 DrawForkLine(i);
             }
@@ -509,10 +517,10 @@ namespace WpfMap
         {
             //添加
             MapElement.RouteForkLine line = new MapElement.RouteForkLine();
-            line.Num = MapElement.MapForkLineList.Count + 1;
-            MapElement.MapForkLineList.Add(line);
+            line.Num = MapElement.MapObject.MapForkLineList.Count + 1;
+            MapElement.MapObject.MapForkLineList.Add(line);
             //返回索引
-            return MapElement.MapForkLineList.Count - 1;
+            return MapElement.MapObject.MapForkLineList.Count - 1;
         }
     }
 }

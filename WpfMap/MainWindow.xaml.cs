@@ -28,9 +28,9 @@ namespace WpfMap
             bottomstackPanel.DataContext = GlobalVar.ViewInfo;
             //指定画布
             MapElement.CvGrid = cvGrid;//栅格
-            MapElement.CvRFID = cvMap;//标签
-            MapElement.CvRouteLine = cvMap;//直路线
-            MapElement.CvForkLine = cvMap;//分叉路线
+            MapElement.CvRFID = cvRFID;//标签
+            MapElement.CvRouteLine = cvLine;//直路线
+            MapElement.CvForkLine = cvForkLine;//分叉路线
 
             //画背景栅格，大小为20*20
             MapElement.DrawGrid(1024 * 2, 768 * 2);
@@ -103,7 +103,7 @@ namespace WpfMap
                         //清除图形
                         MapFunction.ClearAllSelect();
                         //删除新增线条
-                        MapElement.MapLineList.RemoveAt(GlobalVar.NowSelectIndex);
+                        MapElement.MapObject.MapLineList.RemoveAt(GlobalVar.NowSelectIndex);
                     }
                     else
                     if (GlobalVar.AddStep == 2)
@@ -121,7 +121,7 @@ namespace WpfMap
                         //清除图形
                         MapFunction.ClearAllSelect();
                         //删除新增线条
-                        MapElement.MapForkLineList.RemoveAt(GlobalVar.NowSelectIndex);
+                         MapElement.MapObject.MapForkLineList.RemoveAt(GlobalVar.NowSelectIndex);
                     }
                     else
                     if (GlobalVar.AddStep == 2)
@@ -197,7 +197,7 @@ namespace WpfMap
                 if (rs != -1)
                 {
                     //记录当前margin
-                    GlobalVar.ElementMarginLast = MapElement.MapLineList[rs].line.Margin;
+                    GlobalVar.ElementMarginLast = MapElement.MapObject.MapLineList[rs].line.Margin;
 
                     //如果选中的和之前是同一个元素
                     if (rs == GlobalVar.NowSelectIndex && GlobalVar.NowType == GlobalVar.EnumElementType.RouteLine)
@@ -225,7 +225,7 @@ namespace WpfMap
                 if (rs != -1)
                 {
                     //记录当前margin
-                    GlobalVar.ElementMarginLast = MapElement.MapForkLineList[rs].Path.Margin;
+                    GlobalVar.ElementMarginLast =  MapElement.MapObject.MapForkLineList[rs].Path.Margin;
 
                     //如果选中的和之前是同一个元素
                     if (rs == GlobalVar.NowSelectIndex && GlobalVar.NowType == GlobalVar.EnumElementType.RouteForkLine)
@@ -584,7 +584,16 @@ namespace WpfMap
 
         private void Btn_SaveMap_Click(object sender, RoutedEventArgs e)
         {
+            //保存地图【转换映射】
+            SaveMap.Helper.RFIDToJson();
+            SaveMap.Helper.LineToJSON();
+            SaveMap.Helper.ForkLineToJson();
+            string str = JsonConvert.SerializeObject(MapElement.MapObject,Formatting.Indented);
+            //保存
+            SaveMap.Helper.SaveToFile(str);
 
+            //SaveMap.MapObject.MapRFIDList = MapElement.MapObject.MapRFIDList;
+            //SaveMap.MapObject.MapForkLineList= MapElement.
             //获得RFID JSON 字符串
             //保存到数据库
 
@@ -592,7 +601,47 @@ namespace WpfMap
 
         private void Btn_LoadMap_Click(object sender, RoutedEventArgs e)
         {
-
+            //读取
+            string str = SaveMap.Helper.LoadFromFile();
+            //json 转为对象
+            MapElement.MapObject = JsonConvert.DeserializeObject<MapElement.MapObjectClass>(str);
+            //转换映射并显示
+            //将Base转为标准对象
+            foreach (var item in MapElement.MapObject.MapRFIDList)
+            {
+                item.SelectRectangle = SaveMap.Convert.BaseToRectangle(item.baseSelectRectangle);
+                item.textBlock = SaveMap.Convert.BaseToTextBlock(item.baseTextBlock);
+                item.ellipse = SaveMap.Convert.BaseToEllipse(item.baseEllipse);
+            }
+            //清空画布
+            MapElement.CvRFID.Children.Clear();
+            //绘制所有
+            MapElement.DrawRFIDList();
+            foreach (var item in MapElement.MapObject.MapLineList)
+            {
+                item.EndRect = SaveMap.Convert.BaseToRectangle(item.baseEndRect);
+                item.line = SaveMap.Convert.BaseToLine(item.baseLine);
+                item.SelectLine = SaveMap.Convert.BaseToLine(item.baseSelectLine);
+                item.StartRect = SaveMap.Convert.BaseToRectangle(item.baseStartRect);
+                item.textBlock = SaveMap.Convert.BaseToTextBlock(item.baseTextBlock);
+            }
+            //清空画布
+            MapElement.CvRouteLine.Children.Clear();
+            //绘制所有
+            MapElement.DrawLineList();
+            //将Base转为标准对象
+            foreach (var item in MapElement.MapObject.MapForkLineList)
+            {
+                item.Path = SaveMap.Convert.BaseToForkLiePath(item.basePath);
+                item.SelectPath = SaveMap.Convert.BaseToForkLiePath(item.baseSelectPath);
+                item.StartRect = SaveMap.Convert.BaseToRectangle(item.baseStartRect);
+                item.EndRect = SaveMap.Convert.BaseToRectangle(item.baseEndRect);
+                item.textBlock = SaveMap.Convert.BaseToTextBlock(item.baseTextBlock);
+            }
+            //清空画布
+            MapElement.CvForkLine.Children.Clear();
+            //绘制所有
+            MapElement.DrawForkLineList();
         }
     }
 }
