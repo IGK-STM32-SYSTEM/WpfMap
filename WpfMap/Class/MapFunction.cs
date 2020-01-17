@@ -102,7 +102,7 @@ namespace WpfMap
             if (rfid == null)
                 return;
             rfid.SelectRectangle.Fill = CavnvasBase.GetSolid(120, Colors.Green);
-            rfid.SelectRectangle.StrokeThickness = 1;
+            rfid.SelectRectangle.StrokeThickness = 0.5;
             rfid.SelectRectangle.Stroke = CavnvasBase.GetSolid(180, Colors.Gray);
             rfid.SelectRectangle.Width = MapElement.RFID_Radius * 2;
             rfid.SelectRectangle.Height = MapElement.RFID_Radius * 2;
@@ -458,6 +458,7 @@ namespace WpfMap
                 Point start = figure.StartPoint;
                 //圆弧终点
                 Point end = arc.Point;
+                end.Y = -end.Y;
 
                 //圆弧半径
                 double radius = arc.Size.Width;

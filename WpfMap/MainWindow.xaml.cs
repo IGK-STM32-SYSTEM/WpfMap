@@ -96,6 +96,11 @@ namespace WpfMap
             //添加新元素
             if (MapOperate.NowMode == MapOperate.EnumMode.AddElement)
             {
+                if(MapOperate.NowType == MapOperate.EnumElementType.RFID)
+                {
+                    MapFunction.RemoveRFID(MapOperate.NowSelectIndex);
+                }
+                else
                 if (MapOperate.NowType == MapOperate.EnumElementType.RouteLine)
                 {
                     //如果是第一步
@@ -131,6 +136,7 @@ namespace WpfMap
                         MapFunction.ClearSelect();
                     }
                 }
+                
                 //结束添加
                 MapOperate.NowType = MapOperate.EnumElementType.None;
                 MapOperate.NowMode = MapOperate.EnumMode.EditElement;
@@ -642,7 +648,6 @@ namespace WpfMap
             //将Base转为标准对象
             foreach (var item in MapElement.MapObject.MapRFIDList)
             {
-                item.SelectRectangle = SaveMap.Convert.BaseToRectangle(item.baseSelectRectangle);
                 item.textBlock = SaveMap.Convert.BaseToTextBlock(item.baseTextBlock);
                 item.ellipse = SaveMap.Convert.BaseToEllipse(item.baseEllipse);
             }

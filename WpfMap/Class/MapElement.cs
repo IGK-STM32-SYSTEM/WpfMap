@@ -52,7 +52,6 @@ namespace WpfMap
             /// </summary>
             [JsonIgnore]
             public Rectangle SelectRectangle = new Rectangle();
-            public BaseRectangle baseSelectRectangle = new BaseRectangle();
         }
         //直线
         public class RouteLine : SaveMap.ShapesBase

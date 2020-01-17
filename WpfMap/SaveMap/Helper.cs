@@ -64,7 +64,6 @@ namespace WpfMap.SaveMap
             //将标准对象转为Base
             foreach (var item in MapElement.MapObject.MapRFIDList)
             {
-                item.baseSelectRectangle = SaveMap.Convert.RectangleToBase(item.SelectRectangle);
                 item.baseTextBlock = SaveMap.Convert.TextBlockToBase(item.textBlock);
                 item.baseEllipse = SaveMap.Convert.EllipseToBase(item.ellipse);
             }
@@ -83,7 +82,6 @@ namespace WpfMap.SaveMap
             //将Base转为标准对象
             foreach (var item in MapElement.MapObject.MapRFIDList)
             {
-                item.SelectRectangle = SaveMap.Convert.BaseToRectangle(item.baseSelectRectangle);
                 item.textBlock = SaveMap.Convert.BaseToTextBlock(item.baseTextBlock);
                 item.ellipse = SaveMap.Convert.BaseToEllipse(item.baseEllipse);
             }
