@@ -95,5 +95,74 @@ namespace WpfMap.SaveMap
             /// </summary>
             public PenLineCap StrokeDashCap { get; set; }
         }
+        public class BaseLine
+        {
+            /// <summary>
+            /// margin
+            /// </summary>
+            public Thickness Thickness { get; set; }
+            /// <summary>
+            /// 轮廓颜色
+            /// </summary>
+            public Brush Stroke { get; set; }
+            /// <summary>
+            /// StrokeDashArray
+            /// </summary>
+            public DoubleCollection StrokeDashArray { get; set; }
+            /// <summary>
+            /// StrokeDashCap
+            /// </summary>
+            public PenLineCap StrokeDashCap { get; set; }
+            /// <summary>
+            /// X1
+            /// </summary>
+            public double X1 { get; set; }
+            /// <summary>
+            /// X2
+            /// </summary>
+            public double X2 { get; set; }
+            /// <summary>
+            /// Y1
+            /// </summary>
+            public double Y1 { get; set; }
+            /// <summary>
+            /// Y2
+            /// </summary>
+            public double Y2 { get; set; }
+        }
+        /// <summary>
+        /// 圆弧专用的路径类
+        /// </summary>
+        public class BaseForkLiePath
+        {
+            /// <summary>
+            /// Figure的起点
+            /// </summary>
+            public Point FigureStartPoint { get; set; }
+            /// <summary>
+            /// arcPoint终点坐标
+            /// </summary>
+            public Point ArcStopPoint { get; set; }
+            /// <summary>
+            /// 圆弧半径
+            /// </summary>
+            public double Radius { get; set; }
+            /// <summary>
+            /// 旋转方向
+            /// </summary>
+            public SweepDirection sweepDirection { get; set; }
+            /// <summary>
+            /// margin
+            /// </summary>
+            public Thickness Thickness { get; set; }
+            /// <summary>
+            /// 轮廓厚度
+            /// </summary>
+            public double StrokeThickness { get; set; }
+            /// <summary>
+            /// 轮廓颜色
+            /// </summary>
+            public Brush Stroke { get; set; }
+        } 
     }
 }

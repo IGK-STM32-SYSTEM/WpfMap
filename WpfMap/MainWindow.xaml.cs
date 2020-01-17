@@ -584,34 +584,103 @@ namespace WpfMap
 
         private void Btn_SaveMap_Click(object sender, RoutedEventArgs e)
         {
+            //#region RFID
+            ////将标准对象转为Base
+            //foreach (var item in MapElement.MapRFIDList)
+            //{
+            //    item.baseSelectRectangle = SaveMap.Convert.RectangleToBase(item.SelectRectangle);
+            //    item.baseTextBlock = SaveMap.Convert.TextBlockToBase(item.textBlock);
+            //    item.baseEllipse = SaveMap.Convert.EllipseToBase(item.ellipse);
+            //}
+            ////转为json
+            //string str = JsonConvert.SerializeObject(MapElement.MapRFIDList, Formatting.Indented);
+            ////保存
+            //SaveMap.Helper.SaveToFile(str);
+            //#endregion
+            // #region Line
+            // //将标准对象转为Base
+            // foreach (var item in MapElement.MapLineList)
+            // {
+            //     item.baseEndRect = SaveMap.Convert.RectangleToBase(item.EndRect);
+            //     item.baseLine = SaveMap.Convert.LineToBase(item.line);
+            //     item.baseSelectLine = SaveMap.Convert.LineToBase(item.SelectLine);
+            //     item.baseStartRect = SaveMap.Convert.RectangleToBase(item.StartRect);
+            //     item.baseTextBlock = SaveMap.Convert.TextBlockToBase(item.textBlock);
+            // }
+            // //转为json
+            //string str = JsonConvert.SerializeObject(MapElement.MapLineList, Formatting.Indented);
+            // //保存
+            // SaveMap.Helper.SaveToFile(str);
+            // #endregion
+            #region ForkLine
             //将标准对象转为Base
-            foreach (var item in MapElement.MapRFIDList)
+            foreach (var item in MapElement.MapForkLineList)
             {
-                item.baseSelectRectangle = SaveMap.Convert.RectangleToBase(item.SelectRectangle);
+                item.basePath = SaveMap.Convert.ForkLiePathToBase(item.Path);
+                item.baseSelectPath = SaveMap.Convert.ForkLiePathToBase(item.SelectPath);
+                item.baseStartRect = SaveMap.Convert.RectangleToBase(item.StartRect);
+                item.baseEndRect = SaveMap.Convert.RectangleToBase(item.EndRect);
                 item.baseTextBlock = SaveMap.Convert.TextBlockToBase(item.textBlock);
-                item.baseEllipse = SaveMap.Convert.EllipseToBase(item.ellipse);
             }
             //转为json
-            string str = JsonConvert.SerializeObject(MapElement.MapRFIDList, Formatting.Indented);
+            string str = JsonConvert.SerializeObject(MapElement.MapForkLineList, Formatting.Indented);
             //保存
             SaveMap.Helper.SaveToFile(str);
+            #endregion
+
         }
 
         private void Btn_LoadMap_Click(object sender, RoutedEventArgs e)
         {
-            MapElement.MapRFIDList.Clear();
+            //#region RFID
+            //MapElement.MapRFIDList.Clear();
+            //string str = SaveMap.Helper.LoadFromFile();
+            ////json 转为对象
+            //MapElement.MapRFIDList = JsonConvert.DeserializeObject<List<MapElement.RFID>>(str);
+            ////将Base转为标准对象
+            //foreach (var item in MapElement.MapRFIDList)
+            //{
+            //    item.SelectRectangle = SaveMap.Convert.BaseToRectangle(item.baseSelectRectangle);
+            //    item.textBlock = SaveMap.Convert.BaseToTextBlock(item.baseTextBlock);
+            //    item.ellipse = SaveMap.Convert.BaseToEllipse(item.baseEllipse);
+            //}
+            ////绘制所有标签
+            //MapElement.DrawRFIDList();
+            //#endregion
+            //#region Line
+            //MapElement.MapLineList.Clear();
+            //string str = SaveMap.Helper.LoadFromFile();
+            ////json 转为对象
+            //MapElement.MapLineList = JsonConvert.DeserializeObject<List<MapElement.RouteLine>>(str);
+            ////将Base转为标准对象
+            //foreach (var item in MapElement.MapLineList)
+            //{
+            //    item.EndRect = SaveMap.Convert.BaseToRectangle(item.baseEndRect);
+            //    item.line = SaveMap.Convert.BaseToLine(item.baseLine);
+            //    item.SelectLine = SaveMap.Convert.BaseToLine(item.baseSelectLine);
+            //    item.StartRect = SaveMap.Convert.BaseToRectangle(item.baseStartRect);
+            //    item.textBlock = SaveMap.Convert.BaseToTextBlock(item.baseTextBlock);
+            //}
+            ////绘制所有直线
+            //MapElement.DrawLineList();
+            //#endregion
+            #region ForkLine
+            MapElement.MapForkLineList.Clear();
             string str = SaveMap.Helper.LoadFromFile();
             //json 转为对象
-            MapElement.MapRFIDList = JsonConvert.DeserializeObject<List<MapElement.RFID>>(str);
+            MapElement.MapForkLineList = JsonConvert.DeserializeObject<List<MapElement.RouteForkLine>>(str);
             //将Base转为标准对象
-            foreach (var item in MapElement.MapRFIDList)
+            foreach (var item in MapElement.MapForkLineList)
             {
-                item.SelectRectangle = SaveMap.Convert.BaseToRectangle(item.baseSelectRectangle);
+                item.Path  = SaveMap.Convert.BaseToForkLiePath(item.basePath);
+                item.SelectPath = SaveMap.Convert.BaseToForkLiePath(item.baseSelectPath);
+                item.StartRect = SaveMap.Convert.BaseToRectangle(item.baseStartRect);
+                item.EndRect = SaveMap.Convert.BaseToRectangle(item.baseEndRect);
                 item.textBlock = SaveMap.Convert.BaseToTextBlock(item.baseTextBlock);
-                item.ellipse = SaveMap.Convert.BaseToEllipse(item.baseEllipse);
             }
-            //绘制所有标签
-            MapElement.DrawRFIDList();
+            //绘制所有直线
+            MapElement.DrawForkLineList();
+            #endregion
         }
     }
 }

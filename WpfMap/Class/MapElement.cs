@@ -58,7 +58,7 @@ namespace WpfMap
         /// </summary>
         public static List<MapElement.RFID> MapRFIDList = new List<MapElement.RFID>();
         //直线
-        public class RouteLine
+        public class RouteLine : SaveMap.ShapesBase
         {
             /// <summary>
             /// 编号
@@ -67,30 +67,40 @@ namespace WpfMap
             /// <summary>
             /// 线条对象
             /// </summary>
+            [JsonIgnore]
             public Line line = new Line();
+            public BaseLine baseLine = new BaseLine();
             /// <summary>
             /// 起点矩形编辑器
             /// </summary>
+            [JsonIgnore]
             public Rectangle StartRect = new Rectangle();
+            public BaseRectangle baseStartRect = new BaseRectangle();
             /// <summary>
             /// 终点矩形编辑器
             /// </summary>
+            [JsonIgnore]
             public Rectangle EndRect = new Rectangle();
+            public BaseRectangle baseEndRect = new BaseRectangle();
             /// <summary>
             /// 选中提示线虚线
             /// </summary>
+            [JsonIgnore]
             public Line SelectLine = new Line();
+            public BaseLine baseSelectLine = new BaseLine();
             /// <summary>
             /// 编号显示文本
             /// </summary>
+            [JsonIgnore]
             public TextBlock textBlock = new TextBlock();
+            public BaseTextBlock baseTextBlock = new BaseTextBlock();
         }
         /// <summary>
         /// 直线集合
         /// </summary>
         public static List<MapElement.RouteLine> MapLineList = new List<MapElement.RouteLine>();
         //分叉线
-        public class RouteForkLine
+        public class RouteForkLine : SaveMap.ShapesBase
         {
             /// <summary>
             /// 编号
@@ -99,27 +109,27 @@ namespace WpfMap
             /// <summary>
             /// 路径
             /// </summary>
+            [JsonIgnore]
             public Path Path = new Path();
-            ///// <summary>
-            ///// 几何路径
-            ///// </summary>
-            //public PathGeometry PathGeometry = new PathGeometry();
-            //// <summary>
-            ///// 路径图
-            ///// </summary>
-            //public PathFigure Figure = new PathFigure();
+            public BaseForkLiePath basePath = new BaseForkLiePath();
             /// <summary>
             /// 起点矩形编辑器
             /// </summary>
+            [JsonIgnore]
             public Rectangle StartRect = new Rectangle();
+            public BaseRectangle baseStartRect = new BaseRectangle();
             /// <summary>
             /// 终点矩形编辑器
             /// </summary>
+            [JsonIgnore]
             public Rectangle EndRect = new Rectangle();
+            public BaseRectangle baseEndRect = new BaseRectangle();
             /// <summary>
             /// 选中提示虚线【路径】
             /// </summary>
+            [JsonIgnore]
             public Path SelectPath = new Path();
+            public BaseForkLiePath baseSelectPath = new BaseForkLiePath();
             ///// <summary>
             ///// 选中提示路径虚线【几何路径】
             ///// </summary>
@@ -131,7 +141,9 @@ namespace WpfMap
             /// <summary>
             /// 编号显示文本
             /// </summary>
+            [JsonIgnore]
             public TextBlock textBlock = new TextBlock();
+            public BaseTextBlock baseTextBlock = new BaseTextBlock();
         }
 
         /// <summary>
@@ -285,10 +297,6 @@ namespace WpfMap
         {
             //绘制
             MapElement.MapLineList[index].line.Stroke = Brushes.Black;
-            MapElement.MapLineList[index].line.X1 = 0;
-            MapElement.MapLineList[index].line.X2 = 0;
-            MapElement.MapLineList[index].line.Y1 = 0;
-            MapElement.MapLineList[index].line.Y2 = 0;
             MapElement.MapLineList[index].line.StrokeThickness = 3;//线的宽度
             //MapElement.MapLineList[index].line.HorizontalAlignment = HorizontalAlignment.Left;
             //MapElement.MapLineList[index].line.VerticalAlignment = VerticalAlignment.Center;
@@ -373,7 +381,18 @@ namespace WpfMap
             //MapElement.MapLineList[index].SelectLine.VerticalAlignment = VerticalAlignment.Center;
             MapElement.CvRouteLine.Children.Add(MapElement.MapLineList[index].SelectLine);
         }
-
+        /// <summary>
+        /// 绘制直线列表
+        /// </summary>
+        public static void DrawLineList()
+        {
+            if (MapLineList.Count == 0)
+                return;
+            for (int i = 0; i < MapLineList.Count; i++)
+            {
+                DrawRouteLine(i);
+            }
+        }
         /*-------路径分叉线---------------*/
         /// <summary>
         /// 绘制分叉【圆弧】
@@ -412,7 +431,7 @@ namespace WpfMap
         /// </summary>
         public static void DrawForkLine(int index)
         {
-
+            MapElement.CvForkLine.Children.Add(MapElement.MapForkLineList[index].Path);
         }
         /// <summary>
         /// 显示起点编辑器
@@ -473,12 +492,12 @@ namespace WpfMap
         /// </summary>
         public static void DrawForkLineList()
         {
-            //if (MapRFIDList.Count == 0)
-            //    return;
-            //for (int i = 0; i < MapRFIDList.Count; i++)
-            //{
-            //    DrawRFID(i);
-            //}
+            if (MapForkLineList.Count == 0)
+                return;
+            for (int i = 0; i < MapForkLineList.Count; i++)
+            {
+                DrawForkLine(i);
+            }
         }
 
         /// <summary>

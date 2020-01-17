@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace WpfMap.SaveMap
@@ -43,6 +45,37 @@ namespace WpfMap.SaveMap
             baseRectangle.Width = rectangle.Width;
             return baseRectangle;
         }
+        public static ShapesBase.BaseLine LineToBase(Line line)
+        {
+            ShapesBase.BaseLine baseLine = new ShapesBase.BaseLine();
+            baseLine.Stroke = line.Stroke;
+            baseLine.StrokeDashArray = line.StrokeDashArray;
+            baseLine.StrokeDashCap = line.StrokeDashCap;
+            baseLine.Thickness = line.Margin;
+            baseLine.X1 = line.X1;
+            baseLine.X2 = line.X2;
+            baseLine.Y1 = line.Y1;
+            baseLine.Y2 = line.Y2;
+            return baseLine;
+        }
+        public static ShapesBase.BaseForkLiePath ForkLiePathToBase(Path path)
+        {
+            ShapesBase.BaseForkLiePath baseForkLiePath = new ShapesBase.BaseForkLiePath();
+            baseForkLiePath.Stroke = path.Stroke;
+            baseForkLiePath.StrokeThickness = path.StrokeThickness;
+            baseForkLiePath.Thickness = path.Margin;
+
+            //找到圆弧起点
+            PathGeometry pathGeometry = path.Data as PathGeometry;
+            PathFigure figure = pathGeometry.Figures.First();
+            ArcSegment arc = figure.Segments.First() as ArcSegment;
+            baseForkLiePath.ArcStopPoint = arc.Point;
+            baseForkLiePath.FigureStartPoint = figure.StartPoint;
+            baseForkLiePath.Radius = arc.Size.Width;
+            baseForkLiePath.sweepDirection = arc.SweepDirection;
+
+            return baseForkLiePath;
+        }
         #endregion
 
         #region 基本类型转原始
@@ -78,6 +111,43 @@ namespace WpfMap.SaveMap
             rectangle.Margin = baseRectangle.Thickness;
             rectangle.Width = baseRectangle.Width;
             return rectangle;
+        }
+        public static Line BaseToLine(ShapesBase.BaseLine baseLine)
+        {
+            Line line = new Line();
+            line.Stroke = baseLine.Stroke;
+            line.StrokeDashArray = baseLine.StrokeDashArray;
+            line.StrokeDashCap = baseLine.StrokeDashCap;
+            line.Margin = baseLine.Thickness;
+            line.X1 = baseLine.X1;
+            line.X2 = baseLine.X2;
+            line.Y1 = baseLine.Y1;
+            line.Y2 = baseLine.Y2;
+            return line;
+        }
+        public static Path BaseToForkLiePath(ShapesBase.BaseForkLiePath baseForkLiePath)
+        {
+            Path path = new Path();
+            path.Stroke = baseForkLiePath.Stroke;
+            path.StrokeThickness = baseForkLiePath.StrokeThickness;
+            path.Margin = baseForkLiePath.Thickness;
+            //定义圆弧半径
+            double radius = baseForkLiePath.Radius;
+            PathGeometry pathGeometry = new PathGeometry();
+            PathFigure figure = new PathFigure();
+            //路径图起点坐标
+            figure.StartPoint = baseForkLiePath.FigureStartPoint;
+            ArcSegment arc = new ArcSegment(
+               baseForkLiePath.ArcStopPoint,
+               new Size(radius, radius),
+               0,
+               false,
+               baseForkLiePath.sweepDirection,
+               true);
+            figure.Segments.Add(arc);
+            pathGeometry.Figures.Add(figure);
+            path.Data = pathGeometry;
+            return path;
         }
         #endregion
     }
