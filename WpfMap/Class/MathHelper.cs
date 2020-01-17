@@ -84,10 +84,10 @@ namespace WpfMap
         /// <param name="rect"></param>
         /// <param name="point"></param>
         /// <returns></returns>
-        public static bool PointInRect(Rect rect,Point point)
+        public static bool PointInRect(Rect rect, Point point)
         {
-            Point start=new Point ();
-            Point end = new Point ();
+            Point start = new Point();
+            Point end = new Point();
             start.X = rect.X;
             start.Y = rect.Y;
             end.X = rect.X + rect.Width;
@@ -96,6 +96,14 @@ namespace WpfMap
                 return true;
             else
                 return false;
+        }
+        public static bool PointInRect(Rectangle rectangle, Point point)
+        {
+            Rect rect = new Rect();
+            rect.Location = new Point(rectangle.Margin.Left, rectangle.Margin.Top);
+            rect.Width = rectangle.Width;
+            rect.Height = rectangle.Height;
+            return PointInRect(rect, point);
         }
         /// <summary>
         /// 点到线段的垂线长度

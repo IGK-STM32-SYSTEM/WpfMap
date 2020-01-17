@@ -31,6 +31,7 @@ namespace WpfMap
             MapElement.CvRFID = cvRFID;//标签
             MapElement.CvRouteLine = cvLine;//直路线
             MapElement.CvForkLine = cvForkLine;//分叉路线
+            MapElement.CvOperate = cvOperate;//操作层
 
             //画背景栅格，大小为20*20
             MapElement.DrawGrid(1024 * 2, 768 * 2);
@@ -101,7 +102,7 @@ namespace WpfMap
                     if (MapOperate.AddStep == 1)
                     {
                         //清除图形
-                        MapFunction.ClearAllSelect();
+                        MapFunction.ClearSelect();
                         //删除新增线条
                         MapElement.MapObject.MapLineList.RemoveAt(MapOperate.NowSelectIndex);
                     }
@@ -109,7 +110,7 @@ namespace WpfMap
                     if (MapOperate.AddStep == 2)
                     {
                         //清除图形
-                        MapFunction.ClearAllSelect();
+                        MapFunction.ClearSelect();
                     }
                 }
                 else
@@ -119,7 +120,7 @@ namespace WpfMap
                     if (MapOperate.AddStep == 1)
                     {
                         //清除图形
-                        MapFunction.ClearAllSelect();
+                        MapFunction.ClearSelect();
                         //删除新增线条
                         MapElement.MapObject.MapForkLineList.RemoveAt(MapOperate.NowSelectIndex);
                     }
@@ -127,7 +128,7 @@ namespace WpfMap
                     if (MapOperate.AddStep == 2)
                     {
                         //清除图形
-                        MapFunction.ClearAllSelect();
+                        MapFunction.ClearSelect();
                     }
                 }
                 //结束添加
@@ -170,7 +171,7 @@ namespace WpfMap
                         //切换到调整整体
                         MapOperate.ElementEditMode = MapOperate.EnumElementEditMode.All;
                 }
-                //情况1：如果目前是有选中的直线
+                //情况1：如果目前是有选中的分叉线【圆弧】
                 if (MapOperate.NowSelectIndex != -1 && MapOperate.NowType == MapOperate.EnumElementType.RouteForkLine)
                 {
                     //1.判断光标是否在起点编辑器
@@ -208,7 +209,7 @@ namespace WpfMap
                     else
                     {
                         //清除选中
-                        MapFunction.ClearAllSelect();
+                        MapFunction.ClearSelect();
                         //设置该点选中
                         MapFunction.SetRouteLineIsSelected(rs);
                         //更新当前选中索引
@@ -236,7 +237,7 @@ namespace WpfMap
                     else
                     {
                         //清除选中
-                        MapFunction.ClearAllSelect();
+                        MapFunction.ClearSelect();
                         //设置该点选中
                         MapFunction.SetForkLineIsSelected(rs);
                         //更新当前选中索引
@@ -260,7 +261,9 @@ namespace WpfMap
                     }
                     else
                     {
-                        //清除选中
+                        //清除单个选中
+                        MapFunction.ClearSelect();
+                        //清除所有选中
                         MapFunction.ClearAllSelect();
                         //设置该点选中
                         MapFunction.SetRFIDIsSelected(rs);
@@ -273,8 +276,14 @@ namespace WpfMap
                 }
 
                 //清除选中
+                MapFunction.ClearSelect();
+                //清除所有选中
                 MapFunction.ClearAllSelect();
                 MapOperate.NowSelectIndex = -1;
+                //进入多选模式
+                MapOperate.NowMode = MapOperate.EnumMode.MultiEdit;
+                //清除移动状态【是否按住左键移动过】
+                MapOperate.MovedAfterLeftBtn = false;
             }
         }
         //左键抬起
@@ -285,6 +294,20 @@ namespace WpfMap
             //编辑属性
             if (MapOperate.NowMode == MapOperate.EnumMode.EditElement)
             {
+            }
+            else
+            if (MapOperate.NowMode == MapOperate.EnumMode.MultiEdit)
+            {
+                //是否按住左键移动过,如果没有移动就不能计算选中
+                if (MapOperate.MovedAfterLeftBtn)
+                {
+                    //清除选中框
+                    MapOperate.ClearMultiSelectRect();
+                    //选中框内元素
+                    MapFunction.GetMultiSelectedObject();
+                }
+                //恢复单个编辑模式
+                MapOperate.NowMode = MapOperate.EnumMode.EditElement;
             }
             else
             //添加新元素
@@ -375,6 +398,9 @@ namespace WpfMap
             Point nowPoint = e.GetPosition(gridDraw);
             //显示当前坐标到界面
             MapOperate.ViewInfo.View = new Point(Math.Round(nowPoint.X, 0), Math.Round(nowPoint.Y, 0));
+            //计算左键按下移动偏差
+            MapOperate.mouseLeftBtnDownMoveDiff.X = nowPoint.X - MapOperate.mouseLeftBtnDownMoveLast.X;
+            MapOperate.mouseLeftBtnDownMoveDiff.Y = nowPoint.Y - MapOperate.mouseLeftBtnDownMoveLast.Y;
 
             //移动视图【如果右键按下】
             if (e.RightButton == MouseButtonState.Pressed)
@@ -388,64 +414,69 @@ namespace WpfMap
                 //更新圆点坐标,保留两位小数
                 MapOperate.ViewInfo.Origin = new Point(Math.Round(tlt.X, 0), Math.Round(tlt.Y, 0));
             }
+
             //编辑属性
             if (MapOperate.NowMode == MapOperate.EnumMode.EditElement)
             {
                 //左键按住移动位置【调整元素位置】
-                if (e.LeftButton == MouseButtonState.Pressed && MapOperate.NowSelectIndex != -1)
+                if (e.LeftButton == MouseButtonState.Pressed)
                 {
-                    //计算左键按下移动偏差
-                    MapOperate.mouseLeftBtnDownMoveDiff.X = nowPoint.X - MapOperate.mouseLeftBtnDownMoveLast.X;
-                    MapOperate.mouseLeftBtnDownMoveDiff.Y = nowPoint.Y - MapOperate.mouseLeftBtnDownMoveLast.Y;
-                    //移动标签
-                    if (MapOperate.NowType == MapOperate.EnumElementType.RFID)
-                        MapFunction.MoveRFIDTo(MapOperate.NowSelectIndex, nowPoint);
-                    else
-                    //移动直线
-                    if (MapOperate.NowType == MapOperate.EnumElementType.RouteLine)
+                    if (MapOperate.NowSelectIndex != -1)
                     {
-                        switch (MapOperate.ElementEditMode)
+                        //移动标签
+                        if (MapOperate.NowType == MapOperate.EnumElementType.RFID)
+                            MapFunction.MoveRFIDTo(MapOperate.NowSelectIndex, nowPoint);
+                        else
+                        //移动直线
+                        if (MapOperate.NowType == MapOperate.EnumElementType.RouteLine)
                         {
-                            case MapOperate.EnumElementEditMode.Start:
-                                MapFunction.MoveRouteLineStart(MapOperate.NowSelectIndex, nowPoint);
-                                break;
-                            case MapOperate.EnumElementEditMode.End:
-                                MapFunction.MoveRouteLineEnd(MapOperate.NowSelectIndex, nowPoint);
-                                break;
-                            case MapOperate.EnumElementEditMode.All:
-                                MapFunction.MoveRouteLineAll(MapOperate.NowSelectIndex, nowPoint);
-                                break;
-                            default:
-                                break;
+                            switch (MapOperate.ElementEditMode)
+                            {
+                                case MapOperate.EnumElementEditMode.Start:
+                                    MapFunction.MoveRouteLineStart(MapOperate.NowSelectIndex, nowPoint);
+                                    break;
+                                case MapOperate.EnumElementEditMode.End:
+                                    MapFunction.MoveRouteLineEnd(MapOperate.NowSelectIndex, nowPoint);
+                                    break;
+                                case MapOperate.EnumElementEditMode.All:
+                                    MapFunction.MoveRouteLineAll(MapOperate.NowSelectIndex, nowPoint);
+                                    break;
+                                default:
+                                    break;
 
+                            }
                         }
-                    }
-                    else
-                    //移动分叉【圆弧】
-                    if (MapOperate.NowType == MapOperate.EnumElementType.RouteForkLine)
-                    {
-                        switch (MapOperate.ElementEditMode)
+                        else
+                        //移动分叉【圆弧】
+                        if (MapOperate.NowType == MapOperate.EnumElementType.RouteForkLine)
                         {
-                            case MapOperate.EnumElementEditMode.Start:
-                                MapFunction.MoveForkLineStartForAdd(MapOperate.NowSelectIndex, nowPoint);
-                                break;
-                            case MapOperate.EnumElementEditMode.End:
-                                MapFunction.MoveForkLineEnd(MapOperate.NowSelectIndex, nowPoint);
-                                break;
-                            case MapOperate.EnumElementEditMode.All:
-                                MapFunction.MoveForkLineAll(MapOperate.NowSelectIndex, nowPoint);
-                                break;
-                            default:
-                                break;
+                            switch (MapOperate.ElementEditMode)
+                            {
+                                case MapOperate.EnumElementEditMode.Start:
+                                    MapFunction.MoveForkLineStartForAdd(MapOperate.NowSelectIndex, nowPoint);
+                                    break;
+                                case MapOperate.EnumElementEditMode.End:
+                                    MapFunction.MoveForkLineEnd(MapOperate.NowSelectIndex, nowPoint);
+                                    break;
+                                case MapOperate.EnumElementEditMode.All:
+                                    MapFunction.MoveForkLineAll(MapOperate.NowSelectIndex, nowPoint);
+                                    break;
+                                default:
+                                    break;
 
+                            }
                         }
-                    }
-                    else
-                    //框选模式
-                    {
-                        //更新选择框【起点是左键落下的地方，宽度和高度根据偏差获取】
                     }
                 }
+            }
+            else
+            //多选模式，多个编辑
+            if (MapOperate.NowMode == MapOperate.EnumMode.MultiEdit)
+            {
+                //标记移动状态【是否按住左键移动过】
+                MapOperate.MovedAfterLeftBtn = true;
+                //绘制选择框   
+                MapOperate.DrawMultiSelectRect(nowPoint);
             }
             else
             //添加新元素
@@ -547,7 +578,7 @@ namespace WpfMap
         private void Btn_Add_RFID_Click(object sender, RoutedEventArgs e)
         {
             //清除选中状态
-            MapFunction.ClearAllSelect();
+            MapFunction.ClearSelect();
             MapOperate.NowType = MapOperate.EnumElementType.RFID;
             //添加一个RFID
             MapOperate.NowSelectIndex = MapElement.AddRFIDAndShow();
@@ -557,7 +588,7 @@ namespace WpfMap
         private void Btn_Add_RouteLine_Click(object sender, RoutedEventArgs e)
         {
             //清除选中状态
-            MapFunction.ClearAllSelect();
+            MapFunction.ClearSelect();
             //选中类型为直线
             MapOperate.NowType = MapOperate.EnumElementType.RouteLine;
             //添加直线
@@ -572,7 +603,7 @@ namespace WpfMap
         private void Btn_Add_RouteForkLine_Click(object sender, RoutedEventArgs e)
         {
             //清除选中状态
-            MapFunction.ClearAllSelect();
+            MapFunction.ClearSelect();
             //选中类型为分叉线
             MapOperate.NowType = MapOperate.EnumElementType.RouteForkLine;
             //添加分叉线
@@ -585,7 +616,7 @@ namespace WpfMap
             MapOperate.NowMode = MapOperate.EnumMode.AddElement;
         }
         #endregion
-   
+
         private void Btn_SaveMap_Click(object sender, RoutedEventArgs e)
         {
             //保存地图【转换映射】
