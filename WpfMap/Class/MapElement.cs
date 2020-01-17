@@ -20,7 +20,7 @@ namespace WpfMap
         public static int ForkLineArc_Radius = 20;
 
         //背景栅格
-        public static int GridSize = 20;
+        public static int GridSize = 10;
         //定义画布对象
         public static Canvas CvGrid;//栅格
         public static Canvas CvRFID;//标签
@@ -28,7 +28,7 @@ namespace WpfMap
         public static Canvas CvForkLine;//分叉路线
 
         //标签类
-        public class RFID
+        public class RFID:SaveMap.ShapesBase
         {
             /// <summary>
             /// 编号
@@ -37,16 +37,21 @@ namespace WpfMap
             /// <summary>
             /// 绘图对象
             /// </summary>
+            [JsonIgnore]
             public Ellipse ellipse = new Ellipse();
+            public BaseEllipse baseEllipse = new BaseEllipse();
             /// <summary>
             /// 绘文字对象
             /// </summary>
-            //[JsonIgnore]
+            [JsonIgnore]
             public TextBlock textBlock = new TextBlock();
+            public BaseTextBlock baseTextBlock = new BaseTextBlock();
             /// <summary>
             /// 选中框
             /// </summary>
-            public Rectangle selectRectangle = new Rectangle();
+            [JsonIgnore]
+            public Rectangle SelectRectangle = new Rectangle();
+            public BaseRectangle baseSelectRectangle = new BaseRectangle();
         }
         /// <summary>
         /// 标签绘图列表

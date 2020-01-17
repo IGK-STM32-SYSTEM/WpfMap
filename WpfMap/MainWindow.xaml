@@ -12,9 +12,10 @@
         >
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="33*"/>
-            <RowDefinition Height="343*"/>
             <RowDefinition Height="43*"/>
+            <RowDefinition Height="70*"/>
+            <RowDefinition Height="340*"/>
+            <RowDefinition Height="51*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="107*"/>
@@ -22,14 +23,14 @@
             <ColumnDefinition Width="72*"/>
         </Grid.ColumnDefinitions>
         <!--绘图区-->
-        <Border  Grid.Column="1" Grid.Row="1"  BorderBrush="DarkCyan"  BorderThickness="1"/>
+        <Border  Grid.Column="1" Grid.Row="1"  BorderBrush="DarkCyan"  BorderThickness="1" Grid.RowSpan="2"/>
         <ScrollViewer Grid.Column="1" Grid.Row="1" x:Name="drawViewScroll" VerticalScrollBarVisibility="Disabled"
                           PreviewMouseWheel="image_PreviewMouseWheel" 
                           PreviewMouseRightButtonDown="imageRobot_PreviewMouseRightButtonDown" 
                           PreviewMouseMove="imageRobot_PreviewMouseMove"
                           PreviewMouseRightButtonUp="imageRobot_PreviewMouseRightButtonUp"
                           PreviewMouseLeftButtonDown="imageRobot_PreviewMouseLeftButtonDown" 
-                          PreviewMouseLeftButtonUp="imageRobot_PreviewMouseLeftButtonUp"
+                          PreviewMouseLeftButtonUp="imageRobot_PreviewMouseLeftButtonUp" Grid.RowSpan="2"
                           >
             <Grid  x:Name="gridDraw">
                 <Grid.RenderTransform>
@@ -43,7 +44,7 @@
             </Grid>
         </ScrollViewer>
         <!--状态栏-->
-        <Border Grid.Row="2" Grid.Column="1" BorderThickness="0,2,0,0">
+        <Border Grid.Row="3" Grid.Column="1" BorderThickness="0,2,0,0">
             <StackPanel Name="bottomstackPanel" Orientation="Horizontal">
                 <Label Content="缩放:" VerticalAlignment="Center"/>
                 <Label Content="{Binding Scale}" VerticalAlignment="Center"/>
@@ -60,5 +61,7 @@
             <Button x:Name="Btn_Add_RouteLine" Content="直线" Click="Btn_Add_RouteLine_Click" Margin="10,0" VerticalAlignment="Center"/>
             <Button x:Name="Btn_Add_RouteForkLine" Content="分叉线" Click="Btn_Add_RouteForkLine_Click" Margin="10,0" VerticalAlignment="Center"/>
         </StackPanel>
+        <Button x:Name="Btn_SaveMap" Content="保存地图" Click="Btn_SaveMap_Click"  Margin="4,22,47,1" VerticalAlignment="Center" RenderTransformOrigin="-0.036,0.842" Height="20"/>
+        <Button x:Name="Btn_LoadMap" Content="加载地图" Click="Btn_LoadMap_Click"  Margin="4,2,47,23" VerticalAlignment="Center" RenderTransformOrigin="-0.036,0.842" Height="18"/>
     </Grid>
 </Window>

@@ -80,7 +80,7 @@ namespace WpfMap
             MapElement.MapRFIDList[index].ellipse.Margin = thickness;
 
             //选择框跟随
-            MapElement.MapRFIDList[index].selectRectangle.Margin = thickness;
+            MapElement.MapRFIDList[index].SelectRectangle.Margin = thickness;
 
             //文字跟随即可
             thickness.Left -= diff_x - 15;
@@ -97,18 +97,18 @@ namespace WpfMap
         {
             if (index == -1)
                 return;
-            if (MapElement.CvRFID.Children.Contains(MapElement.MapRFIDList[index].selectRectangle))
+            if (MapElement.CvRFID.Children.Contains(MapElement.MapRFIDList[index].SelectRectangle))
                 return;
-            MapElement.MapRFIDList[index].selectRectangle.Fill = null;
-            MapElement.MapRFIDList[index].selectRectangle.StrokeThickness = 0.8;
-            MapElement.MapRFIDList[index].selectRectangle.Stroke = Brushes.Black;
-            MapElement.MapRFIDList[index].selectRectangle.Width = MapElement.RFID_Radius * 2;
-            MapElement.MapRFIDList[index].selectRectangle.Height = MapElement.RFID_Radius * 2;
-            MapElement.MapRFIDList[index].selectRectangle.Margin = MapElement.MapRFIDList[index].ellipse.Margin;
+            MapElement.MapRFIDList[index].SelectRectangle.Fill = null;
+            MapElement.MapRFIDList[index].SelectRectangle.StrokeThickness = 0.8;
+            MapElement.MapRFIDList[index].SelectRectangle.Stroke = Brushes.Black;
+            MapElement.MapRFIDList[index].SelectRectangle.Width = MapElement.RFID_Radius * 2;
+            MapElement.MapRFIDList[index].SelectRectangle.Height = MapElement.RFID_Radius * 2;
+            MapElement.MapRFIDList[index].SelectRectangle.Margin = MapElement.MapRFIDList[index].ellipse.Margin;
             //显示虚线
-            MapElement.MapRFIDList[index].selectRectangle.StrokeDashArray = new DoubleCollection() { 3, 5 };
-            MapElement.MapRFIDList[index].selectRectangle.StrokeDashCap = PenLineCap.Triangle;
-            MapElement.CvRFID.Children.Add(MapElement.MapRFIDList[index].selectRectangle);
+            MapElement.MapRFIDList[index].SelectRectangle.StrokeDashArray = new DoubleCollection() { 3, 5 };
+            MapElement.MapRFIDList[index].SelectRectangle.StrokeDashCap = PenLineCap.Triangle;
+            MapElement.CvRFID.Children.Add(MapElement.MapRFIDList[index].SelectRectangle);
         }
         /// <summary>
         /// 设置标到正常状态
@@ -119,7 +119,7 @@ namespace WpfMap
         {
             if (index == -1)
                 return;
-            MapElement.CvRFID.Children.Remove(MapElement.MapRFIDList[index].selectRectangle);
+            MapElement.CvRFID.Children.Remove(MapElement.MapRFIDList[index].SelectRectangle);
         }
         /// <summary>
         /// 删除
@@ -130,7 +130,7 @@ namespace WpfMap
             //从画布移除
             MapElement.CvRFID.Children.Remove(MapElement.MapRFIDList[index].ellipse);
             MapElement.CvRFID.Children.Remove(MapElement.MapRFIDList[index].textBlock);
-            MapElement.CvRFID.Children.Remove(MapElement.MapRFIDList[index].selectRectangle);
+            MapElement.CvRFID.Children.Remove(MapElement.MapRFIDList[index].SelectRectangle);
             //从列表移除
             MapElement.MapRFIDList.RemoveAt(index);
         }
