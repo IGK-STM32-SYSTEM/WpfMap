@@ -66,14 +66,16 @@ namespace WpfMap.SaveMap
             baseForkLiePath.Thickness = path.Margin;
 
             //找到圆弧起点
-            PathGeometry pathGeometry = path.Data as PathGeometry;
-            PathFigure figure = pathGeometry.Figures.First();
-            ArcSegment arc = figure.Segments.First() as ArcSegment;
-            baseForkLiePath.ArcStopPoint = arc.Point;
-            baseForkLiePath.FigureStartPoint = figure.StartPoint;
-            baseForkLiePath.Radius = arc.Size.Width;
-            baseForkLiePath.sweepDirection = arc.SweepDirection;
-
+            if (path.Data != null)
+            {
+                PathGeometry pathGeometry = path.Data as PathGeometry;
+                PathFigure figure = pathGeometry.Figures.First();
+                ArcSegment arc = figure.Segments.First() as ArcSegment;
+                baseForkLiePath.ArcStopPoint = arc.Point;
+                baseForkLiePath.FigureStartPoint = figure.StartPoint;
+                baseForkLiePath.Radius = arc.Size.Width;
+                baseForkLiePath.sweepDirection = arc.SweepDirection;
+            }
             return baseForkLiePath;
         }
         #endregion
