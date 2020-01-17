@@ -66,8 +66,8 @@ namespace WpfMap
         /// <param name="canvas">画布</param>
         public static void MoveRFIDTo(int index, Point point)
         {
-            point.X -= MapElement.GridSize / 2;
-            point.Y -= MapElement.GridSize / 2;
+            point.X -= MapElement.RFID_Radius-MapElement.GridSize/2;
+            point.Y -= MapElement.RFID_Radius - MapElement.GridSize / 2;
 
             //计算xy方向偏差
             Thickness thickness = MapElement.MapObject.MapRFIDList[index].ellipse.Margin;
@@ -308,20 +308,18 @@ namespace WpfMap
 
             //提高变化阈值【当光标超过半个栅格就发生跳格】
             if (difx > 0)
-                difx += MapElement.GridSize / 2;
+                difx += MapElement.GridSize* 0.6;
             else
-                difx -= MapElement.GridSize / 2;
+                difx -= MapElement.GridSize * 0.6;
             if (dify > 0)
-                dify += MapElement.GridSize / 2;
+                dify += MapElement.GridSize * 0.6;
             else
-                dify -= MapElement.GridSize / 2;
+                dify -= MapElement.GridSize * 0.6;
 
             //对齐栅格
             difx -= difx % MapElement.GridSize;
             dify -= dify % MapElement.GridSize;
-            //未达到移动标准，退出，提高效率
-            if (Math.Abs(difx) == 0 && Math.Abs(dify) == 0)
-                return;
+            Console.WriteLine("x:{0},y:{1}",difx,dify);
 
             //计算起点编辑器和终点编辑器margin的偏差
             double margin_Diff_Left = MapElement.MapObject.MapLineList[index].EndRect.Margin.Left - MapElement.MapObject.MapLineList[index].StartRect.Margin.Left;
@@ -724,9 +722,6 @@ namespace WpfMap
             //对齐栅格
             difx -= difx % MapElement.GridSize;
             dify -= dify % MapElement.GridSize;
-            //未达到移动标准，退出，提高效率
-            if (Math.Abs(difx) == 0 && Math.Abs(dify) == 0)
-                return;
 
             //移动线
             Thickness tk = new Thickness();
@@ -926,7 +921,7 @@ namespace WpfMap
                 //做margin平移
                 end.X += item.Path.Margin.Left;
                 end.Y += item.Path.Margin.Top;
-               
+
                 //判断是否在选框矩形内
                 bool rs1 = MathHelper.PointInRect(selectRectangle, start);
                 bool rs2 = MathHelper.PointInRect(selectRectangle, end);
