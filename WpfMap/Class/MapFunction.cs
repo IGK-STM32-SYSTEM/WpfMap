@@ -856,6 +856,9 @@ namespace WpfMap
                 default: break;
             }
         }
+        /// <summary>
+        /// 设置所有选中状态的元素为正常状态，并清空多选列表
+        /// </summary>
         public static void ClearAllSelect()
         {
             //清除RFID

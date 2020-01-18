@@ -566,38 +566,73 @@ namespace WpfMap
         #region 快捷键事件
         private void drawViewScroll_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            //快捷键VF，重置视图
+            //V+F【重置视图】
             if (MapOperate.Userkey.Key == Key.V && e.Key == Key.F)
             {
                 RestView();
             }
             else
+            //Delete【删除】
             if (e.Key == Key.Delete)
             {
-                //是否有选中的
-                if (MapOperate.NowSelectIndex != -1)
+                //编辑单个
+                if (MapOperate.NowMode == MapOperate.EnumMode.EditElement)
                 {
-                    switch (MapOperate.NowType)
+                    //是否有选中的
+                    if (MapOperate.NowSelectIndex != -1)
                     {
-                        case MapOperate.EnumElementType.None:
-                            break;
-                        //选中了RFID
-                        case MapOperate.EnumElementType.RFID:
-                            MapFunction.RemoveRFID(MapOperate.NowSelectIndex);
-                            MapOperate.NowSelectIndex = -1;
-                            break;
-                        case MapOperate.EnumElementType.RouteLine:
-                            MapFunction.RemoveRouteLine(MapOperate.NowSelectIndex);
-                            MapOperate.NowSelectIndex = -1;
-                            break;
-                        case MapOperate.EnumElementType.RouteForkLine:
-                            MapFunction.RemoveForkLine(MapOperate.NowSelectIndex);
-                            MapOperate.NowSelectIndex = -1;
-                            break;
-                        default:
-                            break;
+                        switch (MapOperate.NowType)
+                        {
+                            case MapOperate.EnumElementType.None:
+                                break;
+                            //选中了RFID
+                            case MapOperate.EnumElementType.RFID:
+                                MapFunction.RemoveRFID(MapOperate.NowSelectIndex);
+                                MapOperate.NowSelectIndex = -1;
+                                break;
+                            case MapOperate.EnumElementType.RouteLine:
+                                MapFunction.RemoveRouteLine(MapOperate.NowSelectIndex);
+                                MapOperate.NowSelectIndex = -1;
+                                break;
+                            case MapOperate.EnumElementType.RouteForkLine:
+                                MapFunction.RemoveForkLine(MapOperate.NowSelectIndex);
+                                MapOperate.NowSelectIndex = -1;
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
+                else
+                //编辑多个
+                if (MapOperate.NowMode == MapOperate.EnumMode.MultiEdit)
+                {
+                    //删除已选中所有元素
+                    //RFID
+                    foreach (var item in MapOperate.MultiSelected.RFIDList)
+                    {
+                        MapFunction.RemoveRFID(MapElement.MapObject.RFIDList.IndexOf(item));
+                    }
+                    //Line
+                    foreach (var item in MapOperate.MultiSelected.LineList)
+                    {
+                        MapFunction.RemoveRouteLine(MapElement.MapObject.LineList.IndexOf(item));
+                    }
+                    //ForkLine
+                    foreach (var item in MapOperate.MultiSelected.ForkLineList)
+                    {
+                        MapFunction.RemoveForkLine(MapElement.MapObject.ForkLineList.IndexOf(item));
+                    }
+                    //清除已选中
+                    MapFunction.ClearAllSelect();
+                }
+
+            }
+            else
+            //Ctrl+C【复制】
+            if (MapOperate.Userkey.Key == Key.LeftCtrl && e.Key == Key.C)
+            {
+
             }
             //记录当前按键
             MapOperate.Userkey.Key = e.Key;

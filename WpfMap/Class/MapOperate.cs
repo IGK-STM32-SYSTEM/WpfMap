@@ -139,7 +139,10 @@ namespace WpfMap
         /// 已被选中对象【多选】
         /// </summary>
         public static MapElement.MapObjectClass MultiSelected = new MapElement.MapObjectClass();
-
+        /// <summary>
+        /// 剪贴板元素集合
+        /// </summary>
+        public static MapElement.MapObjectClass Clipboard= new MapElement.MapObjectClass();
 
         /// <summary>
         /// 绘制选择框
