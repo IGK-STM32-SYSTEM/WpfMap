@@ -34,7 +34,7 @@ namespace WpfMap
             MapElement.CvOperate = cvOperate;//操作层
 
             //画背景栅格，大小为20*20
-            MapElement.DrawGrid(1024 * 2, 768 * 2);
+            MapElement.DrawGrid(1024 * 4, 768 * 4);
         }
 
         private void UpdateBottomInfo()
@@ -109,7 +109,7 @@ namespace WpfMap
                         //清除图形
                         MapFunction.ClearSelect();
                         //删除新增线条
-                        MapElement.MapObject.LineList.RemoveAt(MapOperate.NowSelectIndex);
+                        MapElement.MapObject.Lines.RemoveAt(MapOperate.NowSelectIndex);
                     }
                     else
                     if (MapOperate.AddStep == 2)
@@ -127,7 +127,7 @@ namespace WpfMap
                         //清除图形
                         MapFunction.ClearSelect();
                         //删除新增线条
-                        MapElement.MapObject.ForkLineList.RemoveAt(MapOperate.NowSelectIndex);
+                        MapElement.MapObject.ForkLines.RemoveAt(MapOperate.NowSelectIndex);
                     }
                     else
                     if (MapOperate.AddStep == 2)
@@ -203,7 +203,7 @@ namespace WpfMap
                 if (rs != -1)
                 {
                     //记录当前margin
-                    MapOperate.ElementMarginLast = MapElement.MapObject.LineList[rs].line.Margin;
+                    MapOperate.ElementMarginLast = MapElement.MapObject.Lines[rs].line.Margin;
 
                     //如果选中的和之前是同一个元素
                     if (rs == MapOperate.NowSelectIndex && MapOperate.NowType == MapOperate.EnumElementType.RouteLine)
@@ -231,7 +231,7 @@ namespace WpfMap
                 if (rs != -1)
                 {
                     //记录当前margin
-                    MapOperate.ElementMarginLast = MapElement.MapObject.ForkLineList[rs].Path.Margin;
+                    MapOperate.ElementMarginLast = MapElement.MapObject.ForkLines[rs].Path.Margin;
 
                     //如果选中的和之前是同一个元素
                     if (rs == MapOperate.NowSelectIndex && MapOperate.NowType == MapOperate.EnumElementType.RouteForkLine)
@@ -329,9 +329,9 @@ namespace WpfMap
                     //计算选中的元素
                     MapFunction.GetMultiSelectedObject();
                     //如果一个都没有选上，退出多选状态
-                    if (MapOperate.MultiSelected.RFIDList.Count == 0
-                        && MapOperate.MultiSelected.LineList.Count == 0
-                        && MapOperate.MultiSelected.ForkLineList.Count == 0)
+                    if (MapOperate.MultiSelected.RFIDS.Count == 0
+                        && MapOperate.MultiSelected.Lines.Count == 0
+                        && MapOperate.MultiSelected.ForkLines.Count == 0)
                     {
                         //退出多选模式
                         MapOperate.NowMode = MapOperate.EnumMode.EditElement;
@@ -436,6 +436,7 @@ namespace WpfMap
         {
             //获取当前坐标
             Point nowPoint = e.GetPosition(gridDraw);
+            MapOperate.NowPoint = nowPoint;
             //显示当前坐标到界面
             MapOperate.ViewInfo.View = new Point(Math.Round(nowPoint.X, 0), Math.Round(nowPoint.Y, 0));
             //计算左键按下移动偏差
@@ -609,30 +610,74 @@ namespace WpfMap
                 {
                     //删除已选中所有元素
                     //RFID
-                    foreach (var item in MapOperate.MultiSelected.RFIDList)
+                    foreach (var item in MapOperate.MultiSelected.RFIDS)
                     {
-                        MapFunction.RemoveRFID(MapElement.MapObject.RFIDList.IndexOf(item));
+                        MapFunction.RemoveRFID(MapElement.MapObject.RFIDS.IndexOf(item));
                     }
                     //Line
-                    foreach (var item in MapOperate.MultiSelected.LineList)
+                    foreach (var item in MapOperate.MultiSelected.Lines)
                     {
-                        MapFunction.RemoveRouteLine(MapElement.MapObject.LineList.IndexOf(item));
+                        MapFunction.RemoveRouteLine(MapElement.MapObject.Lines.IndexOf(item));
                     }
                     //ForkLine
-                    foreach (var item in MapOperate.MultiSelected.ForkLineList)
+                    foreach (var item in MapOperate.MultiSelected.ForkLines)
                     {
-                        MapFunction.RemoveForkLine(MapElement.MapObject.ForkLineList.IndexOf(item));
+                        MapFunction.RemoveForkLine(MapElement.MapObject.ForkLines.IndexOf(item));
                     }
                     //清除已选中
                     MapFunction.ClearAllSelect();
                 }
-
             }
             else
             //Ctrl+C【复制】
             if (MapOperate.Userkey.Key == Key.LeftCtrl && e.Key == Key.C)
             {
-
+                //编辑单个
+                if (MapOperate.NowMode == MapOperate.EnumMode.EditElement)
+                {
+                    if (MapOperate.NowSelectIndex!=-1)
+                    {
+                        //清空剪切板
+                        MapFunction.ClearClipBoard();
+                        //将元素复制到剪贴板
+                        switch (MapOperate.NowType)
+                        {
+                            case MapOperate.EnumElementType.None:
+                                break;
+                            case MapOperate.EnumElementType.RFID:
+                                MapElement.RFID rfid = new MapElement.RFID();
+                                //利用序列化深度复制
+                                //string str = SaveMap.Helper.RFIDToJson(MapElement.MapObject.RFIDS[MapOperate.NowSelectIndex]);
+                                // rfid= MapElement.MapObject.RFIDList[MapOperate.NowSelectIndex].baseEllipse.
+                                //MapOperate.Clipboard.RFIDList.Add(MapElement.MapObject.RFIDList[MapOperate.NowSelectIndex]);
+                                break;
+                            case MapOperate.EnumElementType.RouteLine:
+                                MapOperate.Clipboard.Lines.Add(MapElement.MapObject.Lines[MapOperate.NowSelectIndex]);
+                                break;
+                            case MapOperate.EnumElementType.RouteForkLine:
+                                MapOperate.Clipboard.ForkLines.Add(MapElement.MapObject.ForkLines[MapOperate.NowSelectIndex]);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                else
+                //编辑多个
+                if (MapOperate.NowMode == MapOperate.EnumMode.MultiEdit)
+                {
+                    //将元素复制到剪贴板
+                    MapFunction.CopyMultiSelectToClipBoard();
+                }
+            }
+            else
+            //Ctrl+V【粘贴】
+            if (MapOperate.Userkey.Key == Key.LeftCtrl && e.Key == Key.V)
+            {
+                //进入粘贴模式
+                MapOperate.NowMode = MapOperate.EnumMode.Paste;
+                //清除之前的所有选中
+                //将剪切板的元素复制到对应的地图列表
             }
             //记录当前按键
             MapOperate.Userkey.Key = e.Key;
@@ -706,9 +751,9 @@ namespace WpfMap
         private void Btn_SaveMap_Click(object sender, RoutedEventArgs e)
         {
             //保存地图【转换映射】
-            SaveMap.Helper.RFIDToJson();
-            SaveMap.Helper.LineToJSON();
-            SaveMap.Helper.ForkLineToJson();
+            SaveMap.Helper.StandardToBase.RFID(MapElement.MapObject.RFIDS);
+            SaveMap.Helper.StandardToBase.Line(MapElement.MapObject.Lines);
+            SaveMap.Helper.StandardToBase.ForkLine(MapElement.MapObject.ForkLines);
             string str = JsonConvert.SerializeObject(MapElement.MapObject, Formatting.Indented);
             //保存
             SaveMap.Helper.SaveToFile(str);
@@ -724,41 +769,27 @@ namespace WpfMap
                 return;
             else
                 MapElement.MapObject = tt;
-            //转换映射并显示
+
+            /*--------------RFID--------------------------------*/
             //将Base转为标准对象
-            foreach (var item in MapElement.MapObject.RFIDList)
-            {
-                item.textBlock = SaveMap.Convert.BaseToTextBlock(item.baseTextBlock);
-                item.ellipse = SaveMap.Convert.BaseToEllipse(item.baseEllipse);
-            }
+            SaveMap.Helper.BaseToStandard.RFID(MapElement.MapObject.RFIDS);
             //清空画布
             MapElement.CvRFID.Children.Clear();
-            //绘制所有
+            //绘制显示
             MapElement.DrawRFIDList();
-            foreach (var item in MapElement.MapObject.LineList)
-            {
-                item.EndRect = SaveMap.Convert.BaseToRectangle(item.baseEndRect);
-                item.line = SaveMap.Convert.BaseToLine(item.baseLine);
-                item.SelectLine = SaveMap.Convert.BaseToLine(item.baseSelectLine);
-                item.StartRect = SaveMap.Convert.BaseToRectangle(item.baseStartRect);
-                item.textBlock = SaveMap.Convert.BaseToTextBlock(item.baseTextBlock);
-            }
+            /*--------------Line--------------------------------*/
+            //将Base转为标准对象
+            SaveMap.Helper.BaseToStandard.Line(MapElement.MapObject.Lines);
             //清空画布
             MapElement.CvRouteLine.Children.Clear();
-            //绘制所有
+            //绘制显示
             MapElement.DrawLineList();
+            /*--------------ForkLine--------------------------------*/
             //将Base转为标准对象
-            foreach (var item in MapElement.MapObject.ForkLineList)
-            {
-                item.Path = SaveMap.Convert.BaseToForkLiePath(item.basePath);
-                item.SelectPath = SaveMap.Convert.BaseToForkLiePath(item.baseSelectPath);
-                item.StartRect = SaveMap.Convert.BaseToRectangle(item.baseStartRect);
-                item.EndRect = SaveMap.Convert.BaseToRectangle(item.baseEndRect);
-                item.textBlock = SaveMap.Convert.BaseToTextBlock(item.baseTextBlock);
-            }
+            SaveMap.Helper.BaseToStandard.ForkLine(MapElement.MapObject.ForkLines);
             //清空画布
             MapElement.CvForkLine.Children.Clear();
-            //绘制所有
+            //绘制显示
             MapElement.DrawForkLineList();
         }
     }

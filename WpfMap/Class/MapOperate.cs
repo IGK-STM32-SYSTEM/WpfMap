@@ -50,6 +50,10 @@ namespace WpfMap
             /// </summary>
             MultiEdit,
             /// <summary>
+            /// 粘贴模式
+            /// </summary>
+            Paste,
+            /// <summary>
             /// 添加元素
             /// </summary>
             AddElement
@@ -120,6 +124,8 @@ namespace WpfMap
 
         //右键按下
         public static System.Windows.Point mouseRightBtnDownPoint = new System.Windows.Point();
+        //光标实时位置
+        public static System.Windows.Point NowPoint = new System.Windows.Point();
 
         //记录用户按键
         public class UserKeyClass

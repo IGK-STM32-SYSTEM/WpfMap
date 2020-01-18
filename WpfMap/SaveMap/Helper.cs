@@ -56,172 +56,209 @@ namespace WpfMap.SaveMap
             return txt;
         }
 
+        #region 标准转Base
         /// <summary>
-        /// RFID对象列表转JSON字符串
+        /// 将标准【实际使用的】对象转换【映射】到基本对象【用于存储的对象】
         /// </summary>
-        public static string RFIDToJson()
+        public class StandardToBase
         {
-            //将标准对象转为Base
-            foreach (var item in MapElement.MapObject.RFIDList)
+            public static void RFID(MapElement.RFID rfid)
             {
-                item.baseTextBlock = SaveMap.Convert.TextBlockToBase(item.textBlock);
-                item.baseEllipse = SaveMap.Convert.EllipseToBase(item.ellipse);
+                rfid.baseTextBlock = SaveMap.Convert.TextBlockToBase(rfid.textBlock);
+                rfid.baseEllipse = SaveMap.Convert.EllipseToBase(rfid.ellipse);
             }
-            //转为json
-            string str = JsonConvert.SerializeObject(MapElement.MapObject.RFIDList, Formatting.Indented);
-            return str;
+            public static void RFID(List<MapElement.RFID> rfids)
+            {
+                foreach (var item in rfids)
+                {
+                    RFID(item);
+                }
+            }
+            public static void Line(MapElement.RouteLine line)
+            {
+                line.baseEndRect = SaveMap.Convert.RectangleToBase(line.EndRect);
+                line.baseLine = SaveMap.Convert.LineToBase(line.line);
+                line.baseSelectLine = SaveMap.Convert.LineToBase(line.SelectLine);
+                line.baseStartRect = SaveMap.Convert.RectangleToBase(line.StartRect);
+                line.baseTextBlock = SaveMap.Convert.TextBlockToBase(line.textBlock);
+            }
+            public static void Line(List<MapElement.RouteLine> routeLines)
+            {
+                foreach (var item in routeLines)
+                {
+                    Line(item);
+                }
+            }
+            public static void ForkLine(MapElement.RouteForkLine ForkLine)
+            {
+                ForkLine.basePath = SaveMap.Convert.ForkLiePathToBase(ForkLine.Path);
+                ForkLine.baseSelectPath = SaveMap.Convert.ForkLiePathToBase(ForkLine.SelectPath);
+                ForkLine.baseStartRect = SaveMap.Convert.RectangleToBase(ForkLine.StartRect);
+                ForkLine.baseEndRect = SaveMap.Convert.RectangleToBase(ForkLine.EndRect);
+                ForkLine.baseTextBlock = SaveMap.Convert.TextBlockToBase(ForkLine.textBlock);
+            }
+            public static void ForkLine(List<MapElement.RouteForkLine> routeForkLines)
+            {
+                foreach (var item in routeForkLines)
+                {
+                    ForkLine(item);
+                }
+            }
         }
+        #endregion
+
+        #region Base转标准
         /// <summary>
-        /// Json字符串转RFID对象，并显示
+        /// 将基本对象【用于存储的对象】转换【映射】到标准【实际使用的】对象
         /// </summary>
-        public static void JsonToRFIDAndShow(string json)
+        public class BaseToStandard
         {
-            MapElement.MapObject.RFIDList.Clear();
-            //json 转为对象
-            MapElement.MapObject.RFIDList = JsonConvert.DeserializeObject<List<MapElement.RFID>>(json);
-            //将Base转为标准对象
-            foreach (var item in MapElement.MapObject.RFIDList)
+            public static void RFID(MapElement.RFID rfid)
             {
-                item.textBlock = SaveMap.Convert.BaseToTextBlock(item.baseTextBlock);
-                item.ellipse = SaveMap.Convert.BaseToEllipse(item.baseEllipse);
+                rfid.textBlock = SaveMap.Convert.BaseToTextBlock(rfid.baseTextBlock);
+                rfid.ellipse = SaveMap.Convert.BaseToEllipse(rfid.baseEllipse);
             }
-            //清空画布
-            MapElement.CvRFID.Children.Clear();
-            //绘制所有
-            MapElement.DrawRFIDList();
-        }
-        /// <summary>
-        /// 直线转JSON字符串
-        /// </summary>
-        public static string LineToJSON()
-        {
-            //将标准对象转为Base
-            foreach (var item in MapElement.MapObject.LineList)
+            public static void RFID(List<MapElement.RFID> rfidList)
             {
-                item.baseEndRect = SaveMap.Convert.RectangleToBase(item.EndRect);
-                item.baseLine = SaveMap.Convert.LineToBase(item.line);
-                item.baseSelectLine = SaveMap.Convert.LineToBase(item.SelectLine);
-                item.baseStartRect = SaveMap.Convert.RectangleToBase(item.StartRect);
-                item.baseTextBlock = SaveMap.Convert.TextBlockToBase(item.textBlock);
+                foreach (var item in rfidList)
+                {
+                    RFID(item);
+                }
             }
-            //转为json
-            string str = JsonConvert.SerializeObject(MapElement.MapObject.LineList, Formatting.Indented);
-            return str;
-        }
-        /// <summary>
-        /// Json字符串转直线对象，并显示
-        /// </summary>
-        public static void JsonToLineAndShow(string str)
-        {
-            MapElement.MapObject.LineList.Clear();
-            //json 转为对象
-            MapElement.MapObject.LineList = JsonConvert.DeserializeObject<List<MapElement.RouteLine>>(str);
-            //将Base转为标准对象
-            foreach (var item in MapElement.MapObject.LineList)
+            public static void Line(MapElement.RouteLine line)
             {
-                item.EndRect = SaveMap.Convert.BaseToRectangle(item.baseEndRect);
-                item.line = SaveMap.Convert.BaseToLine(item.baseLine);
-                item.SelectLine = SaveMap.Convert.BaseToLine(item.baseSelectLine);
-                item.StartRect = SaveMap.Convert.BaseToRectangle(item.baseStartRect);
-                item.textBlock = SaveMap.Convert.BaseToTextBlock(item.baseTextBlock);
+                line.EndRect = SaveMap.Convert.BaseToRectangle(line.baseEndRect);
+                line.line = SaveMap.Convert.BaseToLine(line.baseLine);
+                line.SelectLine = SaveMap.Convert.BaseToLine(line.baseSelectLine);
+                line.StartRect = SaveMap.Convert.BaseToRectangle(line.baseStartRect);
+                line.textBlock = SaveMap.Convert.BaseToTextBlock(line.baseTextBlock);
             }
-            //清空画布
-            MapElement.CvRouteLine.Children.Clear();
-            //绘制所有
-            MapElement.DrawLineList();
-        }
-        /// <summary>
-        /// 分叉转JSON字符串
-        /// </summary>
-        public static string ForkLineToJson()
-        {
-            //将标准对象转为Base
-            foreach (var item in  MapElement.MapObject.ForkLineList)
+            public static void Line(List<MapElement.RouteLine> routeLines)
             {
-                item.basePath = SaveMap.Convert.ForkLiePathToBase(item.Path);
-                item.baseSelectPath = SaveMap.Convert.ForkLiePathToBase(item.SelectPath);
-                item.baseStartRect = SaveMap.Convert.RectangleToBase(item.StartRect);
-                item.baseEndRect = SaveMap.Convert.RectangleToBase(item.EndRect);
-                item.baseTextBlock = SaveMap.Convert.TextBlockToBase(item.textBlock);
+                foreach (var item in routeLines)
+                {
+                    Line(item);
+                }
             }
-            //转为json
-            string str = JsonConvert.SerializeObject( MapElement.MapObject.ForkLineList, Formatting.Indented);
-            return str;
-        }
-        /// <summary>
-        /// Json字符串转分叉对象，并显示
-        /// </summary>
-        public static void JsonToForkLineAndShow(string str)
-        {
-             MapElement.MapObject.ForkLineList.Clear();
-            //json 转为对象
-             MapElement.MapObject.ForkLineList = JsonConvert.DeserializeObject<List<MapElement.RouteForkLine>>(str);
-            //将Base转为标准对象
-            foreach (var item in  MapElement.MapObject.ForkLineList)
+            public static void ForkLine(MapElement.RouteForkLine ForkLine)
             {
-                item.Path = SaveMap.Convert.BaseToForkLiePath(item.basePath);
-                item.SelectPath = SaveMap.Convert.BaseToForkLiePath(item.baseSelectPath);
-                item.StartRect = SaveMap.Convert.BaseToRectangle(item.baseStartRect);
-                item.EndRect = SaveMap.Convert.BaseToRectangle(item.baseEndRect);
-                item.textBlock = SaveMap.Convert.BaseToTextBlock(item.baseTextBlock);
+                ForkLine.Path = SaveMap.Convert.BaseToForkLiePath(ForkLine.basePath);
+                ForkLine.SelectPath = SaveMap.Convert.BaseToForkLiePath(ForkLine.baseSelectPath);
+                ForkLine.StartRect = SaveMap.Convert.BaseToRectangle(ForkLine.baseStartRect);
+                ForkLine.EndRect = SaveMap.Convert.BaseToRectangle(ForkLine.baseEndRect);
+                ForkLine.textBlock = SaveMap.Convert.BaseToTextBlock(ForkLine.baseTextBlock);
             }
-            //清空画布
-            MapElement.CvForkLine.Children.Clear();
-            //绘制所有
-            MapElement.DrawForkLineList();
+            public static void ForkLine(List<MapElement.RouteForkLine> forkLines)
+            {
+                foreach (var item in forkLines)
+                {
+                    ForkLine(item);
+                }
+            }
         }
 
+        #endregion
 
         /// <summary>
-        /// 保存站点到文件
+        /// 对象转Json字符串
         /// </summary>
-        public static void SaveRFIDToFile()
+        public class ObjToJson
         {
-            string str = RFIDToJson();
-            //保存
-            SaveMap.Helper.SaveToFile(str);
+            /// <summary>
+            /// RFID转JSON字符串
+            /// </summary>
+            public static string RFID(List<MapElement.RFID> rfidList)
+            {
+                //将标准对象转为Base
+                StandardToBase.RFID(rfidList);
+                //转为json
+                string str = JsonConvert.SerializeObject(rfidList, Formatting.Indented);
+                return str;
+            }
+            public static string RFID(MapElement.RFID rfid)
+            {
+                //将标准对象转为Base
+                StandardToBase.RFID(rfid);
+                //转为json
+                string str = JsonConvert.SerializeObject(rfid, Formatting.Indented);
+                return str;
+            }
+            /// <summary>
+            /// Line转JSON字符串
+            /// </summary>
+            public static string Line(List<MapElement.RouteLine> routeLines)
+            {
+                //将标准对象转为Base
+                StandardToBase.Line(routeLines);
+                //转为json
+                return JsonConvert.SerializeObject(routeLines, Formatting.Indented);
+            }
+            public static string Line(MapElement.RouteLine line)
+            {
+                //将标准对象转为Base
+                StandardToBase.Line(line);
+                //转为json
+                return JsonConvert.SerializeObject(line, Formatting.Indented);
+            }
+            /// <summary>
+            /// 分叉转JSON字符串
+            /// </summary>
+            public static string ForkLine(List<MapElement.RouteForkLine> routeForkLines)
+            {
+                //将标准对象转为Base
+                StandardToBase.ForkLine(routeForkLines);
+                //转为json
+                return JsonConvert.SerializeObject(routeForkLines, Formatting.Indented);
+            }
+            public static string ForkLine(MapElement.RouteForkLine routeForkLine)
+            {
+                //将标准对象转为Base
+                StandardToBase.ForkLine(routeForkLine);
+                //转为json
+                return JsonConvert.SerializeObject(routeForkLine, Formatting.Indented);
+            }
         }
         /// <summary>
-        /// 从文件加载站点
+        /// Json字符串转对象
         /// </summary>
-        public static void LoadRFIDFromFile()
+        public class JsonToObj
         {
-            string str = SaveMap.Helper.LoadFromFile();
-            JsonToRFIDAndShow(str);
-        }
-        /// <summary>
-        /// 保存直线到文件
-        /// </summary>
-        public static void SaveLineToFile()
-        {
-            string str = LineToJSON();
-            //保存
-            SaveMap.Helper.SaveToFile(str);
-        }
-        /// <summary>
-        /// 从文件加载直线
-        /// </summary>
-        public static void LoadLineFromFile()
-        {
-            string str = SaveMap.Helper.LoadFromFile();
-            JsonToLineAndShow(str);
-        }
-        /// <summary>
-        /// 保存分叉到文件
-        /// </summary>
-        public static void SaveForkLineToFile()
-        {
-            string str = ForkLineToJson();
-            //保存
-            SaveMap.Helper.SaveToFile(str);
-        }
-        /// <summary>
-        /// 从文件加载分叉
-        /// </summary>
-        public static void LoadForkLineFromFile()
-        {
-            string str = SaveMap.Helper.LoadFromFile();
-            JsonToForkLineAndShow(str);
+            /// <summary>
+            /// RFID
+            /// </summary>
+            public static List<MapElement.RFID> RFID(string json)
+            {
+                List<MapElement.RFID> rfidList = new List<MapElement.RFID>();
+                //json 转为对象
+                rfidList = JsonConvert.DeserializeObject<List<MapElement.RFID>>(json);
+                //将Base转为标准对象
+                BaseToStandard.RFID(rfidList);
+                return rfidList;
+            }
+            /// <summary>
+            /// Line
+            /// </summary>
+            public static List<MapElement.RouteLine> Line(string str)
+            {
+                List<MapElement.RouteLine> routeLines = new List<MapElement.RouteLine>();
+                //json 转为对象
+                routeLines = JsonConvert.DeserializeObject<List<MapElement.RouteLine>>(str);
+                //将Base转为标准对象
+                BaseToStandard.Line(routeLines);
+                return routeLines;
+            }
+            /// <summary>
+            /// Json字符串转分叉对象，并显示
+            /// </summary>
+            public static List<MapElement.RouteForkLine> ForkLine(string str)
+            {
+                List<MapElement.RouteForkLine> routeForkLines = new List<MapElement.RouteForkLine>();
+                //json 转为对象
+                routeForkLines = JsonConvert.DeserializeObject<List<MapElement.RouteForkLine>>(str);
+                //将Base转为标准对象
+                BaseToStandard.ForkLine(routeForkLines);
+                return routeForkLines;
+            }
         }
     }
 }
