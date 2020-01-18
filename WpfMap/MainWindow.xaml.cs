@@ -94,12 +94,20 @@ namespace WpfMap
             {
             }
             else
-            //添加新元素
-            if (MapOperate.NowMode == MapOperate.EnumMode.AddElement)
+            //粘贴模式
+            if (MapOperate.NowMode == MapOperate.EnumMode.Paste)
+            {
+                MapFunction.CancelPaste();
+                //恢复默认
+                MapOperate.NowMode = MapOperate.EnumMode.EditElement;
+            }
+            else
+        //添加新元素
+        if (MapOperate.NowMode == MapOperate.EnumMode.AddElement)
             {
                 if (MapOperate.NowType == MapOperate.EnumElementType.RFID)
                 {
-                    MapFunction.RemoveRFID(MapOperate.NowSelectIndex);
+                    MapFunction.RemoveRFID(MapElement.MapObject.RFIDS[MapOperate.NowSelectIndex]);
                 }
                 else
                 if (MapOperate.NowType == MapOperate.EnumElementType.RouteLine)
@@ -606,15 +614,15 @@ namespace WpfMap
                                 break;
                             //选中了RFID
                             case MapOperate.EnumElementType.RFID:
-                                MapFunction.RemoveRFID(MapOperate.NowSelectIndex);
+                                MapFunction.RemoveRFID(MapElement.MapObject.RFIDS[MapOperate.NowSelectIndex]);
                                 MapOperate.NowSelectIndex = -1;
                                 break;
                             case MapOperate.EnumElementType.RouteLine:
-                                MapFunction.RemoveRouteLine(MapOperate.NowSelectIndex);
+                                MapFunction.RemoveRouteLine(MapElement.MapObject.Lines[MapOperate.NowSelectIndex]);
                                 MapOperate.NowSelectIndex = -1;
                                 break;
                             case MapOperate.EnumElementType.RouteForkLine:
-                                MapFunction.RemoveForkLine(MapOperate.NowSelectIndex);
+                                MapFunction.RemoveForkLine(MapElement.MapObject.ForkLines[MapOperate.NowSelectIndex]);
                                 MapOperate.NowSelectIndex = -1;
                                 break;
                             default:
@@ -630,17 +638,17 @@ namespace WpfMap
                     //RFID
                     foreach (var item in MapOperate.MultiSelected.RFIDS)
                     {
-                        MapFunction.RemoveRFID(MapElement.MapObject.RFIDS.IndexOf(item));
+                        MapFunction.RemoveRFID(item);
                     }
                     //Line
                     foreach (var item in MapOperate.MultiSelected.Lines)
                     {
-                        MapFunction.RemoveRouteLine(MapElement.MapObject.Lines.IndexOf(item));
+                        MapFunction.RemoveRouteLine(item);
                     }
                     //ForkLine
                     foreach (var item in MapOperate.MultiSelected.ForkLines)
                     {
-                        MapFunction.RemoveForkLine(MapElement.MapObject.ForkLines.IndexOf(item));
+                        MapFunction.RemoveForkLine(item);
                     }
                     //清除已选中
                     MapFunction.ClearAllSelect(MapOperate.MultiSelected);
@@ -771,6 +779,17 @@ namespace WpfMap
                 MapFunction.MoveMultiSelected(MapOperate.NowPoint, MapOperate.PastedObject);
                 //进入粘贴模式
                 MapOperate.NowMode = MapOperate.EnumMode.Paste;
+            }
+            //Esc【取消】
+            if (e.Key == Key.Escape)
+            {
+                //粘贴模式
+                if (MapOperate.NowMode == MapOperate.EnumMode.Paste)
+                {
+                    MapFunction.CancelPaste();
+                    //恢复默认
+                    MapOperate.NowMode = MapOperate.EnumMode.EditElement;
+                }
             }
             //记录当前按键
             MapOperate.Userkey.Key = e.Key;

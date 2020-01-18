@@ -136,14 +136,14 @@ namespace WpfMap
         /// 删除
         /// </summary>
         /// <param name="index"></param>
-        public static void RemoveRFID(int index)
+        public static void RemoveRFID(MapElement.RFID rfid)
         {
             //从画布移除
-            MapElement.CvRFID.Children.Remove(MapElement.MapObject.RFIDS[index].ellipse);
-            MapElement.CvRFID.Children.Remove(MapElement.MapObject.RFIDS[index].textBlock);
-            MapElement.CvRFID.Children.Remove(MapElement.MapObject.RFIDS[index].SelectRectangle);
+            MapElement.CvRFID.Children.Remove(rfid.ellipse);
+            MapElement.CvRFID.Children.Remove(rfid.textBlock);
+            MapElement.CvRFID.Children.Remove(rfid.SelectRectangle);
             //从列表移除
-            MapElement.MapObject.RFIDS.RemoveAt(index);
+            MapElement.MapObject.RFIDS.Remove(rfid);
         }
         /*-----------------直线-------------------------------*/
         /// <summary>
@@ -423,16 +423,16 @@ namespace WpfMap
         /// 删除
         /// </summary>
         /// <param name="index"></param>
-        public static void RemoveRouteLine(int index)
+        public static void RemoveRouteLine(MapElement.RouteLine routeLine)
         {
             //从画布移除
-            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.Lines[index].line);
-            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.Lines[index].textBlock);
-            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.Lines[index].SelectLine);
-            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.Lines[index].StartRect);
-            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.Lines[index].EndRect);
+            MapElement.CvRouteLine.Children.Remove(routeLine.line);
+            MapElement.CvRouteLine.Children.Remove(routeLine.textBlock);
+            MapElement.CvRouteLine.Children.Remove(routeLine.SelectLine);
+            MapElement.CvRouteLine.Children.Remove(routeLine.StartRect);
+            MapElement.CvRouteLine.Children.Remove(routeLine.EndRect);
             //从列表移除
-            MapElement.MapObject.Lines.RemoveAt(index);
+            MapElement.MapObject.Lines.Remove(routeLine);
         }
         /*-----------------分叉线-----------------------------*/
         /// <summary>
@@ -807,16 +807,16 @@ namespace WpfMap
         /// 删除
         /// </summary>
         /// <param name="index"></param>
-        public static void RemoveForkLine(int index)
+        public static void RemoveForkLine(MapElement.RouteForkLine routeForkLine)
         {
             //从画布移除
-            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.ForkLines[index].Path);
-            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.ForkLines[index].textBlock);
-            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.ForkLines[index].SelectPath);
-            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.ForkLines[index].StartRect);
-            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.ForkLines[index].EndRect);
+            MapElement.CvForkLine.Children.Remove(routeForkLine.Path);
+            MapElement.CvForkLine.Children.Remove(routeForkLine.textBlock);
+            MapElement.CvForkLine.Children.Remove(routeForkLine.SelectPath);
+            MapElement.CvForkLine.Children.Remove(routeForkLine.StartRect);
+            MapElement.CvForkLine.Children.Remove(routeForkLine.EndRect);
             //从列表移除
-            MapElement.MapObject.ForkLines.RemoveAt(index);
+            MapElement.MapObject.ForkLines.Remove(routeForkLine);
         }
         /*-----------------共用-----------------------------*/
         /// <summary>
@@ -1188,7 +1188,29 @@ namespace WpfMap
                 MapOperate.Clipboard.ForkLines.Add(forkLine);
             }
         }
-
+        /// <summary>
+        /// 中途取消粘贴状态
+        /// </summary>
+        public static void CancelPaste()
+        {
+            //删除RFID
+            foreach (var item in MapOperate.PastedObject.RFIDS)
+            {
+                MapFunction.RemoveRFID(item);
+            }
+            //Line
+            foreach (var item in MapOperate.PastedObject.Lines)
+            {
+                MapFunction.RemoveRouteLine(item);
+            }
+            // ForkLine
+            foreach (var item in MapOperate.PastedObject.ForkLines)
+            {
+                MapFunction.RemoveForkLine(item);
+            }
+            //清除选中状态
+            MapFunction.ClearAllSelect(MapOperate.PastedObject);
+        }
         /// <summary>
         /// 利用json序列化深度复制
         /// </summary>
