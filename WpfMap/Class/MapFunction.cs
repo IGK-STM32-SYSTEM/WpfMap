@@ -917,6 +917,52 @@ namespace WpfMap
                 item.textBlock.Margin = tk;
             }
         }
+        /// <summary>
+        /// 获取传入对象中所有元素的中心坐标【以核心元素的margin为参考】
+        /// </summary>
+        /// <param name="mapObject"></param>
+        /// <returns></returns>
+        public static Point GetCenterPoint(MapElement.MapObjectClass mapObject)
+        {
+            double Minx = double.MaxValue;
+            double Miny = double.MaxValue;
+            double Maxx = double.MinValue;
+            double Maxy = double.MinValue;
+            Point center = new Point();
+            /*-------找出xy的最大和最小值--------------*/
+            //RFID
+            foreach (var item in mapObject.RFIDS)
+            {
+                Thickness tk = item.ellipse.Margin;
+                Minx = tk.Left < Minx ? tk.Left : Minx;
+                Miny = tk.Top < Miny ? tk.Top : Miny;
+                Maxx = tk.Left + item.ellipse.Width > Maxx ? tk.Left + item.ellipse.Width : Maxx;
+                Maxy = tk.Top + item.ellipse.Width > Maxy ? tk.Top + item.ellipse.Width : Maxy;
+            }
+            //Line
+            foreach (var item in mapObject.Lines)
+            {
+                Thickness tk = item.line.Margin;
+                Minx = tk.Left + item.line.X1 < Minx ? tk.Left + item.line.X1 : Minx;
+                Miny = tk.Top + item.line.Y1 < Miny ? tk.Top + item.line.Y1 : Miny;
+                Maxx = tk.Left + item.line.X2 > Maxx ? tk.Left + item.line.X2 : Maxx;
+                Maxy = tk.Top + item.line.Y2 > Maxy ? tk.Top + item.line.Y2 : Maxy;
+            }
+            //ForkLine
+            foreach (var item in mapObject.ForkLines)
+            {
+                Thickness tk = item.Path.Margin;
+                Minx = tk.Left < Minx ? tk.Left : Minx;
+                Miny = tk.Top < Miny ? tk.Top : Miny;
+                Maxx = tk.Left > Maxx ? tk.Left : Maxx;
+                Maxy = tk.Top > Maxy ? tk.Top : Maxy;
+            }
+            /*---------得到中心坐标--------------------*/
+            center.X = (Maxx + Minx) / 2.0;
+            center.Y = (Maxy + Miny) / 2.0;
+            return center;
+        }
+
         /*-----------------多选-----------------------------*/
         /// <summary>
         /// 清除当前选中【单个】

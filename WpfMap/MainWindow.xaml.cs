@@ -538,7 +538,7 @@ namespace WpfMap
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
                     //移动所以选中的元素
-                    MapFunction.MoveMultiSelected(nowPoint,MapOperate.MultiSelected);
+                    MapFunction.MoveMultiSelected(nowPoint, MapOperate.MultiSelected);
                 }
             }
             else
@@ -546,7 +546,7 @@ namespace WpfMap
             if (MapOperate.NowMode == MapOperate.EnumMode.Paste)
             {
                 //移动所以选中的元素
-                MapFunction.MoveMultiSelected(nowPoint,MapOperate.PastedObject);
+                MapFunction.MoveMultiSelected(nowPoint, MapOperate.PastedObject);
             }
             else
             //添加新元素
@@ -745,7 +745,7 @@ namespace WpfMap
                 foreach (var item in MapOperate.Clipboard.ForkLines)
                 {
                     //列化深度复制
-                    MapElement.RouteForkLine  forkLine = MapFunction.IgkClone.ForkLine(item);
+                    MapElement.RouteForkLine forkLine = MapFunction.IgkClone.ForkLine(item);
                     //修改编号
                     forkLine.Num = MapElement.MapObject.ForkLines.Last().Num + 1;
                     //更新到文本
@@ -759,6 +759,16 @@ namespace WpfMap
                     //添加到粘贴过程对象
                     MapOperate.PastedObject.ForkLines.Add(forkLine);
                 }
+                /*----使所有对象处于光标中心【优化效果】---------------------------*/
+                //计算所有对象的中心
+                Point center = MapFunction.GetCenterPoint(MapOperate.PastedObject);
+                //将左键的按下值设置为中心值【移动是根据左键按下的位置计算偏差】
+                MapOperate.mouseLeftBtnDownToMap = center;
+                //计算左键按下移动偏差
+                MapOperate.mouseLeftBtnDownMoveDiff.X = MapOperate.NowPoint.X - MapOperate.mouseLeftBtnDownToMap.X;
+                MapOperate.mouseLeftBtnDownMoveDiff.Y = MapOperate.NowPoint.Y - MapOperate.mouseLeftBtnDownToMap.Y;
+                //初始移动【增加粘贴动态效果】
+                MapFunction.MoveMultiSelected(MapOperate.NowPoint, MapOperate.PastedObject);
                 //进入粘贴模式
                 MapOperate.NowMode = MapOperate.EnumMode.Paste;
             }
