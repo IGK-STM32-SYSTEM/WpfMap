@@ -64,13 +64,13 @@ namespace WpfMap
             //设置放大或缩小10%
             this.sfr.ScaleX += sfr.ScaleX * 0.1 * scaleDir;
             this.sfr.ScaleY += sfr.ScaleY * 0.1 * scaleDir;
-            if (this.sfr.ScaleX < 0.4)
+            if (this.sfr.ScaleX < 0.5)
             {
-                this.sfr.ScaleX = 0.4;
-                this.sfr.ScaleY = 0.4;
+                this.sfr.ScaleX = 0.5;
+                this.sfr.ScaleY = 0.5;
             }
             //更新缩放比例,保留两位小数
-            MapOperate.ViewInfo.Scale = Math.Round(this.sfr.ScaleX, 0);
+            MapOperate.ViewInfo.Scale = Math.Round(this.sfr.ScaleX, 1);
         }
         //右键按下
         private void imageRobot_PreviewMouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
