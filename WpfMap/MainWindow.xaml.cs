@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -635,7 +636,7 @@ namespace WpfMap
                 //编辑单个
                 if (MapOperate.NowMode == MapOperate.EnumMode.EditElement)
                 {
-                    if (MapOperate.NowSelectIndex!=-1)
+                    if (MapOperate.NowSelectIndex != -1)
                     {
                         //清空剪切板
                         MapFunction.ClearClipBoard();
@@ -645,11 +646,10 @@ namespace WpfMap
                             case MapOperate.EnumElementType.None:
                                 break;
                             case MapOperate.EnumElementType.RFID:
-                                MapElement.RFID rfid = new MapElement.RFID();
-                                //利用序列化深度复制
-                                //string str = SaveMap.Helper.RFIDToJson(MapElement.MapObject.RFIDS[MapOperate.NowSelectIndex]);
-                                // rfid= MapElement.MapObject.RFIDList[MapOperate.NowSelectIndex].baseEllipse.
-                                //MapOperate.Clipboard.RFIDList.Add(MapElement.MapObject.RFIDList[MapOperate.NowSelectIndex]);
+                                //列化深度复制
+                                MapElement.RFID rfid = MapFunction.IgkClone.RFID(MapElement.MapObject.RFIDS[MapOperate.NowSelectIndex]);
+                                //添加到剪切板
+                                MapOperate.Clipboard.RFIDS.Add(rfid);
                                 break;
                             case MapOperate.EnumElementType.RouteLine:
                                 MapOperate.Clipboard.Lines.Add(MapElement.MapObject.Lines[MapOperate.NowSelectIndex]);
@@ -677,7 +677,26 @@ namespace WpfMap
                 //进入粘贴模式
                 MapOperate.NowMode = MapOperate.EnumMode.Paste;
                 //清除之前的所有选中
+                MapFunction.ClearSelect();
+                MapOperate.NowSelectIndex = -1;
+                MapFunction.ClearAllSelect();
                 //将剪切板的元素复制到对应的地图列表
+                foreach (var item in MapOperate.Clipboard.RFIDS)
+                {
+                    //列化深度复制
+                    MapElement.RFID rfid = MapFunction.IgkClone.RFID(item);
+                    //修改编号
+                    rfid.Num = MapElement.MapObject.RFIDS.Last().Num + 1;
+                    //更新到文本
+                    rfid.textBlock.Text = rfid.Num.ToString();
+                    //添加到列表
+                    MapElement.MapObject.RFIDS.Add(rfid);
+                    //显示
+                    MapElement.AddRFIDToCanvas(MapElement.MapObject.RFIDS.IndexOf(rfid));
+                    //设置为选中状态
+                    MapFunction.SetRFIDIsSelected(MapElement.MapObject.RFIDS.IndexOf(rfid));
+                }
+
             }
             //记录当前按键
             MapOperate.Userkey.Key = e.Key;

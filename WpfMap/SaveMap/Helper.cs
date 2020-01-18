@@ -226,7 +226,16 @@ namespace WpfMap.SaveMap
             /// <summary>
             /// RFID
             /// </summary>
-            public static List<MapElement.RFID> RFID(string json)
+            public static MapElement.RFID RFID(string json)
+            {
+                MapElement.RFID rfid = new MapElement.RFID();
+                //json 转为对象
+                rfid = JsonConvert.DeserializeObject<MapElement.RFID>(json);
+                //将Base转为标准对象
+                BaseToStandard.RFID(rfid);
+                return rfid;
+            }
+            public static List<MapElement.RFID> RFIDList(string json)
             {
                 List<MapElement.RFID> rfidList = new List<MapElement.RFID>();
                 //json 转为对象
@@ -238,7 +247,16 @@ namespace WpfMap.SaveMap
             /// <summary>
             /// Line
             /// </summary>
-            public static List<MapElement.RouteLine> Line(string str)
+            public static MapElement.RouteLine Line(string str)
+            {
+                MapElement.RouteLine routeLine = new MapElement.RouteLine();
+                //json 转为对象
+                routeLine = JsonConvert.DeserializeObject<MapElement.RouteLine>(str);
+                //将Base转为标准对象
+                BaseToStandard.Line(routeLine);
+                return routeLine;
+            }
+            public static List<MapElement.RouteLine> LineList(string str)
             {
                 List<MapElement.RouteLine> routeLines = new List<MapElement.RouteLine>();
                 //json 转为对象
@@ -250,7 +268,16 @@ namespace WpfMap.SaveMap
             /// <summary>
             /// Json字符串转分叉对象，并显示
             /// </summary>
-            public static List<MapElement.RouteForkLine> ForkLine(string str)
+            public static MapElement.RouteForkLine ForkLine(string str)
+            {
+                MapElement.RouteForkLine routeForkLine = new MapElement.RouteForkLine();
+                //json 转为对象
+                routeForkLine = JsonConvert.DeserializeObject<MapElement.RouteForkLine>(str);
+                //将Base转为标准对象
+                BaseToStandard.ForkLine(routeForkLine);
+                return routeForkLine;
+            }
+            public static List<MapElement.RouteForkLine> ForkLineList(string str)
             {
                 List<MapElement.RouteForkLine> routeForkLines = new List<MapElement.RouteForkLine>();
                 //json 转为对象

@@ -1138,6 +1138,41 @@ namespace WpfMap
                 MapOperate.Clipboard.ForkLines.Add(item);
             }
         }
-
+        /// <summary>
+        /// 利用json序列化深度复制
+        /// </summary>
+        public class IgkClone
+        {
+            /// <summary>
+            /// 复制一个RFID
+            /// </summary>
+            /// <param name="rfid"></param>
+            public static MapElement.RFID RFID(MapElement.RFID rfid)
+            {
+                //利用序列化深度复制
+                string str = SaveMap.Helper.ObjToJson.RFID(rfid);
+                return SaveMap.Helper.JsonToObj.RFID(str);
+            }
+            /// <summary>
+            /// 复制一个Line
+            /// </summary>
+            /// <param name="rfid"></param>
+            public static MapElement.RouteLine Line(MapElement.RouteLine  routeLine)
+            {
+                //利用序列化深度复制
+                string str = SaveMap.Helper.ObjToJson.Line(routeLine);
+                return SaveMap.Helper.JsonToObj.Line(str);
+            }
+            /// <summary>
+            /// 复制一个ForkLine
+            /// </summary>
+            /// <param name="rfid"></param>
+            public static MapElement.RouteForkLine Line(MapElement.RouteForkLine  routeForkLine)
+            {
+                //利用序列化深度复制
+                string str = SaveMap.Helper.ObjToJson.ForkLine(routeForkLine);
+                return SaveMap.Helper.JsonToObj.ForkLine(str);
+            }
+        }
     }
 }
