@@ -965,7 +965,68 @@ namespace WpfMap
                 tk.Top += dify;
                 item.textBlock.Margin = tk;
             }
+            //Line
+            foreach (var item in MapOperate.MultiSelected.LineList)
+            {
+                //获取原来的位置
+                Thickness tk = item.line.Margin;
+                //移动
+                tk.Left += difx;
+                tk.Top += dify;
+                item.line.Margin = tk;
 
+                //选择框跟随
+                item.SelectLine.Margin = tk;
+
+                //起点选择器跟随
+                tk = item.StartRect.Margin;
+                tk.Left += difx;
+                tk.Top += dify;
+                item.StartRect.Margin = tk;
+
+                //终点选择器跟随
+                tk = item.EndRect.Margin;
+                tk.Left += difx;
+                tk.Top += dify;
+                item.EndRect.Margin = tk;
+
+                //文字跟随
+                tk = item.textBlock.Margin;
+                tk.Left += difx;
+                tk.Top += dify;
+                item.textBlock.Margin = tk;
+            }
+            //ForkLine
+            foreach (var item in MapOperate.MultiSelected.ForkLineList)
+            {
+                //获取原来的位置
+                Thickness tk = item.Path.Margin;
+                //移动
+                tk.Left += difx;
+                tk.Top += dify;
+                item.Path.Margin = tk;
+
+                //选择框跟随
+                item.SelectPath.Margin = tk;
+
+                //起点选择器跟随
+                tk = item.StartRect.Margin;
+                tk.Left += difx;
+                tk.Top += dify;
+                item.StartRect.Margin = tk;
+
+                //终点选择器跟随
+                tk = item.EndRect.Margin;
+                tk.Left += difx;
+                tk.Top += dify;
+                item.EndRect.Margin = tk;
+
+                //文字跟随
+                tk = item.textBlock.Margin;
+                tk.Left += difx;
+                tk.Top += dify;
+                item.textBlock.Margin = tk;
+            }
             //更新历史位置，以便记录下一次变化【注意：需要保留余数】
             double rx = MapOperate.mouseLeftBtnDownMoveDiff.X % MapElement.GridSize;
             double ry = MapOperate.mouseLeftBtnDownMoveDiff.Y % MapElement.GridSize;
