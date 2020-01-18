@@ -11,8 +11,7 @@ namespace Maticsoft
         public DESEncrypt()
         {
         }
-
-        #region ========加密======== 
+        #region ========加密========
 
         /// <summary>
         /// 加密
@@ -21,7 +20,10 @@ namespace Maticsoft
         /// <returns></returns>
         public static string Encrypt(string Text)
         {
-            return Encrypt(Text, "litianping");
+            if (Text.Trim() == "")
+                return "";
+            else
+                return Encrypt(Text, "passkey");
         }
         /// <summary> 
         /// 加密数据 
@@ -34,8 +36,8 @@ namespace Maticsoft
             DESCryptoServiceProvider des = new DESCryptoServiceProvider();
             byte[] inputByteArray;
             inputByteArray = Encoding.Default.GetBytes(Text);
-            des.Key = ASCIIEncoding.ASCII.GetBytes(System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(sKey, "md5").Substring(0, 8));
-            des.IV = ASCIIEncoding.ASCII.GetBytes(System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(sKey, "md5").Substring(0, 8));
+            des.Key = ASCIIEncoding.ASCII.GetBytes(MD5(sKey).Substring(0, 8));
+            des.IV = ASCIIEncoding.ASCII.GetBytes(MD5(sKey).Substring(0, 8));
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
             CryptoStream cs = new CryptoStream(ms, des.CreateEncryptor(), CryptoStreamMode.Write);
             cs.Write(inputByteArray, 0, inputByteArray.Length);
@@ -50,7 +52,7 @@ namespace Maticsoft
 
         #endregion
 
-        #region ========解密======== 
+        #region ========解密========
 
 
         /// <summary>
@@ -60,7 +62,10 @@ namespace Maticsoft
         /// <returns></returns>
         public static string Decrypt(string Text)
         {
-            return Decrypt(Text, "litianping");
+            if (Text.Trim() == "")
+                return "";
+            else
+                return Decrypt(Text, "passkey");
         }
         /// <summary> 
         /// 解密数据 
@@ -80,13 +85,24 @@ namespace Maticsoft
                 i = Convert.ToInt32(Text.Substring(x * 2, 2), 16);
                 inputByteArray[x] = (byte)i;
             }
-            des.Key = ASCIIEncoding.ASCII.GetBytes(System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(sKey, "md5").Substring(0, 8));
-            des.IV = ASCIIEncoding.ASCII.GetBytes(System.Web.Security.FormsAuthentication.HashPasswordForStoringInConfigFile(sKey, "md5").Substring(0, 8));
+            des.Key = ASCIIEncoding.ASCII.GetBytes(MD5(sKey).Substring(0, 8));
+            des.IV = ASCIIEncoding.ASCII.GetBytes(MD5(sKey).Substring(0, 8));
             System.IO.MemoryStream ms = new System.IO.MemoryStream();
             CryptoStream cs = new CryptoStream(ms, des.CreateDecryptor(), CryptoStreamMode.Write);
             cs.Write(inputByteArray, 0, inputByteArray.Length);
             cs.FlushFinalBlock();
             return Encoding.Default.GetString(ms.ToArray());
+        }
+
+        public static string MD5(string str)
+        {
+            //微软md5方法参考return FormsAuthentication.HashPasswordForStoringInConfigFile(str, "md5");
+            byte[] b = Encoding.Default.GetBytes(str);
+            b = new MD5CryptoServiceProvider().ComputeHash(b);
+            string ret = "";
+            for (int i = 0; i < b.Length; i++)
+                ret += b[i].ToString("X").PadLeft(2, '0');
+            return ret;
         }
 
         #endregion

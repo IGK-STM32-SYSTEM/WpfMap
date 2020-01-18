@@ -96,7 +96,7 @@ namespace WpfMap
             //添加新元素
             if (MapOperate.NowMode == MapOperate.EnumMode.AddElement)
             {
-                if(MapOperate.NowType == MapOperate.EnumElementType.RFID)
+                if (MapOperate.NowType == MapOperate.EnumElementType.RFID)
                 {
                     MapFunction.RemoveRFID(MapOperate.NowSelectIndex);
                 }
@@ -109,7 +109,7 @@ namespace WpfMap
                         //清除图形
                         MapFunction.ClearSelect();
                         //删除新增线条
-                        MapElement.MapObject.MapLineList.RemoveAt(MapOperate.NowSelectIndex);
+                        MapElement.MapObject.LineList.RemoveAt(MapOperate.NowSelectIndex);
                     }
                     else
                     if (MapOperate.AddStep == 2)
@@ -127,7 +127,7 @@ namespace WpfMap
                         //清除图形
                         MapFunction.ClearSelect();
                         //删除新增线条
-                        MapElement.MapObject.MapForkLineList.RemoveAt(MapOperate.NowSelectIndex);
+                        MapElement.MapObject.ForkLineList.RemoveAt(MapOperate.NowSelectIndex);
                     }
                     else
                     if (MapOperate.AddStep == 2)
@@ -136,7 +136,7 @@ namespace WpfMap
                         MapFunction.ClearSelect();
                     }
                 }
-                
+
                 //结束添加
                 MapOperate.NowType = MapOperate.EnumElementType.None;
                 MapOperate.NowMode = MapOperate.EnumMode.EditElement;
@@ -150,9 +150,7 @@ namespace WpfMap
         {
             //记录按下时的位置
             MapOperate.mouseLeftBtnDownToMap = e.GetPosition(cvMap);
-            //更新左键按下移动上一次值
-            MapOperate.mouseLeftBtnDownMoveLast = MapOperate.mouseLeftBtnDownToMap;
-            //编辑属性
+            //编辑单个元素
             if (MapOperate.NowMode == MapOperate.EnumMode.EditElement)
             {
                 //情况0：如果目前是有选中的直线
@@ -204,7 +202,7 @@ namespace WpfMap
                 if (rs != -1)
                 {
                     //记录当前margin
-                    MapOperate.ElementMarginLast = MapElement.MapObject.MapLineList[rs].line.Margin;
+                    MapOperate.ElementMarginLast = MapElement.MapObject.LineList[rs].line.Margin;
 
                     //如果选中的和之前是同一个元素
                     if (rs == MapOperate.NowSelectIndex && MapOperate.NowType == MapOperate.EnumElementType.RouteLine)
@@ -232,7 +230,7 @@ namespace WpfMap
                 if (rs != -1)
                 {
                     //记录当前margin
-                    MapOperate.ElementMarginLast = MapElement.MapObject.MapForkLineList[rs].Path.Margin;
+                    MapOperate.ElementMarginLast = MapElement.MapObject.ForkLineList[rs].Path.Margin;
 
                     //如果选中的和之前是同一个元素
                     if (rs == MapOperate.NowSelectIndex && MapOperate.NowType == MapOperate.EnumElementType.RouteForkLine)
@@ -287,9 +285,27 @@ namespace WpfMap
                 MapFunction.ClearAllSelect();
                 MapOperate.NowSelectIndex = -1;
                 //进入多选模式
-                MapOperate.NowMode = MapOperate.EnumMode.MultiEdit;
+                MapOperate.NowMode = MapOperate.EnumMode.MultiSelect;
                 //清除移动状态【是否按住左键移动过】
                 MapOperate.MovedAfterLeftBtn = false;
+            }
+            else
+            //编辑多个元素
+            if (MapOperate.NowMode == MapOperate.EnumMode.MultiEdit)
+            {
+                //判断光标是否在标签上
+                int s1 = MapFunction.IsOnRFID(MapOperate.mouseLeftBtnDownToMap);
+                //判断光标是否在分叉线【圆弧】上
+                int s2 = MapFunction.IsOnForkLine(MapOperate.mouseLeftBtnDownToMap);
+                //判断是否在直线上
+                int s3 = MapFunction.IsOnRouteLine(MapOperate.mouseLeftBtnDownToMap);
+                if (s1 == -1 && s2 == -1 && s3 == -1)
+                {
+                    //点击了空白处，退出多个编辑状态
+                    MapOperate.NowMode = MapOperate.EnumMode.EditElement;
+                    //清除所有选中
+                    MapFunction.ClearAllSelect();
+                }
             }
         }
         //左键抬起
@@ -297,23 +313,43 @@ namespace WpfMap
         {
             //记录按下时的位置
             MapOperate.mouseLeftBtnDownToMap = e.GetPosition(cvMap);
-            //编辑属性
+            //编辑单个元素
             if (MapOperate.NowMode == MapOperate.EnumMode.EditElement)
             {
             }
             else
-            if (MapOperate.NowMode == MapOperate.EnumMode.MultiEdit)
+            //多选状态
+            if (MapOperate.NowMode == MapOperate.EnumMode.MultiSelect)
             {
                 //是否按住左键移动过,如果没有移动就不能计算选中
                 if (MapOperate.MovedAfterLeftBtn)
                 {
+                    //清除移动标志
+                    MapOperate.MovedAfterLeftBtn = false;
                     //清除选中框
                     MapOperate.ClearMultiSelectRect();
-                    //选中框内元素
+                    //计算选中的元素
                     MapFunction.GetMultiSelectedObject();
+                    //如果一个都没有选上，退出多选状态
+                    if (MapOperate.MultiSelected.RFIDList.Count == 0
+                        && MapOperate.MultiSelected.LineList.Count == 0
+                        && MapOperate.MultiSelected.ForkLineList.Count == 0)
+                    {
+                        //退出多选模式
+                        MapOperate.NowMode = MapOperate.EnumMode.EditElement;
+                    }
+                    else
+                    //有选中的就进入多个编辑状态
+                    {
+                        MapOperate.NowMode = MapOperate.EnumMode.MultiEdit;
+                    }
                 }
-                //恢复单个编辑模式
-                MapOperate.NowMode = MapOperate.EnumMode.EditElement;
+                //没有移动，直接退出多选
+                else
+                {
+                    //恢复单个编辑模式
+                    MapOperate.NowMode = MapOperate.EnumMode.EditElement;
+                }
             }
             else
             //添加新元素
@@ -405,8 +441,8 @@ namespace WpfMap
             //显示当前坐标到界面
             MapOperate.ViewInfo.View = new Point(Math.Round(nowPoint.X, 0), Math.Round(nowPoint.Y, 0));
             //计算左键按下移动偏差
-            MapOperate.mouseLeftBtnDownMoveDiff.X = nowPoint.X - MapOperate.mouseLeftBtnDownMoveLast.X;
-            MapOperate.mouseLeftBtnDownMoveDiff.Y = nowPoint.Y - MapOperate.mouseLeftBtnDownMoveLast.Y;
+            MapOperate.mouseLeftBtnDownMoveDiff.X = nowPoint.X - MapOperate.mouseLeftBtnDownToMap.X;
+            MapOperate.mouseLeftBtnDownMoveDiff.Y = nowPoint.Y - MapOperate.mouseLeftBtnDownToMap.Y;
 
             //移动视图【如果右键按下】
             if (e.RightButton == MouseButtonState.Pressed)
@@ -421,7 +457,7 @@ namespace WpfMap
                 MapOperate.ViewInfo.Origin = new Point(Math.Round(tlt.X, 0), Math.Round(tlt.Y, 0));
             }
 
-            //编辑属性
+            //编辑单个元素
             if (MapOperate.NowMode == MapOperate.EnumMode.EditElement)
             {
                 //左键按住移动位置【调整元素位置】
@@ -476,13 +512,24 @@ namespace WpfMap
                 }
             }
             else
-            //多选模式，多个编辑
-            if (MapOperate.NowMode == MapOperate.EnumMode.MultiEdit)
+            //多选模式
+            if (MapOperate.NowMode == MapOperate.EnumMode.MultiSelect)
             {
                 //标记移动状态【是否按住左键移动过】
                 MapOperate.MovedAfterLeftBtn = true;
                 //绘制选择框   
                 MapOperate.DrawMultiSelectRect(nowPoint);
+            }
+            else
+            //多编辑模式
+            if (MapOperate.NowMode == MapOperate.EnumMode.MultiEdit)
+            {
+                //如果按住左键，则移动对象
+                if (e.LeftButton == MouseButtonState.Pressed)
+                {
+                    //移动所以选中的元素
+                    MapFunction.MoveMultiSelected(nowPoint);
+                }
             }
             else
             //添加新元素
@@ -646,7 +693,7 @@ namespace WpfMap
                 MapElement.MapObject = tt;
             //转换映射并显示
             //将Base转为标准对象
-            foreach (var item in MapElement.MapObject.MapRFIDList)
+            foreach (var item in MapElement.MapObject.RFIDList)
             {
                 item.textBlock = SaveMap.Convert.BaseToTextBlock(item.baseTextBlock);
                 item.ellipse = SaveMap.Convert.BaseToEllipse(item.baseEllipse);
@@ -655,7 +702,7 @@ namespace WpfMap
             MapElement.CvRFID.Children.Clear();
             //绘制所有
             MapElement.DrawRFIDList();
-            foreach (var item in MapElement.MapObject.MapLineList)
+            foreach (var item in MapElement.MapObject.LineList)
             {
                 item.EndRect = SaveMap.Convert.BaseToRectangle(item.baseEndRect);
                 item.line = SaveMap.Convert.BaseToLine(item.baseLine);
@@ -668,7 +715,7 @@ namespace WpfMap
             //绘制所有
             MapElement.DrawLineList();
             //将Base转为标准对象
-            foreach (var item in MapElement.MapObject.MapForkLineList)
+            foreach (var item in MapElement.MapObject.ForkLineList)
             {
                 item.Path = SaveMap.Convert.BaseToForkLiePath(item.basePath);
                 item.SelectPath = SaveMap.Convert.BaseToForkLiePath(item.baseSelectPath);

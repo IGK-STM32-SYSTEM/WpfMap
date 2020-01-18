@@ -18,7 +18,7 @@ namespace WpfMap.Class
             /// <summary>
             /// 线条宽度
             /// </summary>
-            double Tinkess = 3;
+            //double Tinkess = 3;
         }
     }
 }

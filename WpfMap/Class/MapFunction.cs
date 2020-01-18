@@ -23,12 +23,12 @@ namespace WpfMap
         /// <returns>在：返回标签索引，不在：返回-1</returns>
         public static int IsOnRFID(Point point)
         {
-            if (MapElement.MapObject.MapRFIDList.Count == 0)
+            if (MapElement.MapObject.RFIDList.Count == 0)
                 return -1;
             //遍历所有标签
-            for (int i = 0; i < MapElement.MapObject.MapRFIDList.Count; i++)
+            for (int i = 0; i < MapElement.MapObject.RFIDList.Count; i++)
             {
-                Point pt = new Point(MapElement.MapObject.MapRFIDList[i].ellipse.Margin.Left + MapElement.RFID_Radius, MapElement.MapObject.MapRFIDList[i].ellipse.Margin.Top + MapElement.RFID_Radius);
+                Point pt = new Point(MapElement.MapObject.RFIDList[i].ellipse.Margin.Left + MapElement.RFID_Radius, MapElement.MapObject.RFIDList[i].ellipse.Margin.Top + MapElement.RFID_Radius);
                 var distance = MathHelper.Distance(pt, point);
                 //距离小于20,在当前站点上
                 if (distance <= 20)
@@ -46,9 +46,9 @@ namespace WpfMap
         /// <returns>在：返回标签索引，不在：返回-1</returns>
         public static bool IsOnOneRFID(Point point, int index)
         {
-            if (MapElement.MapObject.MapRFIDList.Count == 0)
+            if (MapElement.MapObject.RFIDList.Count == 0)
                 return false;
-            Point pt = new Point(MapElement.MapObject.MapRFIDList[index].ellipse.Margin.Left + MapElement.RFID_Radius, MapElement.MapObject.MapRFIDList[index].ellipse.Margin.Top + MapElement.RFID_Radius);
+            Point pt = new Point(MapElement.MapObject.RFIDList[index].ellipse.Margin.Left + MapElement.RFID_Radius, MapElement.MapObject.RFIDList[index].ellipse.Margin.Top + MapElement.RFID_Radius);
             var distance = MathHelper.Distance(pt, point);
             //距离小于20,在当前站点上
             if (distance <= 20)
@@ -66,26 +66,26 @@ namespace WpfMap
         /// <param name="canvas">画布</param>
         public static void MoveRFIDTo(int index, Point point)
         {
-            point.X -= MapElement.RFID_Radius-MapElement.GridSize/2;
+            point.X -= MapElement.RFID_Radius - MapElement.GridSize / 2;
             point.Y -= MapElement.RFID_Radius - MapElement.GridSize / 2;
 
             //计算xy方向偏差
-            Thickness thickness = MapElement.MapObject.MapRFIDList[index].ellipse.Margin;
+            Thickness thickness = MapElement.MapObject.RFIDList[index].ellipse.Margin;
             //对MapElement.GridSize取余，实现移动时按照栅格移动效果
             double diff_x = thickness.Left - (point.X - point.X % MapElement.GridSize);
             double diff_y = thickness.Top - (point.Y - point.Y % MapElement.GridSize);
             //移动圆
             thickness.Left -= diff_x;
             thickness.Top -= diff_y;
-            MapElement.MapObject.MapRFIDList[index].ellipse.Margin = thickness;
+            MapElement.MapObject.RFIDList[index].ellipse.Margin = thickness;
 
             //选择框跟随
-            MapElement.MapObject.MapRFIDList[index].SelectRectangle.Margin = thickness;
+            MapElement.MapObject.RFIDList[index].SelectRectangle.Margin = thickness;
 
             //文字跟随即可
             thickness.Left -= diff_x - 15;
             thickness.Top -= diff_y - 10;
-            MapElement.MapObject.MapRFIDList[index].textBlock.Margin = thickness;
+            MapElement.MapObject.RFIDList[index].textBlock.Margin = thickness;
 
         }
         /// <summary>
@@ -95,7 +95,7 @@ namespace WpfMap
         /// <param name="canvas"></param>
         public static void SetRFIDIsSelected(int index)
         {
-            SetRFIDIsSelected(MapElement.MapObject.MapRFIDList[index]);
+            SetRFIDIsSelected(MapElement.MapObject.RFIDList[index]);
         }
         public static void SetRFIDIsSelected(MapElement.RFID rfid)
         {
@@ -123,7 +123,7 @@ namespace WpfMap
         {
             if (index == -1)
                 return;
-            MapElement.CvRFID.Children.Remove(MapElement.MapObject.MapRFIDList[index].SelectRectangle);
+            MapElement.CvRFID.Children.Remove(MapElement.MapObject.RFIDList[index].SelectRectangle);
         }
         public static void SetRFIDIsNormal(MapElement.RFID rfid)
         {
@@ -138,11 +138,11 @@ namespace WpfMap
         public static void RemoveRFID(int index)
         {
             //从画布移除
-            MapElement.CvRFID.Children.Remove(MapElement.MapObject.MapRFIDList[index].ellipse);
-            MapElement.CvRFID.Children.Remove(MapElement.MapObject.MapRFIDList[index].textBlock);
-            MapElement.CvRFID.Children.Remove(MapElement.MapObject.MapRFIDList[index].SelectRectangle);
+            MapElement.CvRFID.Children.Remove(MapElement.MapObject.RFIDList[index].ellipse);
+            MapElement.CvRFID.Children.Remove(MapElement.MapObject.RFIDList[index].textBlock);
+            MapElement.CvRFID.Children.Remove(MapElement.MapObject.RFIDList[index].SelectRectangle);
             //从列表移除
-            MapElement.MapObject.MapRFIDList.RemoveAt(index);
+            MapElement.MapObject.RFIDList.RemoveAt(index);
         }
         /*-----------------直线-------------------------------*/
         /// <summary>
@@ -152,13 +152,13 @@ namespace WpfMap
         /// <returns>在：返回标签索引，不在：返回-1</returns>
         public static int IsOnRouteLine(Point point)
         {
-            if (MapElement.MapObject.MapLineList.Count == 0)
+            if (MapElement.MapObject.LineList.Count == 0)
                 return -1;
             //遍历
-            for (int i = 0; i < MapElement.MapObject.MapLineList.Count; i++)
+            for (int i = 0; i < MapElement.MapObject.LineList.Count; i++)
             {
                 //拿到直线
-                Line line = MapElement.MapObject.MapLineList[i].line;
+                Line line = MapElement.MapObject.LineList[i].line;
                 Point pt = point;
                 pt.X -= line.Margin.Left;
                 pt.Y -= line.Margin.Top;
@@ -178,7 +178,7 @@ namespace WpfMap
             if (index < 0)
                 return false;
             //拿到编辑器的矩形
-            Rectangle rectangle = MapElement.MapObject.MapLineList[index].StartRect;
+            Rectangle rectangle = MapElement.MapObject.LineList[index].StartRect;
             Point pt = point;
             //平移margin，让当前点和矩形在同一坐标系
             pt.X -= rectangle.Margin.Left;
@@ -196,7 +196,7 @@ namespace WpfMap
             if (index < 0)
                 return false;
             //拿到编辑器的矩形
-            Rectangle rectangle = MapElement.MapObject.MapLineList[index].EndRect;
+            Rectangle rectangle = MapElement.MapObject.LineList[index].EndRect;
             Point pt = point;
             //平移margin，让当前点和矩形在同一坐标系
             pt.X -= rectangle.Margin.Left;
@@ -215,14 +215,14 @@ namespace WpfMap
             point.Y -= MapElement.GridSize / 2;
 
             //对MapElement.GridSize取余，实现移动时按照栅格移动效果
-            Thickness thickness = MapElement.MapObject.MapLineList[index].line.Margin;
+            Thickness thickness = MapElement.MapObject.LineList[index].line.Margin;
             thickness.Left = point.X - point.X % MapElement.GridSize;
             thickness.Top = point.Y - point.Y % MapElement.GridSize;
 
             //起点编辑器跟随
             thickness.Left += MapElement.GridSize / 2;
             thickness.Top += MapElement.GridSize / 2;
-            MapElement.MapObject.MapLineList[index].StartRect.Margin = thickness;
+            MapElement.MapObject.LineList[index].StartRect.Margin = thickness;
         }
         /// <summary>
         /// 移动直线起点位置【编辑状态】
@@ -235,7 +235,7 @@ namespace WpfMap
             point.Y -= MapElement.GridSize / 2;
 
             //对MapElement.GridSize取余，实现移动时按照栅格移动效果
-            Thickness thickness = MapElement.MapObject.MapLineList[index].line.Margin;
+            Thickness thickness = MapElement.MapObject.LineList[index].line.Margin;
             thickness.Left = point.X - point.X % MapElement.GridSize;
             thickness.Top = point.Y - point.Y % MapElement.GridSize;
 
@@ -248,24 +248,24 @@ namespace WpfMap
             //MapElement.MapObject.MapLineList[index].SelectLine.Y1 = MapElement.MapObject.MapLineList[index].line.Y1;
 
             //更新终点坐标
-            MapElement.MapObject.MapLineList[index].line.X2 -= thickness.Left + MapElement.GridSize - MapElement.MapObject.MapLineList[index].line.Margin.Left;
-            MapElement.MapObject.MapLineList[index].line.Y2 -= thickness.Top + MapElement.GridSize - MapElement.MapObject.MapLineList[index].line.Margin.Top;
+            MapElement.MapObject.LineList[index].line.X2 -= thickness.Left + MapElement.GridSize - MapElement.MapObject.LineList[index].line.Margin.Left;
+            MapElement.MapObject.LineList[index].line.Y2 -= thickness.Top + MapElement.GridSize - MapElement.MapObject.LineList[index].line.Margin.Top;
             //选择线跟随
-            MapElement.MapObject.MapLineList[index].SelectLine.X2 = MapElement.MapObject.MapLineList[index].line.X2;
-            MapElement.MapObject.MapLineList[index].SelectLine.Y2 = MapElement.MapObject.MapLineList[index].line.Y2;
+            MapElement.MapObject.LineList[index].SelectLine.X2 = MapElement.MapObject.LineList[index].line.X2;
+            MapElement.MapObject.LineList[index].SelectLine.Y2 = MapElement.MapObject.LineList[index].line.Y2;
 
             //修正直线margin
-            Thickness tk = MapElement.MapObject.MapLineList[index].line.Margin;
-            tk.Left += thickness.Left + MapElement.GridSize - MapElement.MapObject.MapLineList[index].line.Margin.Left;
-            tk.Top += thickness.Top + MapElement.GridSize - MapElement.MapObject.MapLineList[index].line.Margin.Top;
-            MapElement.MapObject.MapLineList[index].line.Margin = tk;
+            Thickness tk = MapElement.MapObject.LineList[index].line.Margin;
+            tk.Left += thickness.Left + MapElement.GridSize - MapElement.MapObject.LineList[index].line.Margin.Left;
+            tk.Top += thickness.Top + MapElement.GridSize - MapElement.MapObject.LineList[index].line.Margin.Top;
+            MapElement.MapObject.LineList[index].line.Margin = tk;
             //选择线margin跟随
-            MapElement.MapObject.MapLineList[index].SelectLine.Margin = tk;
+            MapElement.MapObject.LineList[index].SelectLine.Margin = tk;
 
             //起点编辑器跟随
             thickness.Left += MapElement.GridSize / 2;
             thickness.Top += MapElement.GridSize / 2;
-            MapElement.MapObject.MapLineList[index].StartRect.Margin = thickness;
+            MapElement.MapObject.LineList[index].StartRect.Margin = thickness;
         }
         /// <summary>
         /// 移动直线终点位置【编辑状态】
@@ -278,22 +278,22 @@ namespace WpfMap
             point.Y -= MapElement.GridSize / 2;
 
             //对MapElement.GridSize取余，实现移动时按照栅格移动效果
-            Thickness thickness = MapElement.MapObject.MapLineList[index].line.Margin;
+            Thickness thickness = MapElement.MapObject.LineList[index].line.Margin;
             thickness.Left = point.X - point.X % MapElement.GridSize;
             thickness.Top = point.Y - point.Y % MapElement.GridSize;
 
             //更新线终点坐标
-            MapElement.MapObject.MapLineList[index].line.X2 = thickness.Left + MapElement.GridSize - MapElement.MapObject.MapLineList[index].line.Margin.Left;
-            MapElement.MapObject.MapLineList[index].line.Y2 = thickness.Top + MapElement.GridSize - MapElement.MapObject.MapLineList[index].line.Margin.Top;
+            MapElement.MapObject.LineList[index].line.X2 = thickness.Left + MapElement.GridSize - MapElement.MapObject.LineList[index].line.Margin.Left;
+            MapElement.MapObject.LineList[index].line.Y2 = thickness.Top + MapElement.GridSize - MapElement.MapObject.LineList[index].line.Margin.Top;
 
             //选择线跟随
-            MapElement.MapObject.MapLineList[index].SelectLine.X2 = MapElement.MapObject.MapLineList[index].line.X2;
-            MapElement.MapObject.MapLineList[index].SelectLine.Y2 = MapElement.MapObject.MapLineList[index].line.Y2;
+            MapElement.MapObject.LineList[index].SelectLine.X2 = MapElement.MapObject.LineList[index].line.X2;
+            MapElement.MapObject.LineList[index].SelectLine.Y2 = MapElement.MapObject.LineList[index].line.Y2;
 
             //终点编辑器跟随
             thickness.Left += MapElement.GridSize / 2;
             thickness.Top += MapElement.GridSize / 2;
-            MapElement.MapObject.MapLineList[index].EndRect.Margin = thickness;
+            MapElement.MapObject.LineList[index].EndRect.Margin = thickness;
         }
         /// <summary>
         /// 更新直线到指定位置【编辑状态】
@@ -306,24 +306,13 @@ namespace WpfMap
             double difx = MapOperate.mouseLeftBtnDownMoveDiff.X;
             double dify = MapOperate.mouseLeftBtnDownMoveDiff.Y;
 
-            //提高变化阈值【当光标超过半个栅格就发生跳格】
-            if (difx > 0)
-                difx += MapElement.GridSize* 0.6;
-            else
-                difx -= MapElement.GridSize * 0.6;
-            if (dify > 0)
-                dify += MapElement.GridSize * 0.6;
-            else
-                dify -= MapElement.GridSize * 0.6;
-
             //对齐栅格
             difx -= difx % MapElement.GridSize;
             dify -= dify % MapElement.GridSize;
-            Console.WriteLine("x:{0},y:{1}",difx,dify);
 
             //计算起点编辑器和终点编辑器margin的偏差
-            double margin_Diff_Left = MapElement.MapObject.MapLineList[index].EndRect.Margin.Left - MapElement.MapObject.MapLineList[index].StartRect.Margin.Left;
-            double margin_Diff_Top = MapElement.MapObject.MapLineList[index].EndRect.Margin.Top - MapElement.MapObject.MapLineList[index].StartRect.Margin.Top;
+            double margin_Diff_Left = MapElement.MapObject.LineList[index].EndRect.Margin.Left - MapElement.MapObject.LineList[index].StartRect.Margin.Left;
+            double margin_Diff_Top = MapElement.MapObject.LineList[index].EndRect.Margin.Top - MapElement.MapObject.LineList[index].StartRect.Margin.Top;
 
             //移动线
             Thickness tk = new Thickness();
@@ -333,19 +322,19 @@ namespace WpfMap
             tk.Left += difx;
             tk.Top += dify;
 
-            MapElement.MapObject.MapLineList[index].line.Margin = tk;
+            MapElement.MapObject.LineList[index].line.Margin = tk;
             //选择线跟随
-            MapElement.MapObject.MapLineList[index].SelectLine.Margin = tk;
+            MapElement.MapObject.LineList[index].SelectLine.Margin = tk;
             //起点编辑器跟随【减X1和Y1是因为在移动起点时修改了X1和Y1，而不是整体移动Margin】
             tk.Left -= MapElement.GridSize / 2;
             tk.Top -= MapElement.GridSize / 2;
             //tk.Left = tk.Left - MapElement.GridSize / 2 - MapElement.MapObject.MapLineList[index].line.X1;
             //tk.Top = tk.Top - MapElement.GridSize / 2 - MapElement.MapObject.MapLineList[index].line.Y1;
-            MapElement.MapObject.MapLineList[index].StartRect.Margin = tk;
+            MapElement.MapObject.LineList[index].StartRect.Margin = tk;
             //终点编辑器跟随
             tk.Left += margin_Diff_Left;
             tk.Top += margin_Diff_Top;
-            MapElement.MapObject.MapLineList[index].EndRect.Margin = tk;
+            MapElement.MapObject.LineList[index].EndRect.Margin = tk;
         }
         /// <summary>
         /// 设置标到选中状态
@@ -357,17 +346,17 @@ namespace WpfMap
             if (index == -1)
                 return;
             //显示选择虚线
-            if (MapElement.CvRouteLine.Children.Contains(MapElement.MapObject.MapLineList[index].SelectLine) == false)
+            if (MapElement.CvRouteLine.Children.Contains(MapElement.MapObject.LineList[index].SelectLine) == false)
             {
                 MapElement.RouteLineShowSelectLine(index);
             }
             //显示起点编辑器
-            if (MapElement.CvRouteLine.Children.Contains(MapElement.MapObject.MapLineList[index].StartRect) == false)
+            if (MapElement.CvRouteLine.Children.Contains(MapElement.MapObject.LineList[index].StartRect) == false)
             {
                 MapElement.RouteLineShowStart(index);
             }
             //显示终点编辑器
-            if (MapElement.CvRouteLine.Children.Contains(MapElement.MapObject.MapLineList[index].EndRect) == false)
+            if (MapElement.CvRouteLine.Children.Contains(MapElement.MapObject.LineList[index].EndRect) == false)
             {
                 MapElement.RouteLineShowEnd(index);
             }
@@ -401,10 +390,10 @@ namespace WpfMap
         {
             if (index == -1)
                 return;
-            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.MapLineList[index].SelectLine);
-            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.MapLineList[index].StartRect);
-            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.MapLineList[index].EndRect);
-            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.MapLineList[index].textBlock);
+            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.LineList[index].SelectLine);
+            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.LineList[index].StartRect);
+            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.LineList[index].EndRect);
+            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.LineList[index].textBlock);
         }
         public static void SetRouteLineIsNormal(MapElement.RouteLine routeLine)
         {
@@ -422,13 +411,13 @@ namespace WpfMap
         public static void RemoveRouteLine(int index)
         {
             //从画布移除
-            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.MapLineList[index].line);
-            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.MapLineList[index].textBlock);
-            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.MapLineList[index].SelectLine);
-            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.MapLineList[index].StartRect);
-            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.MapLineList[index].EndRect);
+            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.LineList[index].line);
+            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.LineList[index].textBlock);
+            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.LineList[index].SelectLine);
+            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.LineList[index].StartRect);
+            MapElement.CvRouteLine.Children.Remove(MapElement.MapObject.LineList[index].EndRect);
             //从列表移除
-            MapElement.MapObject.MapLineList.RemoveAt(index);
+            MapElement.MapObject.LineList.RemoveAt(index);
         }
         /*-----------------分叉线-----------------------------*/
         /// <summary>
@@ -438,18 +427,18 @@ namespace WpfMap
         /// <returns>在：返回标签索引，不在：返回-1</returns>
         public static int IsOnForkLine(Point point)
         {
-            if (MapElement.MapObject.MapForkLineList.Count == 0)
+            if (MapElement.MapObject.ForkLineList.Count == 0)
                 return -1;
 
             //遍历
-            for (int i = 0; i < MapElement.MapObject.MapForkLineList.Count; i++)
+            for (int i = 0; i < MapElement.MapObject.ForkLineList.Count; i++)
             {
                 //取当前坐标【需要margin对齐】
                 Point nowPoint = point;
-                nowPoint.X -= MapElement.MapObject.MapForkLineList[i].Path.Margin.Left;
-                nowPoint.Y -= MapElement.MapObject.MapForkLineList[i].Path.Margin.Top;
+                nowPoint.X -= MapElement.MapObject.ForkLineList[i].Path.Margin.Left;
+                nowPoint.Y -= MapElement.MapObject.ForkLineList[i].Path.Margin.Top;
                 //找到圆弧起点和终点坐标
-                PathGeometry pathGeometry = MapElement.MapObject.MapForkLineList[i].Path.Data as PathGeometry;
+                PathGeometry pathGeometry = MapElement.MapObject.ForkLineList[i].Path.Data as PathGeometry;
                 PathFigure figure = pathGeometry.Figures.First();
                 ArcSegment arc = figure.Segments.First() as ArcSegment;
                 //圆弧起点
@@ -546,7 +535,7 @@ namespace WpfMap
             if (index < 0)
                 return false;
             //拿到编辑器的矩形
-            Rectangle rectangle = MapElement.MapObject.MapForkLineList[index].StartRect;
+            Rectangle rectangle = MapElement.MapObject.ForkLineList[index].StartRect;
             Point pt = point;
             //平移margin，让当前点和矩形在同一坐标系
             pt.X -= rectangle.Margin.Left;
@@ -564,7 +553,7 @@ namespace WpfMap
             if (index < 0)
                 return false;
             //拿到编辑器的矩形
-            Rectangle rectangle = MapElement.MapObject.MapForkLineList[index].EndRect;
+            Rectangle rectangle = MapElement.MapObject.ForkLineList[index].EndRect;
             Point pt = point;
             //平移margin，让当前点和矩形在同一坐标系
             pt.X -= rectangle.Margin.Left;
@@ -581,10 +570,10 @@ namespace WpfMap
         {
             if (index == -1)
                 return;
-            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.MapForkLineList[index].StartRect);
-            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.MapForkLineList[index].EndRect);
-            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.MapForkLineList[index].textBlock);
-            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.MapForkLineList[index].SelectPath);
+            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.ForkLineList[index].StartRect);
+            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.ForkLineList[index].EndRect);
+            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.ForkLineList[index].textBlock);
+            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.ForkLineList[index].SelectPath);
         }
         public static void SetRouteForkLineIsNormal(MapElement.RouteForkLine routeForkLine)
         {
@@ -606,14 +595,14 @@ namespace WpfMap
             point.Y -= MapElement.GridSize / 2;
 
             //对MapElement.GridSize取余，实现移动时按照栅格移动效果
-            Thickness thickness = MapElement.MapObject.MapForkLineList[index].Path.Margin;
+            Thickness thickness = MapElement.MapObject.ForkLineList[index].Path.Margin;
             thickness.Left = point.X - point.X % MapElement.GridSize;
             thickness.Top = point.Y - point.Y % MapElement.GridSize;
 
             //起点编辑器跟随
             thickness.Left += MapElement.GridSize / 2;
             thickness.Top += MapElement.GridSize / 2;
-            MapElement.MapObject.MapForkLineList[index].StartRect.Margin = thickness;
+            MapElement.MapObject.ForkLineList[index].StartRect.Margin = thickness;
         }
         /// <summary>
         /// 移动终点位置
@@ -626,18 +615,18 @@ namespace WpfMap
             point.Y -= MapElement.GridSize / 2;
 
             //对MapElement.GridSize取余，实现移动时按照栅格移动效果
-            Thickness thickness = MapElement.MapObject.MapForkLineList[index].Path.Margin;
+            Thickness thickness = MapElement.MapObject.ForkLineList[index].Path.Margin;
             thickness.Left = point.X - point.X % MapElement.GridSize;
             thickness.Top = point.Y - point.Y % MapElement.GridSize;
 
             //终点编辑器跟随
             thickness.Left += MapElement.GridSize / 2;
             thickness.Top += MapElement.GridSize / 2;
-            MapElement.MapObject.MapForkLineList[index].EndRect.Margin = thickness;
+            MapElement.MapObject.ForkLineList[index].EndRect.Margin = thickness;
 
             //计算当前点【终点编辑器】和起点的偏差
-            double diffx = thickness.Left - MapElement.MapObject.MapForkLineList[index].Path.Margin.Left;
-            double diffy = thickness.Top - MapElement.MapObject.MapForkLineList[index].Path.Margin.Top;
+            double diffx = thickness.Left - MapElement.MapObject.ForkLineList[index].Path.Margin.Left;
+            double diffy = thickness.Top - MapElement.MapObject.ForkLineList[index].Path.Margin.Top;
 
             //定义圆弧半径
             int radius = MapElement.ForkLineArc_Radius;
@@ -689,14 +678,14 @@ namespace WpfMap
                 return;
             figure.Segments.Add(arc);
             pathGeometry.Figures.Add(figure);
-            MapElement.MapObject.MapForkLineList[index].Path.Data = pathGeometry;
+            MapElement.MapObject.ForkLineList[index].Path.Data = pathGeometry;
             //同步选择曲线
-            MapElement.MapObject.MapForkLineList[index].SelectPath.Data = MapElement.MapObject.MapForkLineList[index].Path.Data.Clone();
+            MapElement.MapObject.ForkLineList[index].SelectPath.Data = MapElement.MapObject.ForkLineList[index].Path.Data.Clone();
             //终点跟随到圆弧末端
             Point end = arc.Point;
-            end.X += MapElement.MapObject.MapForkLineList[index].Path.Margin.Left - MapElement.GridSize / 2;
-            end.Y += MapElement.MapObject.MapForkLineList[index].Path.Margin.Top - MapElement.GridSize / 2;
-            MapElement.MapObject.MapForkLineList[index].EndRect.Margin = new Thickness(end.X, end.Y, 0, 0);
+            end.X += MapElement.MapObject.ForkLineList[index].Path.Margin.Left - MapElement.GridSize / 2;
+            end.Y += MapElement.MapObject.ForkLineList[index].Path.Margin.Top - MapElement.GridSize / 2;
+            MapElement.MapObject.ForkLineList[index].EndRect.Margin = new Thickness(end.X, end.Y, 0, 0);
         }
         /// <summary>
         /// 移动分叉【圆弧】到指定位置【编辑状态】
@@ -709,15 +698,15 @@ namespace WpfMap
             double difx = MapOperate.mouseLeftBtnDownMoveDiff.X;
             double dify = MapOperate.mouseLeftBtnDownMoveDiff.Y;
 
-            //提高变化阈值【当光标超过半个栅格就发生跳格】
-            if (difx > 0)
-                difx += MapElement.GridSize / 2;
-            else
-                difx -= MapElement.GridSize / 2;
-            if (dify > 0)
-                dify += MapElement.GridSize / 2;
-            else
-                dify -= MapElement.GridSize / 2;
+            ////提高变化阈值【当光标超过半个栅格就发生跳格】
+            //if (difx > 0)
+            //    difx += MapElement.GridSize / 2;
+            //else
+            //    difx -= MapElement.GridSize / 2;
+            //if (dify > 0)
+            //    dify += MapElement.GridSize / 2;
+            //else
+            //    dify -= MapElement.GridSize / 2;
 
             //对齐栅格
             difx -= difx % MapElement.GridSize;
@@ -731,24 +720,24 @@ namespace WpfMap
             tk.Left += difx;
             tk.Top += dify;
 
-            MapElement.MapObject.MapForkLineList[index].Path.Margin = tk;
+            MapElement.MapObject.ForkLineList[index].Path.Margin = tk;
             //选择线跟随
-            MapElement.MapObject.MapForkLineList[index].SelectPath.Margin = tk;
+            MapElement.MapObject.ForkLineList[index].SelectPath.Margin = tk;
             //起点编辑器跟随【减X1和Y1是因为在移动起点时修改了X1和Y1，而不是整体移动Margin】
             tk.Left -= MapElement.GridSize / 2;
             tk.Top -= MapElement.GridSize / 2;
-            MapElement.MapObject.MapForkLineList[index].StartRect.Margin = tk;
+            MapElement.MapObject.ForkLineList[index].StartRect.Margin = tk;
             //终点编辑器跟随
             //找到圆弧终点坐标
-            PathGeometry pathGeometry = MapElement.MapObject.MapForkLineList[index].Path.Data as PathGeometry;
+            PathGeometry pathGeometry = MapElement.MapObject.ForkLineList[index].Path.Data as PathGeometry;
             PathFigure figure = pathGeometry.Figures.First();
             ArcSegment arc = figure.Segments.First() as ArcSegment;
             //圆弧终点
             Point end = arc.Point;
-            end.X += MapElement.MapObject.MapForkLineList[index].Path.Margin.Left - MapElement.GridSize / 2;
-            end.Y += MapElement.MapObject.MapForkLineList[index].Path.Margin.Top - MapElement.GridSize / 2;
+            end.X += MapElement.MapObject.ForkLineList[index].Path.Margin.Left - MapElement.GridSize / 2;
+            end.Y += MapElement.MapObject.ForkLineList[index].Path.Margin.Top - MapElement.GridSize / 2;
             //终点编辑器的位置和圆弧终点坐标同步
-            MapElement.MapObject.MapForkLineList[index].EndRect.Margin = new Thickness(end.X, end.Y, 0, 0);
+            MapElement.MapObject.ForkLineList[index].EndRect.Margin = new Thickness(end.X, end.Y, 0, 0);
         }
         /// <summary>
         /// 设置标到选中状态
@@ -760,7 +749,7 @@ namespace WpfMap
             if (index == -1)
                 return;
             //显示选择虚线
-            if (MapElement.CvForkLine.Children.Contains(MapElement.MapObject.MapForkLineList[index].SelectPath) == false)
+            if (MapElement.CvForkLine.Children.Contains(MapElement.MapObject.ForkLineList[index].SelectPath) == false)
             {
                 MapElement.ForkLineShowSelect(index);
             }
@@ -770,7 +759,7 @@ namespace WpfMap
             //    MapElement.ForkLineShowStart(index);
             //}
             //显示终点编辑器
-            if (MapElement.CvForkLine.Children.Contains(MapElement.MapObject.MapForkLineList[index].EndRect) == false)
+            if (MapElement.CvForkLine.Children.Contains(MapElement.MapObject.ForkLineList[index].EndRect) == false)
             {
                 MapElement.ForkLineShowEnd(index);
             }
@@ -802,13 +791,13 @@ namespace WpfMap
         public static void RemoveForkLine(int index)
         {
             //从画布移除
-            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.MapForkLineList[index].Path);
-            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.MapForkLineList[index].textBlock);
-            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.MapForkLineList[index].SelectPath);
-            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.MapForkLineList[index].StartRect);
-            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.MapForkLineList[index].EndRect);
+            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.ForkLineList[index].Path);
+            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.ForkLineList[index].textBlock);
+            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.ForkLineList[index].SelectPath);
+            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.ForkLineList[index].StartRect);
+            MapElement.CvForkLine.Children.Remove(MapElement.MapObject.ForkLineList[index].EndRect);
             //从列表移除
-            MapElement.MapObject.MapForkLineList.RemoveAt(index);
+            MapElement.MapObject.ForkLineList.RemoveAt(index);
         }
         /*-----------------综合-----------------------------*/
         /// <summary>
@@ -842,31 +831,32 @@ namespace WpfMap
         public static void ClearAllSelect()
         {
             //清除RFID
-            foreach (var item in MapOperate.MultiSelected.MapRFIDList)
+            foreach (var item in MapOperate.MultiSelected.RFIDList)
             {
                 SetRFIDIsNormal(item);
             }
-            MapOperate.MultiSelected.MapRFIDList.Clear();
+            MapOperate.MultiSelected.RFIDList.Clear();
             //清除Line
-            foreach (var item in MapOperate.MultiSelected.MapLineList)
+            foreach (var item in MapOperate.MultiSelected.LineList)
             {
                 SetRouteLineIsNormal(item);
             }
-            MapOperate.MultiSelected.MapLineList.Clear();
+            MapOperate.MultiSelected.LineList.Clear();
             //清除ForkLine
-            foreach (var item in MapOperate.MultiSelected.MapForkLineList)
+            foreach (var item in MapOperate.MultiSelected.ForkLineList)
             {
                 SetRouteForkLineIsNormal(item);
             }
-            MapOperate.MultiSelected.MapForkLineList.Clear();
+            MapOperate.MultiSelected.ForkLineList.Clear();
         }
         //计算选中对象列表【多选框模式】
         public static void GetMultiSelectedObject()
         {
             //选择框的Rectangle
             Rectangle selectRectangle = MapOperate.SelectRectangle;
+
             //RFID
-            foreach (var item in MapElement.MapObject.MapRFIDList)
+            foreach (var item in MapElement.MapObject.RFIDList)
             {
                 //计算最小坐标
                 Point min = new Point(item.ellipse.Margin.Left, item.ellipse.Margin.Top);
@@ -881,11 +871,11 @@ namespace WpfMap
                     //设置为选中状态
                     MapFunction.SetRFIDIsSelected(item);
                     //添加到选中列表
-                    MapOperate.MultiSelected.MapRFIDList.Add(item);
+                    MapOperate.MultiSelected.RFIDList.Add(item);
                 }
             }
             //Line
-            foreach (var item in MapElement.MapObject.MapLineList)
+            foreach (var item in MapElement.MapObject.LineList)
             {
                 //计算最小坐标
                 Point min = new Point(item.line.X1 + item.line.Margin.Left, item.line.Y1 + item.line.Margin.Top);
@@ -900,11 +890,11 @@ namespace WpfMap
                     //设置为选中状态
                     MapFunction.SetRouteLineIsSelected(item);
                     //添加到选中列表
-                    MapOperate.MultiSelected.MapLineList.Add(item);
+                    MapOperate.MultiSelected.LineList.Add(item);
                 }
             }
             //ForkLine
-            foreach (var item in MapElement.MapObject.MapForkLineList)
+            foreach (var item in MapElement.MapObject.ForkLineList)
             {
 
                 //找到圆弧起点和终点坐标
@@ -931,10 +921,66 @@ namespace WpfMap
                     //设置为选中状态
                     MapFunction.SetForkLineIsSelected(item);
                     //添加到选中列表
-                    MapOperate.MultiSelected.MapForkLineList.Add(item);
+                    MapOperate.MultiSelected.ForkLineList.Add(item);
                 }
             }
         }
+
+        /// <summary>
+        /// 所有已选中元素做相对移动
+        /// </summary>
+        public static void MoveMultiSelected(Point nowPoint)
+        {
+            //获取移动偏差
+            double difx = MapOperate.mouseLeftBtnDownMoveDiff.X;
+            double dify = MapOperate.mouseLeftBtnDownMoveDiff.Y;
+
+            //对齐栅格
+            difx -= difx % MapElement.GridSize;
+            dify -= dify % MapElement.GridSize;
+
+            //如果xy偏差都是0，说明移动的范围不够一个栅格，所以不做处理
+            if (difx == 0 && dify == 0)
+            {
+                return;
+            }
+            Console.WriteLine("dx:{0},dy:{1}", difx, dify);
+            //有偏差，移动元素做相同方向的偏差
+            //RFID
+            foreach (var item in MapOperate.MultiSelected.RFIDList)
+            {
+                //获取原来的位置
+                Thickness thickness = item.ellipse.Margin;
+                //移动
+                thickness.Left += difx;
+                thickness.Top += dify;
+                item.ellipse.Margin = thickness;
+
+                //选择框跟随
+                item.SelectRectangle.Margin = thickness;
+
+                //文字跟随
+                Thickness tk = item.textBlock.Margin;
+                tk.Left += difx;
+                tk.Top += dify;
+                item.textBlock.Margin = tk;
+            }
+
+            //更新历史位置，以便记录下一次变化【注意：需要保留余数】
+            double rx = MapOperate.mouseLeftBtnDownMoveDiff.X % MapElement.GridSize;
+            double ry = MapOperate.mouseLeftBtnDownMoveDiff.Y % MapElement.GridSize;
+            Console.WriteLine("dxdd:{0},dydd:{1}", rx, ry);
+
+            if (difx != 0)
+                MapOperate.mouseLeftBtnDownToMap.X = nowPoint.X - rx;
+            if (dify != 0)
+                MapOperate.mouseLeftBtnDownToMap.Y = nowPoint.Y - ry;
+
+
+        }
+        /*-----------------End-----------------------------*/
+
+
 
     }
 }

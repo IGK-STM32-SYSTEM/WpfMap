@@ -42,7 +42,11 @@ namespace WpfMap
             /// </summary>
             EditElement,
             /// <summary>
-            /// 编辑多个元素【多选】【进入条件：在空白处左键按下，并拖动框选，或按住Ctrl键在对象上单击】
+            /// 多选状态，只显示多选框，结束后如果有选中的，进入多编辑状态，否则恢复单个编辑模式
+            /// </summary>
+            MultiSelect,
+            /// <summary>
+            /// 多个编辑模式，进入该模式说明已经选中了多个元素
             /// </summary>
             MultiEdit,
             /// <summary>
@@ -53,7 +57,15 @@ namespace WpfMap
         /// <summary>
         /// 当前操作模式
         /// </summary>
-        public static EnumMode NowMode = EnumMode.EditElement;
+        private static EnumMode nowMode = EnumMode.EditElement;
+        public static EnumMode NowMode
+        {
+            get { return nowMode; }
+            set {
+                Console.WriteLine("操作模式：{0}",Enum.GetName(typeof(EnumMode),value));
+                nowMode = value;
+            }
+        } 
         //元素类型枚举
         public enum EnumElementType
         {
@@ -94,13 +106,8 @@ namespace WpfMap
 
         //鼠标左键按下，记录按下的位置
         public static System.Windows.Point mouseLeftBtnDownToMap = new System.Windows.Point();
-        public static System.Windows.Point mouseLeftBtnDownToView = new System.Windows.Point();
         //记录是否按住左键移动过
         public static bool MovedAfterLeftBtn = false;
-        /// <summary>
-        /// 鼠标左键按下移动历史值【整体移动直线时使用】
-        /// </summary>
-        public static System.Windows.Point mouseLeftBtnDownMoveLast = new System.Windows.Point();
         /// <summary>
         /// 鼠标左键按下移动偏差，左键按下后清空【整体移动直线时使用】
         /// </summary>
@@ -150,8 +157,8 @@ namespace WpfMap
             MapOperate.SelectRectangle.Width = Math.Abs(diffx);
             MapOperate.SelectRectangle.Height = Math.Abs(diffy);
             Thickness thickness = new Thickness(MapOperate.mouseLeftBtnDownToMap.X, MapOperate.mouseLeftBtnDownToMap.Y, 0, 0);
-            thickness.Left += diffx < 0 ? diffx  : 0;
-            thickness.Top += diffy < 0 ? diffy  : 0;
+            thickness.Left += diffx < 0 ? diffx : 0;
+            thickness.Top += diffy < 0 ? diffy : 0;
             MapOperate.SelectRectangle.Margin = thickness;
             //显示虚线
             MapOperate.SelectRectangle.StrokeDashArray = new DoubleCollection() { 3, 3 };
