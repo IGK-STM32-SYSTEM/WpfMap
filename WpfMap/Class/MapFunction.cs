@@ -157,16 +157,30 @@ namespace WpfMap
             //遍历
             for (int i = 0; i < MapElement.MapObject.LineList.Count; i++)
             {
-                //拿到直线
-                Line line = MapElement.MapObject.LineList[i].line;
-                Point pt = point;
-                pt.X -= line.Margin.Left;
-                pt.Y -= line.Margin.Top;
-                double dis = MathHelper.DistancePointToLine(pt, line);
-                if (dis < 5)
+                if (IsOnOneRouteLine(point, i))
                     return i;
             }
             return -1;
+        }
+        /// <summary>
+        /// 判断坐标是否在某条直线上
+        /// </summary>
+        /// <param name="point">光标坐标</param>
+        /// <returns>在：返回标签索引，不在：返回-1</returns>
+        public static bool IsOnOneRouteLine(Point point, int index)
+        {
+            if (MapElement.MapObject.LineList.Count == 0)
+                return false;
+            //拿到直线
+            Line line = MapElement.MapObject.LineList[index].line;
+            Point pt = point;
+            pt.X -= line.Margin.Left;
+            pt.Y -= line.Margin.Top;
+            double dis = MathHelper.DistancePointToLine(pt, line);
+            if (dis < 5)
+                return true;
+            else
+                return false;
         }
         /// <summary>
         /// 判断坐标是否在指定直线的【起点】编辑器上
@@ -433,97 +447,111 @@ namespace WpfMap
             //遍历
             for (int i = 0; i < MapElement.MapObject.ForkLineList.Count; i++)
             {
-                //取当前坐标【需要margin对齐】
-                Point nowPoint = point;
-                nowPoint.X -= MapElement.MapObject.ForkLineList[i].Path.Margin.Left;
-                nowPoint.Y -= MapElement.MapObject.ForkLineList[i].Path.Margin.Top;
-                //找到圆弧起点和终点坐标
-                PathGeometry pathGeometry = MapElement.MapObject.ForkLineList[i].Path.Data as PathGeometry;
-                PathFigure figure = pathGeometry.Figures.First();
-                ArcSegment arc = figure.Segments.First() as ArcSegment;
-                //圆弧起点
-                Point start = figure.StartPoint;
-                //圆弧终点
-                Point end = arc.Point;
-                end.Y = -end.Y;
-
-                //圆弧半径
-                double radius = arc.Size.Width;
-                //找到圆心坐标
-                Point center = new Point();
-                //逆时针
-                if (arc.SweepDirection == SweepDirection.Counterclockwise)
-                {
-                    if (end.X > start.X && end.Y > start.Y)
-                    {
-                        center.X = start.X;
-                        center.Y = end.Y;
-                    }
-                    else
-                    if (end.X < start.X && end.Y > start.Y)
-                    {
-                        center.X = end.X;
-                        center.Y = start.Y;
-                    }
-                    else
-                    if (end.X < start.X && end.Y < start.Y)
-                    {
-                        center.X = start.X;
-                        center.Y = end.Y;
-                    }
-                    else
-                    if (end.X > start.X && end.Y < start.Y)
-                    {
-                        center.X = end.X;
-                        center.Y = start.Y;
-                    }
-                }
-                //顺时针
-                if (arc.SweepDirection == SweepDirection.Clockwise)
-                {
-                    if (end.X > start.X && end.Y > start.Y)
-                    {
-                        center.X = end.X;
-                        center.Y = start.Y;
-                    }
-                    else
-                    if (end.X < start.X && end.Y > start.Y)
-                    {
-                        center.X = start.X;
-                        center.Y = end.Y;
-                    }
-                    else
-                    if (end.X < start.X && end.Y < start.Y)
-                    {
-                        center.X = end.X;
-                        center.Y = start.Y;
-                    }
-                    else
-                    if (end.X > start.X && end.Y < start.Y)
-                    {
-                        center.X = start.X;
-                        center.Y = end.Y;
-                    }
-                }
-                //计算到圆心距离
-                double dis = MathHelper.Distance(center, nowPoint);
-                //判断是否在圆上【允许偏差 5】
-                if ((dis < (radius + 5)) && (dis > (radius - 5)))
-                {
-                    //恢复Y轴方向
-                    end.Y = -end.Y;
-                    //判断是否在圆弧范围内【X、Y都在起点和终点的XY之间】
-                    double xMax = start.X > end.X ? start.X : end.X;
-                    double xMin = start.X < end.X ? start.X : end.X;
-
-                    double yMax = start.Y > end.Y ? start.Y : end.Y;
-                    double yMin = start.Y < end.Y ? start.Y : end.Y;
-
-                    if (nowPoint.X > xMin && nowPoint.X < xMax && nowPoint.Y > yMin && nowPoint.Y < yMax)
-                        return i;
-                }
+                if (IsOnOneForkLine(point, i))
+                    return i;
             }
             return -1;
+        }
+        /// <summary>
+        /// 判断坐标是否在圆弧上
+        /// </summary>
+        /// <param name="point">光标坐标</param>
+        /// <returns>在：返回标签索引，不在：返回-1</returns>
+        public static bool IsOnOneForkLine(Point point, int index)
+        {
+            if (MapElement.MapObject.ForkLineList.Count == 0)
+                return false;
+
+            //取当前坐标【需要margin对齐】
+            Point nowPoint = point;
+            nowPoint.X -= MapElement.MapObject.ForkLineList[index].Path.Margin.Left;
+            nowPoint.Y -= MapElement.MapObject.ForkLineList[index].Path.Margin.Top;
+            //找到圆弧起点和终点坐标
+            PathGeometry pathGeometry = MapElement.MapObject.ForkLineList[index].Path.Data as PathGeometry;
+            PathFigure figure = pathGeometry.Figures.First();
+            ArcSegment arc = figure.Segments.First() as ArcSegment;
+            //圆弧起点
+            Point start = figure.StartPoint;
+            //圆弧终点
+            Point end = arc.Point;
+            end.Y = -end.Y;
+
+            //圆弧半径
+            double radius = arc.Size.Width;
+            //找到圆心坐标
+            Point center = new Point();
+            //逆时针
+            if (arc.SweepDirection == SweepDirection.Counterclockwise)
+            {
+                if (end.X > start.X && end.Y > start.Y)
+                {
+                    center.X = start.X;
+                    center.Y = end.Y;
+                }
+                else
+                if (end.X < start.X && end.Y > start.Y)
+                {
+                    center.X = end.X;
+                    center.Y = start.Y;
+                }
+                else
+                if (end.X < start.X && end.Y < start.Y)
+                {
+                    center.X = start.X;
+                    center.Y = end.Y;
+                }
+                else
+                if (end.X > start.X && end.Y < start.Y)
+                {
+                    center.X = end.X;
+                    center.Y = start.Y;
+                }
+            }
+            //顺时针
+            if (arc.SweepDirection == SweepDirection.Clockwise)
+            {
+                if (end.X > start.X && end.Y > start.Y)
+                {
+                    center.X = end.X;
+                    center.Y = start.Y;
+                }
+                else
+                if (end.X < start.X && end.Y > start.Y)
+                {
+                    center.X = start.X;
+                    center.Y = end.Y;
+                }
+                else
+                if (end.X < start.X && end.Y < start.Y)
+                {
+                    center.X = end.X;
+                    center.Y = start.Y;
+                }
+                else
+                if (end.X > start.X && end.Y < start.Y)
+                {
+                    center.X = start.X;
+                    center.Y = end.Y;
+                }
+            }
+            //计算到圆心距离
+            double dis = MathHelper.Distance(center, nowPoint);
+            //判断是否在圆上【允许偏差 5】
+            if ((dis < (radius + 5)) && (dis > (radius - 5)))
+            {
+                //恢复Y轴方向
+                end.Y = -end.Y;
+                //判断是否在圆弧范围内【X、Y都在起点和终点的XY之间】
+                double xMax = start.X > end.X ? start.X : end.X;
+                double xMin = start.X < end.X ? start.X : end.X;
+
+                double yMax = start.Y > end.Y ? start.Y : end.Y;
+                double yMin = start.Y < end.Y ? start.Y : end.Y;
+
+                if (nowPoint.X > xMin && nowPoint.X < xMax && nowPoint.Y > yMin && nowPoint.Y < yMax)
+                    return true;
+            }
+            return false;
         }
         /// <summary>
         /// 判断坐标是否在指定【起点】编辑器上
@@ -925,7 +953,38 @@ namespace WpfMap
                 }
             }
         }
-
+        /// <summary>
+        /// 坐标是否在已选中的元素上
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsOnMultiSelected(Point point)
+        {
+            //RFID
+            foreach (var item in MapOperate.MultiSelected.RFIDList)
+            {
+                if (MapFunction.IsOnOneRFID(point, MapElement.MapObject.RFIDList.IndexOf(item)))
+                {
+                    return true;
+                }
+            }
+            //Line
+            foreach (var item in MapOperate.MultiSelected.LineList)
+            {
+                if (MapFunction.IsOnOneRouteLine(point, MapElement.MapObject.LineList.IndexOf(item)))
+                {
+                    return true;
+                }
+            }
+            //ForkLine
+            foreach (var item in MapOperate.MultiSelected.ForkLineList)
+            {
+                if (MapFunction.IsOnOneForkLine(point, MapElement.MapObject.ForkLineList.IndexOf(item)))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         /// <summary>
         /// 所有已选中元素做相对移动
         /// </summary>

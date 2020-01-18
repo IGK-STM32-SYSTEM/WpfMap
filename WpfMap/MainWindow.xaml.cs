@@ -148,6 +148,7 @@ namespace WpfMap
         //左键按下
         private void imageRobot_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            LeftBtnDownStart:
             //记录按下时的位置
             MapOperate.mouseLeftBtnDownToMap = e.GetPosition(cvMap);
             //编辑单个元素
@@ -293,18 +294,15 @@ namespace WpfMap
             //编辑多个元素
             if (MapOperate.NowMode == MapOperate.EnumMode.MultiEdit)
             {
-                //判断光标是否在标签上
-                int s1 = MapFunction.IsOnRFID(MapOperate.mouseLeftBtnDownToMap);
-                //判断光标是否在分叉线【圆弧】上
-                int s2 = MapFunction.IsOnForkLine(MapOperate.mouseLeftBtnDownToMap);
-                //判断是否在直线上
-                int s3 = MapFunction.IsOnRouteLine(MapOperate.mouseLeftBtnDownToMap);
-                if (s1 == -1 && s2 == -1 && s3 == -1)
+                //判断光标是否在已经选中的标签上
+                if (MapFunction.IsOnMultiSelected(MapOperate.mouseLeftBtnDownToMap) == false)
                 {
                     //点击了空白处，退出多个编辑状态
                     MapOperate.NowMode = MapOperate.EnumMode.EditElement;
                     //清除所有选中
                     MapFunction.ClearAllSelect();
+                    //程序回退到左键按下处，重新执行
+                    goto LeftBtnDownStart;
                 }
             }
         }
