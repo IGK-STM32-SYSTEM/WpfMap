@@ -468,8 +468,8 @@ namespace WpfMap
                 System.Windows.Point position = e.GetPosition(cvMap);
                 System.Windows.Point position1 = e.GetPosition(drawViewScroll);
 
-                tlt.X += position.X - MapOperate.mouseRightBtnDownPoint.X;
-                tlt.Y += position.Y - MapOperate.mouseRightBtnDownPoint.Y;
+                tlt.X += (position.X - MapOperate.mouseRightBtnDownPoint.X)* MapOperate.ViewInfo.Scale;
+                tlt.Y +=( position.Y - MapOperate.mouseRightBtnDownPoint.Y)*MapOperate.ViewInfo.Scale;
 
                 //更新圆点坐标,保留两位小数
                 MapOperate.ViewInfo.Origin = new Point(Math.Round(tlt.X, 0), Math.Round(tlt.Y, 0));
