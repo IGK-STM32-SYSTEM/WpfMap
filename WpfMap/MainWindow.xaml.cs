@@ -481,6 +481,12 @@ namespace WpfMap
                 //左键按住移动位置【调整元素位置】
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
+                    //左键按下后，鼠标不移动也会进入移动事件，
+                    //导致如果点击的位置不是中心，标签会动一下，
+                    //很不美好，所以加坐标比较，没有变化就不进行移动
+                    if (MapOperate.mouseLeftBtnDownToMap.X == nowPoint.X &&
+                        MapOperate.mouseLeftBtnDownToMap.Y == nowPoint.Y)
+                        return;
                     if (MapOperate.NowSelectIndex != -1)
                     {
                         //移动标签

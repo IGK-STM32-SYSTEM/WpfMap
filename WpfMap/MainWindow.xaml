@@ -41,10 +41,10 @@
                 </Grid.RenderTransform>
                 <Canvas x:Name="cvGrid"></Canvas>
                 <Canvas x:Name="cvMap"></Canvas>
-                <Canvas x:Name="cvRFID"></Canvas>
                 <Canvas x:Name="cvLine"></Canvas>
                 <Canvas x:Name="cvForkLine"></Canvas>
-                <Canvas x:Name="cvOperate"></Canvas>
+                <Canvas x:Name="cvRFID"></Canvas>
+               <Canvas x:Name="cvOperate"></Canvas>
             </Grid>
         </ScrollViewer>
         <!--状态栏-->
