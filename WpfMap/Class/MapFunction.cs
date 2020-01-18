@@ -727,16 +727,6 @@ namespace WpfMap
             double difx = MapOperate.mouseLeftBtnDownMoveDiff.X;
             double dify = MapOperate.mouseLeftBtnDownMoveDiff.Y;
 
-            ////提高变化阈值【当光标超过半个栅格就发生跳格】
-            //if (difx > 0)
-            //    difx += MapElement.GridSize / 2;
-            //else
-            //    difx -= MapElement.GridSize / 2;
-            //if (dify > 0)
-            //    dify += MapElement.GridSize / 2;
-            //else
-            //    dify -= MapElement.GridSize / 2;
-
             //对齐栅格
             difx -= difx % MapElement.GridSize;
             dify -= dify % MapElement.GridSize;
@@ -827,6 +817,105 @@ namespace WpfMap
             MapElement.CvForkLine.Children.Remove(MapElement.MapObject.ForkLines[index].EndRect);
             //从列表移除
             MapElement.MapObject.ForkLines.RemoveAt(index);
+        }
+        /*-----------------共用-----------------------------*/
+        /// <summary>
+        /// 将所有元素平移指定像素的宽度高度
+        /// </summary>
+        /// <param name="difx">水平方向需要平移的像素，带方向</param>
+        /// <param name="dify">竖直方向需要平移的像素，带方向</param>
+        /// <param name="mapObject">待平移对象</param>
+        public static void MoveObjectByPixel(double difx, double dify, MapElement.MapObjectClass mapObject)
+        {
+            //对齐栅格
+            difx -= difx % MapElement.GridSize;
+            dify -= dify % MapElement.GridSize;
+            //如果xy偏差都是0，说明移动的范围不够一个栅格，所以不做处理
+            if (difx == 0 && dify == 0)
+                return;
+            //Console.WriteLine("dx:{0},dy:{1}", difx, dify);
+            //有偏差，移动元素做相同方向的偏差
+            //RFID
+            foreach (var item in mapObject.RFIDS)
+            {
+                //获取原来的位置
+                Thickness thickness = item.ellipse.Margin;
+                //移动
+                thickness.Left += difx;
+                thickness.Top += dify;
+                item.ellipse.Margin = thickness;
+
+                //选择框跟随
+                item.SelectRectangle.Margin = thickness;
+
+                //文字跟随
+                Thickness tk = item.textBlock.Margin;
+                tk.Left += difx;
+                tk.Top += dify;
+                item.textBlock.Margin = tk;
+            }
+            //Line
+            foreach (var item in mapObject.Lines)
+            {
+                //获取原来的位置
+                Thickness tk = item.line.Margin;
+                //移动
+                tk.Left += difx;
+                tk.Top += dify;
+                item.line.Margin = tk;
+
+                //选择框跟随
+                item.SelectLine.Margin = tk;
+
+                //起点选择器跟随
+                tk = item.StartRect.Margin;
+                tk.Left += difx;
+                tk.Top += dify;
+                item.StartRect.Margin = tk;
+
+                //终点选择器跟随
+                tk = item.EndRect.Margin;
+                tk.Left += difx;
+                tk.Top += dify;
+                item.EndRect.Margin = tk;
+
+                //文字跟随
+                tk = item.textBlock.Margin;
+                tk.Left += difx;
+                tk.Top += dify;
+                item.textBlock.Margin = tk;
+            }
+            //ForkLine
+            foreach (var item in mapObject.ForkLines)
+            {
+                //获取原来的位置
+                Thickness tk = item.Path.Margin;
+                //移动
+                tk.Left += difx;
+                tk.Top += dify;
+                item.Path.Margin = tk;
+
+                //选择框跟随
+                item.SelectPath.Margin = tk;
+
+                //起点选择器跟随
+                tk = item.StartRect.Margin;
+                tk.Left += difx;
+                tk.Top += dify;
+                item.StartRect.Margin = tk;
+
+                //终点选择器跟随
+                tk = item.EndRect.Margin;
+                tk.Left += difx;
+                tk.Top += dify;
+                item.EndRect.Margin = tk;
+
+                //文字跟随
+                tk = item.textBlock.Margin;
+                tk.Left += difx;
+                tk.Top += dify;
+                item.textBlock.Margin = tk;
+            }
         }
         /*-----------------多选-----------------------------*/
         /// <summary>
@@ -998,95 +1087,7 @@ namespace WpfMap
             //获取移动偏差
             double difx = MapOperate.mouseLeftBtnDownMoveDiff.X;
             double dify = MapOperate.mouseLeftBtnDownMoveDiff.Y;
-            //对齐栅格
-            difx -= difx % MapElement.GridSize;
-            dify -= dify % MapElement.GridSize;
-            //如果xy偏差都是0，说明移动的范围不够一个栅格，所以不做处理
-            if (difx == 0 && dify == 0)
-                return;
-            //Console.WriteLine("dx:{0},dy:{1}", difx, dify);
-            //有偏差，移动元素做相同方向的偏差
-            //RFID
-            foreach (var item in mapObject.RFIDS)
-            {
-                //获取原来的位置
-                Thickness thickness = item.ellipse.Margin;
-                //移动
-                thickness.Left += difx;
-                thickness.Top += dify;
-                item.ellipse.Margin = thickness;
-
-                //选择框跟随
-                item.SelectRectangle.Margin = thickness;
-
-                //文字跟随
-                Thickness tk = item.textBlock.Margin;
-                tk.Left += difx;
-                tk.Top += dify;
-                item.textBlock.Margin = tk;
-            }
-            //Line
-            foreach (var item in mapObject.Lines)
-            {
-                //获取原来的位置
-                Thickness tk = item.line.Margin;
-                //移动
-                tk.Left += difx;
-                tk.Top += dify;
-                item.line.Margin = tk;
-
-                //选择框跟随
-                item.SelectLine.Margin = tk;
-
-                //起点选择器跟随
-                tk = item.StartRect.Margin;
-                tk.Left += difx;
-                tk.Top += dify;
-                item.StartRect.Margin = tk;
-
-                //终点选择器跟随
-                tk = item.EndRect.Margin;
-                tk.Left += difx;
-                tk.Top += dify;
-                item.EndRect.Margin = tk;
-
-                //文字跟随
-                tk = item.textBlock.Margin;
-                tk.Left += difx;
-                tk.Top += dify;
-                item.textBlock.Margin = tk;
-            }
-            //ForkLine
-            foreach (var item in mapObject.ForkLines)
-            {
-                //获取原来的位置
-                Thickness tk = item.Path.Margin;
-                //移动
-                tk.Left += difx;
-                tk.Top += dify;
-                item.Path.Margin = tk;
-
-                //选择框跟随
-                item.SelectPath.Margin = tk;
-
-                //起点选择器跟随
-                tk = item.StartRect.Margin;
-                tk.Left += difx;
-                tk.Top += dify;
-                item.StartRect.Margin = tk;
-
-                //终点选择器跟随
-                tk = item.EndRect.Margin;
-                tk.Left += difx;
-                tk.Top += dify;
-                item.EndRect.Margin = tk;
-
-                //文字跟随
-                tk = item.textBlock.Margin;
-                tk.Left += difx;
-                tk.Top += dify;
-                item.textBlock.Margin = tk;
-            }
+            MoveObjectByPixel(difx, dify, mapObject);
             //更新历史位置，以便记录下一次变化【注意：需要保留余数】
             double rx = MapOperate.mouseLeftBtnDownMoveDiff.X % MapElement.GridSize;
             double ry = MapOperate.mouseLeftBtnDownMoveDiff.Y % MapElement.GridSize;
