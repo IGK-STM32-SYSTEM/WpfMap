@@ -146,6 +146,10 @@ namespace WpfMap
         /// </summary>
         public static MapElement.MapObjectClass MultiSelected = new MapElement.MapObjectClass();
         /// <summary>
+        /// 刚粘贴的过程对象【过程对象】
+        /// </summary>
+        public static MapElement.MapObjectClass PastedObject = new MapElement.MapObjectClass();
+        /// <summary>
         /// 剪贴板元素集合
         /// </summary>
         public static MapElement.MapObjectClass Clipboard= new MapElement.MapObjectClass();

@@ -217,24 +217,19 @@ namespace WpfMap
         /// <summary>
         /// 绘制单个RFID
         /// </summary>
-        public static void AddRFIDToCanvas(int index)
+        public static void ShowRFID(MapElement.RFID rfid)
         {
-            MapElement.CvRFID.Children.Add(MapObject.RFIDS[index].ellipse);
-            MapElement.CvRFID.Children.Add(MapObject.RFIDS[index].textBlock);
+            MapElement.CvRFID.Children.Add(rfid.ellipse);
+            MapElement.CvRFID.Children.Add(rfid.textBlock);
         }
         /// <summary>
         /// 绘制RFID列表
         /// </summary>
         public static void DrawRFIDList()
         {
-            if (MapObject.RFIDS.Count == 0)
-                return;
-            for (int i = 0; i < MapObject.RFIDS.Count; i++)
-            {
-                AddRFIDToCanvas(i);
-            }
+            foreach (var item in MapObject.RFIDS)
+                ShowRFID(item);
         }
-
         /// <summary>
         /// 添加一个新的RFID并显示
         /// </summary>
@@ -348,7 +343,6 @@ namespace WpfMap
                 DrawRouteLine(i);
             }
         }
-
         /// <summary>
         /// 添加一条直线
         /// </summary>
@@ -361,6 +355,12 @@ namespace WpfMap
             MapElement.MapObject.Lines.Add(line);
             //返回索引
             return MapElement.MapObject.Lines.Count - 1;
+        }
+        public static void ShowLine(MapElement.RouteLine line)
+        {
+            if (MapElement.CvRouteLine.Children.Contains(line.line))
+                return;
+            MapElement.CvRouteLine.Children.Add(line.line);
         }
         /// <summary>
         /// 显示起点编辑器
@@ -487,9 +487,9 @@ namespace WpfMap
         /// <summary>
         /// 绘制单个
         /// </summary>
-        public static void DrawForkLine(int index)
+        public static void ShowForkLine(MapElement.RouteForkLine forkLine)
         {
-            MapElement.CvForkLine.Children.Add(MapElement.MapObject.ForkLines[index].Path);
+            MapElement.CvForkLine.Children.Add(forkLine.Path);
         }
         /// <summary>
         /// 显示起点编辑器
@@ -584,12 +584,8 @@ namespace WpfMap
         /// </summary>
         public static void DrawForkLineList()
         {
-            if (MapObject.ForkLines.Count == 0)
-                return;
-            for (int i = 0; i < MapObject.ForkLines.Count; i++)
-            {
-                DrawForkLine(i);
-            }
+            foreach (var item in MapObject.ForkLines)
+                ShowForkLine(item);
         }
         /// <summary>
         /// 添加一个并显示

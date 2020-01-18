@@ -858,28 +858,29 @@ namespace WpfMap
             }
         }
         /// <summary>
-        /// 设置所有选中状态的元素为正常状态，并清空多选列表
+        /// 清空选中，并清除传入对象
         /// </summary>
-        public static void ClearAllSelect()
+        /// <param name="mapObject"></param>
+        public static void ClearAllSelect(MapElement.MapObjectClass mapObject)
         {
             //清除RFID
-            foreach (var item in MapOperate.MultiSelected.RFIDS)
+            foreach (var item in mapObject.RFIDS)
             {
                 SetRFIDIsNormal(item);
             }
-            MapOperate.MultiSelected.RFIDS.Clear();
+            mapObject.RFIDS.Clear();
             //清除Line
-            foreach (var item in MapOperate.MultiSelected.Lines)
+            foreach (var item in mapObject.Lines)
             {
                 SetRouteLineIsNormal(item);
             }
-            MapOperate.MultiSelected.Lines.Clear();
+            mapObject.Lines.Clear();
             //清除ForkLine
-            foreach (var item in MapOperate.MultiSelected.ForkLines)
+            foreach (var item in mapObject.ForkLines)
             {
                 SetRouteForkLineIsNormal(item);
             }
-            MapOperate.MultiSelected.ForkLines.Clear();
+            mapObject.ForkLines.Clear();
         }
         //计算选中对象列表【多选框模式】
         public static void GetMultiSelectedObject()
@@ -992,25 +993,21 @@ namespace WpfMap
         /// <summary>
         /// 所有已选中元素做相对移动
         /// </summary>
-        public static void MoveMultiSelected(Point nowPoint)
+        public static void MoveMultiSelected(Point nowPoint, MapElement.MapObjectClass mapObject)
         {
             //获取移动偏差
             double difx = MapOperate.mouseLeftBtnDownMoveDiff.X;
             double dify = MapOperate.mouseLeftBtnDownMoveDiff.Y;
-
             //对齐栅格
             difx -= difx % MapElement.GridSize;
             dify -= dify % MapElement.GridSize;
-
             //如果xy偏差都是0，说明移动的范围不够一个栅格，所以不做处理
             if (difx == 0 && dify == 0)
-            {
                 return;
-            }
             //Console.WriteLine("dx:{0},dy:{1}", difx, dify);
             //有偏差，移动元素做相同方向的偏差
             //RFID
-            foreach (var item in MapOperate.MultiSelected.RFIDS)
+            foreach (var item in mapObject.RFIDS)
             {
                 //获取原来的位置
                 Thickness thickness = item.ellipse.Margin;
@@ -1029,7 +1026,7 @@ namespace WpfMap
                 item.textBlock.Margin = tk;
             }
             //Line
-            foreach (var item in MapOperate.MultiSelected.Lines)
+            foreach (var item in mapObject.Lines)
             {
                 //获取原来的位置
                 Thickness tk = item.line.Margin;
@@ -1060,7 +1057,7 @@ namespace WpfMap
                 item.textBlock.Margin = tk;
             }
             //ForkLine
-            foreach (var item in MapOperate.MultiSelected.ForkLines)
+            foreach (var item in mapObject.ForkLines)
             {
                 //获取原来的位置
                 Thickness tk = item.Path.Margin;
@@ -1094,13 +1091,10 @@ namespace WpfMap
             double rx = MapOperate.mouseLeftBtnDownMoveDiff.X % MapElement.GridSize;
             double ry = MapOperate.mouseLeftBtnDownMoveDiff.Y % MapElement.GridSize;
             //Console.WriteLine("dxdd:{0},dydd:{1}", rx, ry);
-
             if (difx != 0)
                 MapOperate.mouseLeftBtnDownToMap.X = nowPoint.X - rx;
             if (dify != 0)
                 MapOperate.mouseLeftBtnDownToMap.Y = nowPoint.Y - ry;
-
-
         }
         /*-----------------复制-----------------------------*/
         /// <summary>
@@ -1125,19 +1119,29 @@ namespace WpfMap
             //RFID
             foreach (var item in MapOperate.MultiSelected.RFIDS)
             {
-                MapOperate.Clipboard.RFIDS.Add(item);
+                //列化深度复制
+                MapElement.RFID rfid = MapFunction.IgkClone.RFID(item);
+                //添加到剪切板
+                MapOperate.Clipboard.RFIDS.Add(rfid);
             }
             //Line
             foreach (var item in MapOperate.MultiSelected.Lines)
             {
-                MapOperate.Clipboard.Lines.Add(item);
+                //列化深度复制
+                MapElement.RouteLine line = MapFunction.IgkClone.Line(item);
+                //添加到剪切板
+                MapOperate.Clipboard.Lines.Add(line);
             }
             //ForkLine
             foreach (var item in MapOperate.MultiSelected.ForkLines)
             {
-                MapOperate.Clipboard.ForkLines.Add(item);
+                //列化深度复制
+                MapElement.RouteForkLine forkLine = MapFunction.IgkClone.ForkLine(item);
+                //添加到剪切板
+                MapOperate.Clipboard.ForkLines.Add(forkLine);
             }
         }
+
         /// <summary>
         /// 利用json序列化深度复制
         /// </summary>
@@ -1157,7 +1161,7 @@ namespace WpfMap
             /// 复制一个Line
             /// </summary>
             /// <param name="rfid"></param>
-            public static MapElement.RouteLine Line(MapElement.RouteLine  routeLine)
+            public static MapElement.RouteLine Line(MapElement.RouteLine routeLine)
             {
                 //利用序列化深度复制
                 string str = SaveMap.Helper.ObjToJson.Line(routeLine);
@@ -1167,7 +1171,7 @@ namespace WpfMap
             /// 复制一个ForkLine
             /// </summary>
             /// <param name="rfid"></param>
-            public static MapElement.RouteForkLine Line(MapElement.RouteForkLine  routeForkLine)
+            public static MapElement.RouteForkLine ForkLine(MapElement.RouteForkLine routeForkLine)
             {
                 //利用序列化深度复制
                 string str = SaveMap.Helper.ObjToJson.ForkLine(routeForkLine);

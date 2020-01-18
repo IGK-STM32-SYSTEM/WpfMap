@@ -270,7 +270,7 @@ namespace WpfMap
                         //清除单个选中
                         MapFunction.ClearSelect();
                         //清除所有选中
-                        MapFunction.ClearAllSelect();
+                        MapFunction.ClearAllSelect(MapOperate.MultiSelected);
                         //设置该点选中
                         MapFunction.SetRFIDIsSelected(rs);
                         //更新当前选中索引
@@ -284,7 +284,7 @@ namespace WpfMap
                 //清除选中
                 MapFunction.ClearSelect();
                 //清除所有选中
-                MapFunction.ClearAllSelect();
+                MapFunction.ClearAllSelect(MapOperate.MultiSelected);
                 MapOperate.NowSelectIndex = -1;
                 //进入多选模式
                 MapOperate.NowMode = MapOperate.EnumMode.MultiSelect;
@@ -301,10 +301,20 @@ namespace WpfMap
                     //点击了空白处，退出多个编辑状态
                     MapOperate.NowMode = MapOperate.EnumMode.EditElement;
                     //清除所有选中
-                    MapFunction.ClearAllSelect();
+                    MapFunction.ClearAllSelect(MapOperate.MultiSelected);
                     //程序回退到左键按下处，重新执行
                     goto LeftBtnDownStart;
                 }
+            }
+            else
+            //粘贴模式
+            if (MapOperate.NowMode == MapOperate.EnumMode.Paste)
+            {
+                //取消选中
+                MapFunction.ClearAllSelect(MapOperate.PastedObject);
+                //进入正常模式
+                MapOperate.NowMode = MapOperate.EnumMode.EditElement;
+                //粘贴完成
             }
         }
         //左键抬起
@@ -528,8 +538,15 @@ namespace WpfMap
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
                     //移动所以选中的元素
-                    MapFunction.MoveMultiSelected(nowPoint);
+                    MapFunction.MoveMultiSelected(nowPoint,MapOperate.MultiSelected);
                 }
+            }
+            else
+            //粘贴模式
+            if (MapOperate.NowMode == MapOperate.EnumMode.Paste)
+            {
+                //移动所以选中的元素
+                MapFunction.MoveMultiSelected(nowPoint,MapOperate.PastedObject);
             }
             else
             //添加新元素
@@ -626,7 +643,7 @@ namespace WpfMap
                         MapFunction.RemoveForkLine(MapElement.MapObject.ForkLines.IndexOf(item));
                     }
                     //清除已选中
-                    MapFunction.ClearAllSelect();
+                    MapFunction.ClearAllSelect(MapOperate.MultiSelected);
                 }
             }
             else
@@ -652,10 +669,16 @@ namespace WpfMap
                                 MapOperate.Clipboard.RFIDS.Add(rfid);
                                 break;
                             case MapOperate.EnumElementType.RouteLine:
-                                MapOperate.Clipboard.Lines.Add(MapElement.MapObject.Lines[MapOperate.NowSelectIndex]);
+                                //列化深度复制
+                                MapElement.RouteLine routeLine = MapFunction.IgkClone.Line(MapElement.MapObject.Lines[MapOperate.NowSelectIndex]);
+                                //添加到剪切板
+                                MapOperate.Clipboard.Lines.Add(routeLine);
                                 break;
                             case MapOperate.EnumElementType.RouteForkLine:
-                                MapOperate.Clipboard.ForkLines.Add(MapElement.MapObject.ForkLines[MapOperate.NowSelectIndex]);
+                                //列化深度复制
+                                MapElement.RouteForkLine routeForkLine = MapFunction.IgkClone.ForkLine(MapElement.MapObject.ForkLines[MapOperate.NowSelectIndex]);
+                                //添加到剪切板
+                                MapOperate.Clipboard.ForkLines.Add(routeForkLine);
                                 break;
                             default:
                                 break;
@@ -674,13 +697,13 @@ namespace WpfMap
             //Ctrl+V【粘贴】
             if (MapOperate.Userkey.Key == Key.LeftCtrl && e.Key == Key.V)
             {
-                //进入粘贴模式
-                MapOperate.NowMode = MapOperate.EnumMode.Paste;
                 //清除之前的所有选中
                 MapFunction.ClearSelect();
                 MapOperate.NowSelectIndex = -1;
-                MapFunction.ClearAllSelect();
-                //将剪切板的元素复制到对应的地图列表
+                MapFunction.ClearAllSelect(MapOperate.MultiSelected);
+                /*----将剪切板的元素复制到对应的地图列表----------------------------*/
+                //RFID
+                MapOperate.PastedObject.RFIDS.Clear();
                 foreach (var item in MapOperate.Clipboard.RFIDS)
                 {
                     //列化深度复制
@@ -692,11 +715,52 @@ namespace WpfMap
                     //添加到列表
                     MapElement.MapObject.RFIDS.Add(rfid);
                     //显示
-                    MapElement.AddRFIDToCanvas(MapElement.MapObject.RFIDS.IndexOf(rfid));
+                    MapElement.ShowRFID(rfid);
                     //设置为选中状态
-                    MapFunction.SetRFIDIsSelected(MapElement.MapObject.RFIDS.IndexOf(rfid));
+                    MapFunction.SetRFIDIsSelected(rfid);
+                    //添加到粘贴过程对象
+                    MapOperate.PastedObject.RFIDS.Add(rfid);
                 }
-
+                //Line
+                MapOperate.PastedObject.Lines.Clear();
+                foreach (var item in MapOperate.Clipboard.Lines)
+                {
+                    //列化深度复制
+                    MapElement.RouteLine line = MapFunction.IgkClone.Line(item);
+                    //修改编号
+                    line.Num = MapElement.MapObject.Lines.Last().Num + 1;
+                    //更新到文本
+                    line.textBlock.Text = line.Num.ToString();
+                    //添加到列表
+                    MapElement.MapObject.Lines.Add(line);
+                    //显示
+                    MapElement.ShowLine(line);
+                    //设置为选中状态
+                    MapFunction.SetRouteLineIsSelected(line);
+                    //添加到粘贴过程对象
+                    MapOperate.PastedObject.Lines.Add(line);
+                }
+                //ForkLine
+                MapOperate.PastedObject.ForkLines.Clear();
+                foreach (var item in MapOperate.Clipboard.ForkLines)
+                {
+                    //列化深度复制
+                    MapElement.RouteForkLine  forkLine = MapFunction.IgkClone.ForkLine(item);
+                    //修改编号
+                    forkLine.Num = MapElement.MapObject.ForkLines.Last().Num + 1;
+                    //更新到文本
+                    forkLine.textBlock.Text = forkLine.Num.ToString();
+                    //添加到列表
+                    MapElement.MapObject.ForkLines.Add(forkLine);
+                    //显示
+                    MapElement.ShowForkLine(forkLine);
+                    //设置为选中状态
+                    MapFunction.SetForkLineIsSelected(forkLine);
+                    //添加到粘贴过程对象
+                    MapOperate.PastedObject.ForkLines.Add(forkLine);
+                }
+                //进入粘贴模式
+                MapOperate.NowMode = MapOperate.EnumMode.Paste;
             }
             //记录当前按键
             MapOperate.Userkey.Key = e.Key;
