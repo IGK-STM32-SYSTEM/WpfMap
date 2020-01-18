@@ -106,6 +106,10 @@ namespace WpfMap.SaveMap
             /// </summary>
             public Brush Stroke { get; set; }
             /// <summary>
+            /// 线的粗细
+            /// </summary>
+            public double StrokeThickness { get; set; }
+            /// <summary>
             /// StrokeDashArray
             /// </summary>
             public DoubleCollection StrokeDashArray { get; set; }

@@ -49,6 +49,7 @@ namespace WpfMap.SaveMap
         {
             ShapesBase.BaseLine baseLine = new ShapesBase.BaseLine();
             baseLine.Stroke = line.Stroke;
+            baseLine.StrokeThickness = line.StrokeThickness;
             baseLine.StrokeDashArray = line.StrokeDashArray;
             baseLine.StrokeDashCap = line.StrokeDashCap;
             baseLine.Thickness = line.Margin;
@@ -118,6 +119,7 @@ namespace WpfMap.SaveMap
         {
             Line line = new Line();
             line.Stroke = baseLine.Stroke;
+            line.StrokeThickness = baseLine.StrokeThickness;
             line.StrokeDashArray = baseLine.StrokeDashArray;
             line.StrokeDashCap = baseLine.StrokeDashCap;
             line.Margin = baseLine.Thickness;
