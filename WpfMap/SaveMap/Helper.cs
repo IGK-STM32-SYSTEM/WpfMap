@@ -217,6 +217,20 @@ namespace WpfMap.SaveMap
                 //转为json
                 return JsonConvert.SerializeObject(routeForkLine, Formatting.Indented);
             }
+            /// <summary>
+            /// 地图对象转Json字符串
+            /// </summary>
+            /// <param name="mapObject"></param>
+            /// <returns></returns>
+            public static string MapOject(MapElement.MapObjectClass mapObject)
+            {
+                //保存地图【转换映射】
+                SaveMap.Helper.StandardToBase.RFID(mapObject.RFIDS);
+                SaveMap.Helper.StandardToBase.Line(mapObject.Lines);
+                SaveMap.Helper.StandardToBase.ForkLine(mapObject.ForkLines);
+                return JsonConvert.SerializeObject(mapObject, Formatting.Indented);
+            }
+
         }
         /// <summary>
         /// Json字符串转对象
@@ -285,6 +299,28 @@ namespace WpfMap.SaveMap
                 //将Base转为标准对象
                 BaseToStandard.ForkLine(routeForkLines);
                 return routeForkLines;
+            }
+            /// <summary>
+            /// Json转地图对象
+            /// </summary>
+            /// <param name="str"></param>
+            /// <returns></returns>
+            public static MapElement.MapObjectClass MapObject(string str)
+            {
+                //json 转为对象
+                MapElement.MapObjectClass mapObject = JsonConvert.DeserializeObject<MapElement.MapObjectClass>(str);
+                if (mapObject == null)
+                    return null;
+                /*--------------RFID--------------------------------*/
+                //将Base转为标准对象
+                SaveMap.Helper.BaseToStandard.RFID(mapObject.RFIDS);
+                /*--------------Line--------------------------------*/
+                //将Base转为标准对象
+                SaveMap.Helper.BaseToStandard.Line(mapObject.Lines);
+                /*--------------ForkLine--------------------------------*/
+                //将Base转为标准对象
+                SaveMap.Helper.BaseToStandard.ForkLine(mapObject.ForkLines);
+                return mapObject;
             }
         }
     }

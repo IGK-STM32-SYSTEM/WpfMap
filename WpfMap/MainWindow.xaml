@@ -18,9 +18,9 @@
             <RowDefinition Height="51*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="107*"/>
-            <ColumnDefinition Width="613*"/>
-            <ColumnDefinition Width="72*"/>
+            <ColumnDefinition Width="103*"/>
+            <ColumnDefinition Width="598*"/>
+            <ColumnDefinition Width="59*"/>
         </Grid.ColumnDefinitions>
         <!--绘图区-->
         <Border  Grid.Column="1" Grid.Row="1"  BorderBrush="DarkCyan"  BorderThickness="1" Grid.RowSpan="2"/>
@@ -44,7 +44,7 @@
                 <Canvas x:Name="cvLine"></Canvas>
                 <Canvas x:Name="cvForkLine"></Canvas>
                 <Canvas x:Name="cvRFID"></Canvas>
-               <Canvas x:Name="cvOperate"></Canvas>
+                <Canvas x:Name="cvOperate"></Canvas>
             </Grid>
         </ScrollViewer>
         <!--状态栏-->

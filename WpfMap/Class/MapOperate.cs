@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -10,6 +11,103 @@ namespace WpfMap
 {
     public class MapOperate
     {
+        public class History
+        {
+            /// <summary>
+            /// 记录对象
+            /// </summary>
+            public class Record
+            {
+                /// <summary>
+                /// 数据
+                /// </summary>
+                public string Data { get; set; }
+                /// <summary>
+                /// 注释
+                /// </summary>
+                public string Note { get; set; }
+            }
+            /// <summary>
+            /// 历史记录列表
+            /// </summary>
+            public static List<Record> Records = new List<Record>();
+            /// <summary>
+            /// 历史记录索引
+            /// </summary>
+            public static int Index { get; set; } = 0;
+            /// <summary>
+            /// 添加记录
+            /// </summary>
+            /// <param name="note">数据的注解和说明</param>
+            public static void AddRecord(string note)
+            {
+                string str = SaveMap.Helper.ObjToJson.MapOject(MapElement.MapObject);
+                //本次更改后的地图和之前的一致，不保存
+                if (Records.Count > 0)
+                {
+                    if (str == Records.Last().Data)
+                    {
+                        Console.WriteLine("Note:{0}【和之前地图一致,不保存】", note);
+                        return;
+                    }
+                }
+                Record record = new Record();
+                record.Data = str;
+                record.Note = note;
+                Records.Add(record);
+                //索引指到当前位置
+                Index = Records.Count - 1;
+                //打印结果
+                Console.WriteLine("Index:{0},Note:{1}", Index, record.Note);
+            }
+            /// <summary>
+            /// 撤销
+            /// </summary>
+            public static void Undo()
+            {
+                if (Records.Count == 0)
+                {
+                    MessageBox.Show("还没有记录^-^");
+                    return;
+                }
+                if (History.Index==0)
+                {
+                    MessageBox.Show("到低了,不能再撤销了^-^");
+                    return;
+                }
+                History.Index--;
+                //重载地图
+                MapFunction.ReloadMap(Records[History.Index].Data);
+            }
+            /// <summary>
+            /// 重做【恢复撤销】
+            /// </summary>
+            public static void Redo()
+            {
+                if (Records.Count == 0)
+                {
+                    MessageBox.Show("还没有记录^-^");
+                    return;
+                }
+                if (History.Index == Records.Count-1)
+                {
+                    MessageBox.Show("到最后一步了^-^");
+                    return;
+                }
+                History.Index++;
+                //重载地图
+                MapFunction.ReloadMap(Records[History.Index].Data);
+            }
+            /// <summary>
+            /// 恢复到指定记录
+            /// </summary>
+            /// <param name="index">记录索引</param>
+            public static void RecoverIndex(int index)
+            {
+                History.Index++;
+            }
+        }
+
         /// <summary>
         /// 直线调节模式式
         /// </summary>
@@ -65,11 +163,12 @@ namespace WpfMap
         public static EnumMode NowMode
         {
             get { return nowMode; }
-            set {
-                Console.WriteLine("操作模式：{0}",Enum.GetName(typeof(EnumMode),value));
+            set
+            {
+                //Console.WriteLine("操作模式：{0}", Enum.GetName(typeof(EnumMode), value));
                 nowMode = value;
             }
-        } 
+        }
         //元素类型枚举
         public enum EnumElementType
         {
@@ -152,7 +251,7 @@ namespace WpfMap
         /// <summary>
         /// 剪贴板元素集合
         /// </summary>
-        public static MapElement.MapObjectClass Clipboard= new MapElement.MapObjectClass();
+        public static MapElement.MapObjectClass Clipboard = new MapElement.MapObjectClass();
 
         /// <summary>
         /// 绘制选择框

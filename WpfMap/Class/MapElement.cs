@@ -264,9 +264,9 @@ namespace WpfMap
             rfid.ellipse.Height = Radius * 2;
             rfid.ellipse.Width = Radius * 2;
             rfid.ellipse.Margin = thickness;
-            rfid.ellipse.StrokeThickness = 1;
-            rfid.ellipse.Fill = CavnvasBase.GetSolid(200, Colors.Orange);
-            rfid.ellipse.Stroke = System.Windows.Media.Brushes.Gray;
+            rfid.ellipse.StrokeThickness = 0.5;
+            rfid.ellipse.Fill = CavnvasBase.GetSolid(200, Colors.Green);
+            rfid.ellipse.Stroke = CavnvasBase.GetSolid(100, Colors.Green);
             MapElement.CvRFID.Children.Add(rfid.ellipse);
             //显示编号
             CavnvasBase.DrawText(

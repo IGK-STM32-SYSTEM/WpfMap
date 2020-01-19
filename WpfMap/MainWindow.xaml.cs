@@ -81,8 +81,6 @@ namespace WpfMap
             System.Windows.Point nowPoint = e.GetPosition(gridDraw);
             //设置为手型光标
             this.Cursor = Cursors.Hand;
-
-
         }
         //右键抬起
         private void imageRobot_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
@@ -102,8 +100,8 @@ namespace WpfMap
                 MapOperate.NowMode = MapOperate.EnumMode.EditElement;
             }
             else
-        //添加新元素
-        if (MapOperate.NowMode == MapOperate.EnumMode.AddElement)
+            //添加新元素
+            if (MapOperate.NowMode == MapOperate.EnumMode.AddElement)
             {
                 if (MapOperate.NowType == MapOperate.EnumElementType.RFID)
                 {
@@ -182,8 +180,12 @@ namespace WpfMap
                         return;
                     }
                     else
+                    {
                         //切换到调整整体
                         MapOperate.ElementEditMode = MapOperate.EnumElementEditMode.All;
+                        //记录当前状态
+                        MapOperate.History.AddRecord("编辑直线");
+                    }
                 }
                 //情况1：如果目前是有选中的分叉线【圆弧】
                 if (MapOperate.NowSelectIndex != -1 && MapOperate.NowType == MapOperate.EnumElementType.RouteForkLine)
@@ -204,8 +206,12 @@ namespace WpfMap
                         return;
                     }
                     else
+                    {
                         //切换到调整整体
                         MapOperate.ElementEditMode = MapOperate.EnumElementEditMode.All;
+                        //记录当前状态
+                        MapOperate.History.AddRecord("编辑分叉");
+                    }
                 }
                 //情况2：判断光标是否在直线上
                 int rs = MapFunction.IsOnRouteLine(MapOperate.mouseLeftBtnDownToMap);
@@ -322,7 +328,8 @@ namespace WpfMap
                 MapFunction.ClearAllSelect(MapOperate.PastedObject);
                 //进入正常模式
                 MapOperate.NowMode = MapOperate.EnumMode.EditElement;
-                //粘贴完成
+                //粘贴完成，记录当前状态
+                MapOperate.History.AddRecord("粘贴");
             }
         }
         //左键抬起
@@ -333,6 +340,14 @@ namespace WpfMap
             //编辑单个元素
             if (MapOperate.NowMode == MapOperate.EnumMode.EditElement)
             {
+                //记录当前状态
+                MapOperate.History.AddRecord("编辑单个");
+            }
+            else
+            if (MapOperate.NowMode == MapOperate.EnumMode.MultiEdit)
+            {
+                //记录当前状态
+                MapOperate.History.AddRecord("编辑多个");
             }
             else
             //多选状态
@@ -381,6 +396,8 @@ namespace WpfMap
                         {
                             //增加下一个
                             MapOperate.NowSelectIndex = MapElement.AddRFIDAndShow();
+                            //记录当前状态
+                            MapOperate.History.AddRecord("增加RFID");
                         }
                         break;
                     case MapOperate.EnumElementType.RouteLine:
@@ -411,6 +428,8 @@ namespace WpfMap
                                 MapElement.RouteLineShowStart(MapOperate.NowSelectIndex);
                                 //返回添加直线第一步
                                 MapOperate.AddStep = 1;
+                                //记录当前状态
+                                MapOperate.History.AddRecord("增加直线");
                             }
                         }
                         break;
@@ -442,6 +461,8 @@ namespace WpfMap
                                 MapElement.ForkLineShowStart(MapOperate.NowSelectIndex);
                                 //返回添加直线第一步
                                 MapOperate.AddStep = 1;
+                                //记录当前状态
+                                MapOperate.History.AddRecord("增加分叉");
                             }
                         }
                         break;
@@ -468,8 +489,8 @@ namespace WpfMap
                 System.Windows.Point position = e.GetPosition(cvMap);
                 System.Windows.Point position1 = e.GetPosition(drawViewScroll);
 
-                tlt.X += (position.X - MapOperate.mouseRightBtnDownPoint.X)* MapOperate.ViewInfo.Scale;
-                tlt.Y +=( position.Y - MapOperate.mouseRightBtnDownPoint.Y)*MapOperate.ViewInfo.Scale;
+                tlt.X += (position.X - MapOperate.mouseRightBtnDownPoint.X) * MapOperate.ViewInfo.Scale;
+                tlt.Y += (position.Y - MapOperate.mouseRightBtnDownPoint.Y) * MapOperate.ViewInfo.Scale;
 
                 //更新圆点坐标,保留两位小数
                 MapOperate.ViewInfo.Origin = new Point(Math.Round(tlt.X, 0), Math.Round(tlt.Y, 0));
@@ -662,7 +683,7 @@ namespace WpfMap
             }
             else
             //Ctrl+C【复制】
-            if (MapOperate.Userkey.Key == Key.LeftCtrl && e.Key == Key.C)
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.C)
             {
                 //编辑单个
                 if (MapOperate.NowMode == MapOperate.EnumMode.EditElement)
@@ -709,7 +730,7 @@ namespace WpfMap
             }
             else
             //Ctrl+V【粘贴】
-            if (MapOperate.Userkey.Key == Key.LeftCtrl && e.Key == Key.V)
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.V)
             {
                 //清除之前的所有选中
                 MapFunction.ClearSelect();
@@ -786,6 +807,7 @@ namespace WpfMap
                 //进入粘贴模式
                 MapOperate.NowMode = MapOperate.EnumMode.Paste;
             }
+            else
             //Esc【取消】
             if (e.Key == Key.Escape)
             {
@@ -796,6 +818,19 @@ namespace WpfMap
                     //恢复默认
                     MapOperate.NowMode = MapOperate.EnumMode.EditElement;
                 }
+            }
+            else
+            //Ctrl+Shif+Z【重做】
+            if ((Keyboard.Modifiers & (ModifierKeys.Control | ModifierKeys.Shift)) == (ModifierKeys.Control | ModifierKeys.Shift)
+                && e.Key == Key.Z)
+            {
+                MapOperate.History.Redo();
+            }
+            else
+           //Ctrl+Z【撤销】
+           if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Z)
+            {
+                MapOperate.History.Undo();
             }
             //记录当前按键
             MapOperate.Userkey.Key = e.Key;
@@ -868,11 +903,8 @@ namespace WpfMap
 
         private void Btn_SaveMap_Click(object sender, RoutedEventArgs e)
         {
-            //保存地图【转换映射】
-            SaveMap.Helper.StandardToBase.RFID(MapElement.MapObject.RFIDS);
-            SaveMap.Helper.StandardToBase.Line(MapElement.MapObject.Lines);
-            SaveMap.Helper.StandardToBase.ForkLine(MapElement.MapObject.ForkLines);
-            string str = JsonConvert.SerializeObject(MapElement.MapObject, Formatting.Indented);
+            //获取字符串地图
+            string str = SaveMap.Helper.ObjToJson.MapOject(MapElement.MapObject);
             //保存
             SaveMap.Helper.SaveToFile(str);
         }
@@ -881,34 +913,10 @@ namespace WpfMap
         {
             //读取
             string str = SaveMap.Helper.LoadFromFile();
-            //json 转为对象
-            MapElement.MapObjectClass tt = JsonConvert.DeserializeObject<MapElement.MapObjectClass>(str);
-            if (tt == null)
-                return;
-            else
-                MapElement.MapObject = tt;
-
-            /*--------------RFID--------------------------------*/
-            //将Base转为标准对象
-            SaveMap.Helper.BaseToStandard.RFID(MapElement.MapObject.RFIDS);
-            //清空画布
-            MapElement.CvRFID.Children.Clear();
-            //绘制显示
-            MapElement.DrawRFIDList();
-            /*--------------Line--------------------------------*/
-            //将Base转为标准对象
-            SaveMap.Helper.BaseToStandard.Line(MapElement.MapObject.Lines);
-            //清空画布
-            MapElement.CvRouteLine.Children.Clear();
-            //绘制显示
-            MapElement.DrawLineList();
-            /*--------------ForkLine--------------------------------*/
-            //将Base转为标准对象
-            SaveMap.Helper.BaseToStandard.ForkLine(MapElement.MapObject.ForkLines);
-            //清空画布
-            MapElement.CvForkLine.Children.Clear();
-            //绘制显示
-            MapElement.DrawForkLineList();
+            //重载
+            MapFunction.ReloadMap(str);
+            //记录当前状态
+            MapOperate.History.AddRecord("加载地图");
         }
     }
 }

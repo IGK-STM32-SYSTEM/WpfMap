@@ -962,7 +962,44 @@ namespace WpfMap
             center.Y = (Maxy + Miny) / 2.0;
             return center;
         }
-
+        /// <summary>
+        /// 重新加载地图【从地图对象】
+        /// </summary>
+        public static void ReloadMap()
+        {
+            /*--------------RFID--------------------------------*/
+            //清空画布
+            MapElement.CvRFID.Children.Clear();
+            //绘制显示
+            MapElement.DrawRFIDList();
+            /*--------------Line--------------------------------*/
+            //清空画布
+            MapElement.CvRouteLine.Children.Clear();
+            //绘制显示
+            MapElement.DrawLineList();
+            /*--------------ForkLine--------------------------------*/
+            //清空画布
+            MapElement.CvForkLine.Children.Clear();
+            //绘制显示
+            MapElement.DrawForkLineList();
+        }
+        /// <summary>
+        /// 重新加载地图【从JSON字符串】
+        /// </summary>
+        public static void ReloadMap(string str)
+        {
+            MapElement.MapObjectClass tt = SaveMap.Helper.JsonToObj.MapObject(str);
+            if (tt == null)
+            {
+                MessageBox.Show("地图格式不正确，加载失败！");
+                return;
+            }
+            else
+            {
+                MapElement.MapObject = tt;
+                ReloadMap();
+            }
+        }
         /*-----------------多选-----------------------------*/
         /// <summary>
         /// 清除当前选中【单个】
