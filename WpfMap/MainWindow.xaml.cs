@@ -394,10 +394,10 @@ namespace WpfMap
                     case MapOperate.EnumElementType.RFID:
                         //添加RFID
                         {
-                            //增加下一个
-                            MapOperate.NowSelectIndex = MapElement.AddRFIDAndShow();
                             //记录当前状态
                             MapOperate.History.AddRecord("增加RFID");
+                            //增加下一个
+                            MapOperate.NowSelectIndex = MapElement.AddRFIDAndShow();
                         }
                         break;
                     case MapOperate.EnumElementType.RouteLine:
@@ -422,14 +422,14 @@ namespace WpfMap
                             {
                                 //直线添加完成【隐藏编辑器】
                                 MapFunction.SetRouteLineIsNormal(MapOperate.NowSelectIndex);
+                                //记录当前状态
+                                MapOperate.History.AddRecord("增加直线");
                                 //添加新直线
                                 MapOperate.NowSelectIndex = MapElement.AddRouteLine();
                                 //显示直线起点编辑器
                                 MapElement.RouteLineShowStart(MapOperate.NowSelectIndex);
                                 //返回添加直线第一步
                                 MapOperate.AddStep = 1;
-                                //记录当前状态
-                                MapOperate.History.AddRecord("增加直线");
                             }
                         }
                         break;
@@ -455,14 +455,14 @@ namespace WpfMap
                             {
                                 //直线添加完成【隐藏编辑器】
                                 MapFunction.SetRouteForkLineIsNormal(MapOperate.NowSelectIndex);
+                                //记录当前状态
+                                MapOperate.History.AddRecord("增加分叉");
                                 //添加新直线
                                 MapOperate.NowSelectIndex = MapElement.AddForkLine();
                                 //显示直线起点编辑器
                                 MapElement.ForkLineShowStart(MapOperate.NowSelectIndex);
                                 //返回添加直线第一步
                                 MapOperate.AddStep = 1;
-                                //记录当前状态
-                                MapOperate.History.AddRecord("增加分叉");
                             }
                         }
                         break;
@@ -643,14 +643,20 @@ namespace WpfMap
                             case MapOperate.EnumElementType.RFID:
                                 MapFunction.RemoveRFID(MapElement.MapObject.RFIDS[MapOperate.NowSelectIndex]);
                                 MapOperate.NowSelectIndex = -1;
+                                //记录当前状态
+                                MapOperate.History.AddRecord("删除了一个RFID");
                                 break;
                             case MapOperate.EnumElementType.RouteLine:
                                 MapFunction.RemoveRouteLine(MapElement.MapObject.Lines[MapOperate.NowSelectIndex]);
                                 MapOperate.NowSelectIndex = -1;
+                                //记录当前状态
+                                MapOperate.History.AddRecord("删除了一条直线");
                                 break;
                             case MapOperate.EnumElementType.RouteForkLine:
                                 MapFunction.RemoveForkLine(MapElement.MapObject.ForkLines[MapOperate.NowSelectIndex]);
                                 MapOperate.NowSelectIndex = -1;
+                                //记录当前状态
+                                MapOperate.History.AddRecord("删除了一条分叉线");
                                 break;
                             default:
                                 break;
@@ -679,6 +685,8 @@ namespace WpfMap
                     }
                     //清除已选中
                     MapFunction.ClearAllSelect(MapOperate.MultiSelected);
+                    //记录当前状态
+                    MapOperate.History.AddRecord("批量删除");
                 }
             }
             else

@@ -34,7 +34,7 @@ namespace WpfMap
             /// <summary>
             /// 历史记录索引
             /// </summary>
-            public static int Index { get; set; } = 0;
+            public static int nowIndex { get; set; } = 0;
             /// <summary>
             /// 添加记录
             /// </summary>
@@ -42,23 +42,30 @@ namespace WpfMap
             public static void AddRecord(string note)
             {
                 string str = SaveMap.Helper.ObjToJson.MapOject(MapElement.MapObject);
-                //本次更改后的地图和之前的一致，不保存
+                //本次更改后的地图和之前【当前索引对应的记录】的一致，不保存
                 if (Records.Count > 0)
                 {
-                    if (str == Records.Last().Data)
+                    if (str == Records[nowIndex].Data)
                     {
                         Console.WriteLine("Note:{0}【和之前地图一致,不保存】", note);
                         return;
                     }
+                }
+                //如果索引不是最后一个记录，就把后面的记录全部清除
+                if (nowIndex != Records.Count - 1 && Records.Count != 0)
+                {
+                    //清除后面的记录
+                    Records.RemoveRange(nowIndex + 1, Records.Count - nowIndex - 1);
+                    Console.WriteLine("nowIndex：{0}，清除了【{1}】条记录", nowIndex, Records.Count - nowIndex - 1);
                 }
                 Record record = new Record();
                 record.Data = str;
                 record.Note = note;
                 Records.Add(record);
                 //索引指到当前位置
-                Index = Records.Count - 1;
+                nowIndex = Records.Count - 1;
                 //打印结果
-                Console.WriteLine("Index:{0},Note:{1}", Index, record.Note);
+                Console.WriteLine("Index:{0},Note:{1}", nowIndex, record.Note);
             }
             /// <summary>
             /// 撤销
@@ -67,17 +74,17 @@ namespace WpfMap
             {
                 if (Records.Count == 0)
                 {
-                    MessageBox.Show("还没有记录^-^");
+                    Console.WriteLine("还没有记录^-^");
                     return;
                 }
-                if (History.Index==0)
+                if (History.nowIndex == 0)
                 {
-                    MessageBox.Show("到低了,不能再撤销了^-^");
+                    Console.WriteLine("到低了,不能再撤销了^-^");
                     return;
                 }
-                History.Index--;
+                History.nowIndex--;
                 //重载地图
-                MapFunction.ReloadMap(Records[History.Index].Data);
+                MapFunction.ReloadMap(Records[History.nowIndex].Data);
             }
             /// <summary>
             /// 重做【恢复撤销】
@@ -86,17 +93,17 @@ namespace WpfMap
             {
                 if (Records.Count == 0)
                 {
-                    MessageBox.Show("还没有记录^-^");
+                    Console.WriteLine("还没有记录^-^");
                     return;
                 }
-                if (History.Index == Records.Count-1)
+                if (History.nowIndex == Records.Count - 1)
                 {
-                    MessageBox.Show("到最后一步了^-^");
+                    Console.WriteLine("到最后一步了^-^");
                     return;
                 }
-                History.Index++;
+                History.nowIndex++;
                 //重载地图
-                MapFunction.ReloadMap(Records[History.Index].Data);
+                MapFunction.ReloadMap(Records[History.nowIndex].Data);
             }
             /// <summary>
             /// 恢复到指定记录
@@ -104,7 +111,7 @@ namespace WpfMap
             /// <param name="index">记录索引</param>
             public static void RecoverIndex(int index)
             {
-                History.Index++;
+                History.nowIndex++;
             }
         }
 
