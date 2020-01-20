@@ -38,12 +38,6 @@ namespace WpfMap
             MapElement.DrawGrid(1024 * 4, 768 * 4);
         }
 
-        private void UpdateBottomInfo()
-        {
-            //bottomInfo.ViewScale = string.Format("视图缩放: {0:0.0}", sfr.ScaleX);
-            //bottomInfo.OriginPoint = string.Format("原点坐标：X:{0:0.0},Y:{1:0.0}", tlt.X, tlt.Y);
-        }
-
         #region 鼠标事件
         //滚轮缩放
         private void image_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
