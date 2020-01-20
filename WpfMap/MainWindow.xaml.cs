@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Xceed.Wpf.AvalonDock.Layout.Serialization;
 
 namespace WpfMap
 {
@@ -919,6 +920,24 @@ namespace WpfMap
             MapFunction.ReloadMap(str);
             //记录当前状态
             MapOperate.History.AddRecord("加载地图");
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            using (var writer = new StreamWriter("AvalonDockSavedFile.txt"))
+            {
+                var layoutSerializer = new XmlLayoutSerializer(_dockingManager);
+                layoutSerializer.Serialize(writer);
+            }
+        }
+
+        private void LoadButton_Click(object sender, RoutedEventArgs e)
+        {
+            using (var reader = new StreamReader("AvalonDockSavedFile.txt"))
+            {
+                var layoutSerializer = new XmlLayoutSerializer(_dockingManager);
+                layoutSerializer.Deserialize(reader);
+            }
         }
     }
 }
