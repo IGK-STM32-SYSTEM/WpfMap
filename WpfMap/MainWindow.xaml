@@ -32,31 +32,52 @@
                         </StackPanel>
                     </DataTemplate>
                 </xcad:DockingManager.DocumentHeaderTemplate>
-                <xcad:LayoutRoot x:Name="_layoutRoot">
+                <xcad:LayoutRoot x:Name="_layoutRoot" >
                     <xcad:LayoutPanel Orientation="Horizontal">
-                        <xcad:LayoutAnchorablePane DockWidth="200">
-                            <xcad:LayoutAnchorable ContentId="properties"
-                                     Title="属性"
-                                     CanHide="False"
-                                     CanClose="False"
-                                     AutoHideWidth="240"
-                                     IconSource="Images/property-blue.png">
-                                <xctk:PropertyGrid NameColumnWidth="110"
-                                   SelectedObject="{Binding ElementName=_layoutRoot, Path=LastFocusedDocument.Content}"
-                                   AutoGenerateProperties="False">
-                                    <xctk:PropertyGrid.PropertyDefinitions>
-                                        <xctk:PropertyDefinition TargetProperties="Background" />
-                                        <xctk:PropertyDefinition TargetProperties="BorderBrush" />
-                                        <xctk:PropertyDefinition TargetProperties="BorderThickness" />
-                                        <xctk:PropertyDefinition TargetProperties="FontSize" />
-                                        <xctk:PropertyDefinition TargetProperties="FontStyle" />
-                                        <xctk:PropertyDefinition TargetProperties="Width" />
-                                        <xctk:PropertyDefinition TargetProperties="Height" />
-                                    </xctk:PropertyGrid.PropertyDefinitions>
-                                </xctk:PropertyGrid>
-                            </xcad:LayoutAnchorable>
-                        </xcad:LayoutAnchorablePane>
-                        <xcad:LayoutDocumentPaneGroup>
+                        <xcad:LayoutAnchorablePaneGroup Orientation="Vertical" DockWidth="240">
+                            <xcad:LayoutAnchorablePane DockHeight="0.5*" >
+                                    <xcad:LayoutAnchorable Title="工具箱"
+                                               ContentId="ToolBox"
+                                               IsSelected="True" 
+                                               IconSource="Images/address-book-open.png">
+                                        <StackPanel>
+                                            <TextBlock Text="添加元件"
+                                                        Margin="10"
+                                                        FontSize="18"
+                                                        FontWeight="Black"
+                                                        TextWrapping="Wrap" />
+                                            <Button x:Name="Btn_Add_RFID" Content="标签" Margin="10" Height="30" Click="Btn_Add_RFID_Click"  VerticalAlignment="Center"/>
+                                            <Button x:Name="Btn_Add_RouteLine" Content="直线" Margin="10" Height="30" Click="Btn_Add_RouteLine_Click" VerticalAlignment="Center"/>
+                                            <Button x:Name="Btn_Add_RouteForkLine" Content="分叉线" Margin="10" Height="30" Click="Btn_Add_RouteForkLine_Click" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </xcad:LayoutAnchorable>
+                                </xcad:LayoutAnchorablePane>
+                            <xcad:LayoutAnchorablePane DockWidth="200" DockHeight="1.5*">
+                                <xcad:LayoutAnchorable ContentId="properties"
+                                         Title="属性"
+                                         CanHide="False"
+                                         CanClose="False"
+                                         IsSelected="True"
+                                         AutoHideWidth="240" 
+                                         AutoHideMinWidth="100"
+                                         IconSource="Images/property-blue.png">
+                                    <xctk:PropertyGrid NameColumnWidth="110"
+                                       SelectedObject="{Binding ElementName=_layoutRoot, Path=LastFocusedDocument.Content}"
+                                       AutoGenerateProperties="False">
+                                        <xctk:PropertyGrid.PropertyDefinitions>
+                                            <xctk:PropertyDefinition TargetProperties="Background" />
+                                            <xctk:PropertyDefinition TargetProperties="BorderBrush" />
+                                            <xctk:PropertyDefinition TargetProperties="BorderThickness" />
+                                            <xctk:PropertyDefinition TargetProperties="FontSize" />
+                                            <xctk:PropertyDefinition TargetProperties="FontStyle" />
+                                            <xctk:PropertyDefinition TargetProperties="Width" />
+                                            <xctk:PropertyDefinition TargetProperties="Height" />
+                                        </xctk:PropertyGrid.PropertyDefinitions>
+                                    </xctk:PropertyGrid>
+                                </xcad:LayoutAnchorable>
+                            </xcad:LayoutAnchorablePane>
+                        </xcad:LayoutAnchorablePaneGroup>
+                        <xcad:LayoutDocumentPaneGroup DockWidth="*">
                             <xcad:LayoutDocumentPane>
                                 <xcad:LayoutDocument ContentId="document1"
                                      Title="绘 图 区   " CanClose="False"
@@ -88,7 +109,7 @@
                                 </xcad:LayoutDocument>
                             </xcad:LayoutDocumentPane>
                         </xcad:LayoutDocumentPaneGroup >
-                        <xcad:LayoutAnchorablePaneGroup DockWidth="200">
+                        <xcad:LayoutAnchorablePaneGroup DockWidth="240">
                             <xcad:LayoutAnchorablePane>
                                 <xcad:LayoutAnchorable ContentId="mapOperate"
                                        Title="地图"
@@ -112,26 +133,7 @@
                             </xcad:LayoutAnchorablePane>
                         </xcad:LayoutAnchorablePaneGroup>
                     </xcad:LayoutPanel>
-                    <xcad:LayoutRoot.LeftSide>
-                        <xcad:LayoutAnchorSide>
-                            <xcad:LayoutAnchorGroup>
-                                <xcad:LayoutAnchorable Title="工具箱"
-                                       ContentId="ToolBox"
-                                       IconSource="Images/address-book-open.png">
-                                    <StackPanel>
-                                        <TextBlock Text="添加元件"
-                                            Margin="10"
-                                            FontSize="18"
-                                            FontWeight="Black"
-                                            TextWrapping="Wrap" />     
-                                        <Button x:Name="Btn_Add_RFID" Content="标签" Margin="10" Height="30" Click="Btn_Add_RFID_Click"  VerticalAlignment="Center"/>
-                                        <Button x:Name="Btn_Add_RouteLine" Content="直线" Margin="10" Height="30" Click="Btn_Add_RouteLine_Click" VerticalAlignment="Center"/>
-                                        <Button x:Name="Btn_Add_RouteForkLine" Content="分叉线" Margin="10" Height="30" Click="Btn_Add_RouteForkLine_Click" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </xcad:LayoutAnchorable>
-                            </xcad:LayoutAnchorGroup>
-                        </xcad:LayoutAnchorSide>
-                    </xcad:LayoutRoot.LeftSide>
+
                 </xcad:LayoutRoot>
             </xcad:DockingManager>
         </Grid>
