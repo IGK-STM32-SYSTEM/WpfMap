@@ -8,10 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/address-book--pencil.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/address-book-open.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/alarm-clock-blue.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/document.png")]
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/property-blue.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("3.ico")]
 
 

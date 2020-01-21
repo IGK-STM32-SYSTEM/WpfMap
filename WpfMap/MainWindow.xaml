@@ -10,7 +10,7 @@
         mc:Ignorable="d"
         Loaded="Window_Loaded" PreviewKeyDown="drawViewScroll_PreviewKeyDown"
                           PreviewKeyUp="drawViewScroll_PreviewKeyUp"
-        Title="MainWindow" 
+        Title="地图编辑" 
         WindowState="Maximized" 
         >
     <Grid>
@@ -57,22 +57,11 @@
                                          Title="属性"
                                          CanHide="False"
                                          CanClose="False"
-                                         IsSelected="True"
-                                         AutoHideWidth="240" 
-                                         AutoHideMinWidth="100"
+                                         
                                          IconSource="Images/property-blue.png">
                                     <xctk:PropertyGrid NameColumnWidth="110"
-                                       SelectedObject="{Binding ElementName=_layoutRoot, Path=LastFocusedDocument.Content}"
-                                       AutoGenerateProperties="False">
-                                        <xctk:PropertyGrid.PropertyDefinitions>
-                                            <xctk:PropertyDefinition TargetProperties="Background" />
-                                            <xctk:PropertyDefinition TargetProperties="BorderBrush" />
-                                            <xctk:PropertyDefinition TargetProperties="BorderThickness" />
-                                            <xctk:PropertyDefinition TargetProperties="FontSize" />
-                                            <xctk:PropertyDefinition TargetProperties="FontStyle" />
-                                            <xctk:PropertyDefinition TargetProperties="Width" />
-                                            <xctk:PropertyDefinition TargetProperties="Height" />
-                                        </xctk:PropertyGrid.PropertyDefinitions>
+                                        SelectedObject="{Binding}"  
+                                       AutoGenerateProperties="True">
                                     </xctk:PropertyGrid>
                                 </xcad:LayoutAnchorable>
                             </xcad:LayoutAnchorablePane>
@@ -110,7 +99,7 @@
                             </xcad:LayoutDocumentPane>
                         </xcad:LayoutDocumentPaneGroup >
                         <xcad:LayoutAnchorablePaneGroup DockWidth="240">
-                            <xcad:LayoutAnchorablePane>
+                            <xcad:LayoutAnchorablePane >
                                 <xcad:LayoutAnchorable ContentId="mapOperate"
                                        Title="地图"
                                        IconSource="Images/alarm-clock-blue.png"
