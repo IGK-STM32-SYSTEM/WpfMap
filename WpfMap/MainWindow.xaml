@@ -1,24 +1,32 @@
 ﻿<Window x:Class="WpfMap.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfMap"
         xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        xmlns:s="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Loaded="Window_Loaded" PreviewKeyDown="drawViewScroll_PreviewKeyDown"
-                          PreviewKeyUp="drawViewScroll_PreviewKeyUp"
+        Loaded="Window_Loaded" 
+        PreviewKeyDown="drawViewScroll_PreviewKeyDown"
+        PreviewKeyUp="drawViewScroll_PreviewKeyUp"
         Title="地图编辑" 
         WindowState="Maximized" 
         >
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="35" />
             <RowDefinition Height="100*"/>
             <RowDefinition Height="35" />
         </Grid.RowDefinitions>
+        <!--标题-->
         <Grid Grid.Row="0">
+            <TextBlock Grid.Row="1"
+               Padding="10,0"
+               Text="IGK map edit system. . ."
+               Style="{StaticResource Header}" />
+        </Grid>
+        <!--主体-->
+        <Grid Grid.Row="1">
             <xcad:DockingManager x:Name="_dockingManager"
                            AllowMixedOrientation="True"
                            BorderBrush="Black"
@@ -35,23 +43,31 @@
                 <xcad:LayoutRoot x:Name="_layoutRoot" >
                     <xcad:LayoutPanel Orientation="Horizontal">
                         <xcad:LayoutAnchorablePaneGroup Orientation="Vertical" DockWidth="240">
-                            <xcad:LayoutAnchorablePane DockHeight="0.5*" >
-                                    <xcad:LayoutAnchorable Title="工具箱"
+                            <xcad:LayoutAnchorablePane DockHeight="0.6*" >
+                                <xcad:LayoutAnchorable Title="工具箱"
                                                ContentId="ToolBox"
                                                IsSelected="True" 
                                                IconSource="Images/address-book-open.png">
-                                        <StackPanel>
-                                            <TextBlock Text="添加元件"
-                                                        Margin="10"
-                                                        FontSize="18"
-                                                        FontWeight="Black"
-                                                        TextWrapping="Wrap" />
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="10*" />
+                                            <RowDefinition Height="50"/>
+                                        </Grid.RowDefinitions>
+                                        <Border BorderThickness="0.5" BorderBrush="Gray"></Border>
+                                        <StackPanel Grid.Row="0" Margin="20,10">
                                             <Button x:Name="Btn_Add_RFID" Content="标签" Margin="10" Height="30" Click="Btn_Add_RFID_Click"  VerticalAlignment="Center"/>
                                             <Button x:Name="Btn_Add_RouteLine" Content="直线" Margin="10" Height="30" Click="Btn_Add_RouteLine_Click" VerticalAlignment="Center"/>
                                             <Button x:Name="Btn_Add_RouteForkLine" Content="分叉线" Margin="10" Height="30" Click="Btn_Add_RouteForkLine_Click" VerticalAlignment="Center"/>
                                         </StackPanel>
-                                    </xcad:LayoutAnchorable>
-                                </xcad:LayoutAnchorablePane>
+                                        <TextBlock  Grid.Row="1" Padding="20,0" 
+                                                    Style="{StaticResource Header}"
+                                                    FontFamily="Segoe" 
+                                                    TextWrapping="Wrap">
+                                                单击元件类型按钮，切换需要添加的元件！
+                                        </TextBlock>
+                                    </Grid>
+                                </xcad:LayoutAnchorable>
+                            </xcad:LayoutAnchorablePane>
                             <xcad:LayoutAnchorablePane DockWidth="200" DockHeight="1.5*">
                                 <xcad:LayoutAnchorable ContentId="properties"
                                          Title="属性"
@@ -72,7 +88,7 @@
                                      Title="绘 图 区   " CanClose="False"
                                      IconSource="Images/document.png">
                                     <!--绘图区-->
-                                        <ScrollViewer  x:Name="drawViewScroll" VerticalScrollBarVisibility="Disabled"
+                                    <ScrollViewer  x:Name="drawViewScroll" VerticalScrollBarVisibility="Disabled"
                           PreviewMouseWheel="image_PreviewMouseWheel" 
                           PreviewMouseRightButtonDown="imageRobot_PreviewMouseRightButtonDown" 
                           PreviewMouseMove="imageRobot_PreviewMouseMove"
@@ -80,54 +96,78 @@
                           PreviewMouseLeftButtonDown="imageRobot_PreviewMouseLeftButtonDown" 
                           PreviewMouseLeftButtonUp="imageRobot_PreviewMouseLeftButtonUp" Grid.RowSpan="2"
                           >
-                                            <Grid  x:Name="gridDraw">
-                                                <Grid.RenderTransform>
-                                                    <TransformGroup>
-                                                        <ScaleTransform x:Name="sfr"/>
-                                                        <TranslateTransform x:Name="tlt"/>
-                                                    </TransformGroup>
-                                                </Grid.RenderTransform>
-                                                <Canvas x:Name="cvGrid"></Canvas>
-                                                <Canvas x:Name="cvMap"></Canvas>
-                                                <Canvas x:Name="cvLine"></Canvas>
-                                                <Canvas x:Name="cvForkLine"></Canvas>
-                                                <Canvas x:Name="cvRFID"></Canvas>
-                                                <Canvas x:Name="cvOperate"></Canvas>
-                                            </Grid>
-                                        </ScrollViewer>
+                                        <Grid  x:Name="gridDraw">
+                                            <Grid.RenderTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform x:Name="sfr"/>
+                                                    <TranslateTransform x:Name="tlt"/>
+                                                </TransformGroup>
+                                            </Grid.RenderTransform>
+                                            <Canvas x:Name="cvGrid"></Canvas>
+                                            <Canvas x:Name="cvMap"></Canvas>
+                                            <Canvas x:Name="cvLine"></Canvas>
+                                            <Canvas x:Name="cvForkLine"></Canvas>
+                                            <Canvas x:Name="cvRFID"></Canvas>
+                                            <Canvas x:Name="cvOperate"></Canvas>
+                                        </Grid>
+                                    </ScrollViewer>
                                 </xcad:LayoutDocument>
                             </xcad:LayoutDocumentPane>
                         </xcad:LayoutDocumentPaneGroup >
-                        <xcad:LayoutAnchorablePaneGroup DockWidth="240">
-                            <xcad:LayoutAnchorablePane >
+                        <xcad:LayoutAnchorablePaneGroup Orientation="Vertical" DockWidth="240">
+                            <xcad:LayoutAnchorablePane DockHeight="1*" >
                                 <xcad:LayoutAnchorable ContentId="mapOperate"
                                        Title="地图"
                                        IconSource="Images/alarm-clock-blue.png"
                                        CanClose="True">
-                                    <StackPanel>
-                                        <Button x:Name="Btn_SaveMap" Content="保存地图" Click="Btn_SaveMap_Click" Margin="5"  VerticalAlignment="Center" Height="30"/>
-                                        <Button x:Name="Btn_LoadMap" Content="加载地图" Click="Btn_LoadMap_Click"  Margin="5"  VerticalAlignment="Center"  Height="30"/>
-                                    </StackPanel>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="10*" />
+                                            <RowDefinition Height="50"/>
+                                        </Grid.RowDefinitions>
+                                        <Border BorderThickness="0.5" BorderBrush="Gray"></Border>
+                                        <StackPanel Grid.Row="0" Margin="20,10">
+                                            <Button x:Name="Btn_SaveMap" Content="保存地图" Click="Btn_SaveMap_Click" Margin="5"  VerticalAlignment="Center" Height="30"/>
+                                            <Button x:Name="Btn_LoadMap" Content="加载地图" Click="Btn_LoadMap_Click"  Margin="5"  VerticalAlignment="Center"  Height="30"/>
+                                        </StackPanel>
+                                        <TextBlock  Grid.Row="1" Padding="20,0" 
+                                                    Style="{StaticResource Header}"
+                                                    FontFamily="Segoe" 
+                                                    TextWrapping="Wrap">
+                                                这里可以保存或加载地图！
+                                        </TextBlock>
+                                    </Grid>
                                 </xcad:LayoutAnchorable>
+                            </xcad:LayoutAnchorablePane>
+                            <xcad:LayoutAnchorablePane DockWidth="200" DockHeight="1*">
                                 <xcad:LayoutAnchorable ContentId="layouDock"
                                        Title="布局">
-                                        <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
-                                             <TextBlock  DockPanel.Dock="Bottom" Margin="10,50,10,50" FontSize="16"  FontFamily="宋体" Foreground="Blue" TextWrapping="Wrap">
-                                                这里可以保存或加载布局！
-                                             </TextBlock>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="10*" />
+                                            <RowDefinition Height="50"/>
+                                        </Grid.RowDefinitions>
+                                        <Border BorderThickness="0.5" BorderBrush="Gray"></Border>
+                                        <StackPanel Grid.Row="0" Margin="20,10">
                                             <Button Content="保存布局" Margin="5" Padding="5" Click="SaveButton_Click" />
                                             <Button Content="加载布局" Margin="5" Padding="5" Click="LoadButton_Click" />
                                         </StackPanel>
-                               </xcad:LayoutAnchorable>
+                                        <TextBlock  Grid.Row="1" Padding="20,0" 
+                                                    Style="{StaticResource Header}"
+                                                    FontFamily="Segoe" 
+                                                    TextWrapping="Wrap">
+                                                这里可以保存或加载布局！
+                                        </TextBlock>
+                                    </Grid>
+                                </xcad:LayoutAnchorable>
                             </xcad:LayoutAnchorablePane>
                         </xcad:LayoutAnchorablePaneGroup>
                     </xcad:LayoutPanel>
-
                 </xcad:LayoutRoot>
             </xcad:DockingManager>
         </Grid>
         <!--底部信息-->
-        <StatusBar Grid.Row="1" FontSize="16" >
+        <StatusBar Grid.Row="2" FontSize="16" >
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>

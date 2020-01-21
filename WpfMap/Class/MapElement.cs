@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -34,7 +35,10 @@ namespace WpfMap
             /// <summary>
             /// 编号
             /// </summary>
-            public int Num = 0;
+            [Category("Non-Numeric Editors")]
+            [Description("This property is a complex property and has no default editor.")]
+            private int num;
+            public int Num { get { return num; } set { num = value;textBlock.Text = value.ToString(); } }
             /// <summary>
             /// 绘图对象
             /// </summary>
@@ -45,6 +49,8 @@ namespace WpfMap
             /// 绘文字对象
             /// </summary>
             [JsonIgnore]
+            [Category("Non-Numeric Editors")]
+            [Description("This property is a complex property and has no default editor.")]
             public TextBlock textBlock = new TextBlock();
             public BaseTextBlock baseTextBlock = new BaseTextBlock();
             /// <summary>
@@ -190,7 +196,7 @@ namespace WpfMap
                 else
                 {
                     //虚线
-                   // line.StrokeDashArray = new DoubleCollection() { 20};
+                    // line.StrokeDashArray = new DoubleCollection() { 20};
                     line.StrokeThickness = 0.2;
                 }
                 line.Stroke = System.Windows.Media.Brushes.LightGray;

@@ -431,6 +431,7 @@ namespace WpfMap
                         MapOperate.NowSelectIndex = rs;
                         //更新当前元素
                         MapOperate.NowType = MapOperate.EnumElementType.RFID;
+                        this.DataContext = MapElement.MapObject.RFIDS[rs];
                         return;
                     }
                 }
