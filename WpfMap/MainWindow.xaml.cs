@@ -76,12 +76,16 @@ namespace WpfMap
             selectedObject.UInt16 = (ushort)9;
             selectedObject.UInt32 = (uint)10;
             selectedObject.UInt64 = (ulong)11;
-
+            selectedObject.rect = new Rectangle();
             this.DataContext = selectedObject;
         }
 
         public class AllEditorTypes
         {
+            [Category("Non-Numeric Editors")]
+            [Description("测试")]
+            public Rectangle rect { get; set; }
+
             [Category("Non-Numeric Editors")]
             [Description("(C# string type) This property uses a TextBox as the default editor.")]
             public string String { get; set; }

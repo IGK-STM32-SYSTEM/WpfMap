@@ -39,6 +39,12 @@ namespace WpfMap
             [Description("This property is a complex property and has no default editor.")]
             private int num;
             public int Num { get { return num; } set { num = value;textBlock.Text = value.ToString(); } }
+            [Category("Non-Numeric Editors")]
+            [Description("标签颜色")]
+            private Color color;
+            public Color Color { get { return color; } set { color = value; ellipse.Fill = new SolidColorBrush(color); } }
+
+
             /// <summary>
             /// 绘图对象
             /// </summary>
