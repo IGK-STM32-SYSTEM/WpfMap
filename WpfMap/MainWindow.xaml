@@ -16,7 +16,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="100*"/>
-            <RowDefinition Height="30" />
+            <RowDefinition Height="35" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <xcad:DockingManager x:Name="_dockingManager"
@@ -36,7 +36,7 @@
                     <xcad:LayoutPanel Orientation="Horizontal">
                         <xcad:LayoutAnchorablePane DockWidth="200">
                             <xcad:LayoutAnchorable ContentId="properties"
-                                     Title="Properties"
+                                     Title="属性"
                                      CanHide="False"
                                      CanClose="False"
                                      AutoHideWidth="240"
@@ -61,21 +61,8 @@
                                 <xcad:LayoutDocument ContentId="document1"
                                      Title="绘 图 区   " CanClose="False"
                                      IconSource="Images/document.png">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="43*"/>
-                                            <RowDefinition Height="70*"/>
-                                            <RowDefinition Height="340*"/>
-                                            <RowDefinition Height="51*"/>
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="103*"/>
-                                            <ColumnDefinition Width="598*"/>
-                                            <ColumnDefinition Width="59*"/>
-                                        </Grid.ColumnDefinitions>
-                                        <!--绘图区-->
-                                        <Border  Grid.Column="1" Grid.Row="1"  BorderBrush="DarkCyan"  BorderThickness="1" Grid.RowSpan="2"/>
-                                        <ScrollViewer Grid.Column="1" Grid.Row="1" x:Name="drawViewScroll" VerticalScrollBarVisibility="Disabled"
+                                    <!--绘图区-->
+                                        <ScrollViewer  x:Name="drawViewScroll" VerticalScrollBarVisibility="Disabled"
                           PreviewMouseWheel="image_PreviewMouseWheel" 
                           PreviewMouseRightButtonDown="imageRobot_PreviewMouseRightButtonDown" 
                           PreviewMouseMove="imageRobot_PreviewMouseMove"
@@ -98,32 +85,13 @@
                                                 <Canvas x:Name="cvOperate"></Canvas>
                                             </Grid>
                                         </ScrollViewer>
-                                        <!--状态栏-->
-                                        <Border Grid.Row="3" Grid.Column="1" BorderThickness="0,2,0,0">
-                                            <StackPanel Name="bottomstackPanel" Orientation="Horizontal">
-                                                <Label Content="缩放:" VerticalAlignment="Center"/>
-                                                <Label Content="{Binding Scale}" VerticalAlignment="Center"/>
-                                                <Label Content="平移:" VerticalAlignment="Center"/>
-                                                <Label Content="{Binding Origin}" VerticalAlignment="Center"/>
-                                                <Label Content="实时:" VerticalAlignment="Center"/>
-                                                <Label Content="{Binding View}" VerticalAlignment="Center"/>
-                                            </StackPanel>
-                                        </Border>
-                                        <Border  Grid.Row="0" Grid.Column="1"  BorderBrush="DarkCyan"  BorderThickness="1"/>
-                                        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-                                            <Label Content="添加元素"  VerticalAlignment="Center" />
-                                            <Button x:Name="Btn_Add_RFID" Content="标签" Click="Btn_Add_RFID_Click"  Margin="10,0" VerticalAlignment="Center"/>
-                                            <Button x:Name="Btn_Add_RouteLine" Content="直线" Click="Btn_Add_RouteLine_Click" Margin="10,0" VerticalAlignment="Center"/>
-                                            <Button x:Name="Btn_Add_RouteForkLine" Content="分叉线" Click="Btn_Add_RouteForkLine_Click" Margin="10,0" VerticalAlignment="Center"/>
-                                        </StackPanel>
-                                    </Grid>
                                 </xcad:LayoutDocument>
                             </xcad:LayoutDocumentPane>
                         </xcad:LayoutDocumentPaneGroup >
                         <xcad:LayoutAnchorablePaneGroup DockWidth="200">
                             <xcad:LayoutAnchorablePane>
-                                <xcad:LayoutAnchorable ContentId="alarms"
-                                       Title="操作"
+                                <xcad:LayoutAnchorable ContentId="mapOperate"
+                                       Title="地图"
                                        IconSource="Images/alarm-clock-blue.png"
                                        CanClose="True">
                                     <StackPanel>
@@ -131,43 +99,35 @@
                                         <Button x:Name="Btn_LoadMap" Content="加载地图" Click="Btn_LoadMap_Click"  Margin="5"  VerticalAlignment="Center"  Height="30"/>
                                     </StackPanel>
                                 </xcad:LayoutAnchorable>
-                                <xcad:LayoutAnchorable ContentId="journal"
-                                       Title="Journal">
-                                    <RichTextBox>
-                                        <FlowDocument>
-                                            <Paragraph FontSize="14"
-                                 FontFamily="Segoe">
-                                                This is the content of the Journal Pane.
-                                                <LineBreak />
-                                                A
-                                                <Bold>RichTextBox</Bold> has been added here
-                                            </Paragraph>
-                                        </FlowDocument>
-                                    </RichTextBox>
-                                </xcad:LayoutAnchorable>
+                                <xcad:LayoutAnchorable ContentId="layouDock"
+                                       Title="布局">
+                                        <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center">
+                                             <TextBlock  DockPanel.Dock="Bottom" Margin="10,50,10,50" FontSize="16"  FontFamily="宋体" Foreground="Blue" TextWrapping="Wrap">
+                                                这里可以保存或加载布局！
+                                             </TextBlock>
+                                            <Button Content="保存布局" Margin="5" Padding="5" Click="SaveButton_Click" />
+                                            <Button Content="加载布局" Margin="5" Padding="5" Click="LoadButton_Click" />
+                                        </StackPanel>
+                               </xcad:LayoutAnchorable>
                             </xcad:LayoutAnchorablePane>
                         </xcad:LayoutAnchorablePaneGroup>
                     </xcad:LayoutPanel>
                     <xcad:LayoutRoot.LeftSide>
                         <xcad:LayoutAnchorSide>
                             <xcad:LayoutAnchorGroup>
-                                <xcad:LayoutAnchorable Title="Agenda"
-                                       ContentId="agenda"
+                                <xcad:LayoutAnchorable Title="工具箱"
+                                       ContentId="ToolBox"
                                        IconSource="Images/address-book-open.png">
-                                    <TextBlock Text="Agenda Content"
-                             Margin="10"
-                             FontSize="18"
-                             FontWeight="Black"
-                             TextWrapping="Wrap" />
-                                </xcad:LayoutAnchorable>
-                                <xcad:LayoutAnchorable Title="Contacts"
-                                       ContentId="contacts"
-                                       IconSource="Images/address-book--pencil.png">
-                                    <TextBlock Text="Contacts Content"
-                             Margin="10"
-                             FontSize="18"
-                             FontWeight="Black"
-                             TextWrapping="Wrap" />
+                                    <StackPanel>
+                                        <TextBlock Text="添加元件"
+                                            Margin="10"
+                                            FontSize="18"
+                                            FontWeight="Black"
+                                            TextWrapping="Wrap" />     
+                                        <Button x:Name="Btn_Add_RFID" Content="标签" Margin="10" Height="30" Click="Btn_Add_RFID_Click"  VerticalAlignment="Center"/>
+                                        <Button x:Name="Btn_Add_RouteLine" Content="直线" Margin="10" Height="30" Click="Btn_Add_RouteLine_Click" VerticalAlignment="Center"/>
+                                        <Button x:Name="Btn_Add_RouteForkLine" Content="分叉线" Margin="10" Height="30" Click="Btn_Add_RouteForkLine_Click" VerticalAlignment="Center"/>
+                                    </StackPanel>
                                 </xcad:LayoutAnchorable>
                             </xcad:LayoutAnchorGroup>
                         </xcad:LayoutAnchorSide>
@@ -175,6 +135,41 @@
                 </xcad:LayoutRoot>
             </xcad:DockingManager>
         </Grid>
-        <StatusBar Grid.Row="1"/>
+        <!--底部信息-->
+        <StatusBar Grid.Row="1" FontSize="16" >
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="240" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+            <StatusBarItem>
+                <TextBlock Text="系统：就绪" />
+            </StatusBarItem>
+            <Separator Grid.Column="1" />
+            <StatusBarItem Grid.Column="2">
+                <StackPanel Name="bottomstackPanel" Orientation="Horizontal">
+                    <Label Content="缩放:" VerticalAlignment="Center"/>
+                    <Label Content="{Binding Scale}" VerticalAlignment="Center"/>
+                    <Label Content="平移:" VerticalAlignment="Center"/>
+                    <Label Content="{Binding Origin}" VerticalAlignment="Center"/>
+                    <Label Content="实时:" VerticalAlignment="Center"/>
+                    <Label Content="{Binding View}" VerticalAlignment="Center"/>
+                </StackPanel>
+            </StatusBarItem>
+            <Separator Grid.Column="3" />
+            <StatusBarItem Grid.Column="4">
+                <Hyperlink NavigateUri="http://igeekiot.com" Name="companyLink" ToolTip="欢迎访问，爱极客官网"  Click="CompanyLink_Click" >
+                    西安爱极客网络科技有限公司
+                </Hyperlink>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>

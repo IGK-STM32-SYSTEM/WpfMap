@@ -188,7 +188,11 @@ namespace WpfMap
                 if (i % 2 == 0)
                     line.StrokeThickness = 0.4;
                 else
+                {
+                    //虚线
+                   // line.StrokeDashArray = new DoubleCollection() { 20};
                     line.StrokeThickness = 0.2;
+                }
                 line.Stroke = System.Windows.Media.Brushes.LightGray;
                 MapElement.CvGrid.Children.Add(line);
             }
@@ -207,7 +211,11 @@ namespace WpfMap
                 if (i % 2 == 0)
                     line.StrokeThickness = 0.4;
                 else
+                {
+                    //虚线
+                    //line.StrokeDashArray = new DoubleCollection() { 20 };
                     line.StrokeThickness = 0.2;
+                }
                 line.Stroke = System.Windows.Media.Brushes.LightGray;
                 MapElement.CvGrid.Children.Add(line);
             }
