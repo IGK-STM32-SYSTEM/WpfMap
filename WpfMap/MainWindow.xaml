@@ -197,15 +197,14 @@
                 <ItemsPanelTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="200" />
-                            <ColumnDefinition Width="1" />
-                            <ColumnDefinition Width="50" />
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="5" />
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="5" />
                             <ColumnDefinition Width="240" />
                         </Grid.ColumnDefinitions>
                     </Grid>

@@ -309,6 +309,7 @@ namespace WpfMap
                         return;
                     }
                 }
+                this.DataContext = null;
 
                 //清除选中
                 MapFunction.ClearSelect();
