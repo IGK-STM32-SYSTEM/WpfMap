@@ -43,6 +43,7 @@ namespace WpfMap
                 set {
                     num = value;
                     textBlock.Text = value.ToString();
+                    //这里如果是创建时触发，会出错，所以加入try catch
                     try
                     {
                     //获取文本的尺寸
@@ -51,7 +52,6 @@ namespace WpfMap
                         ellipse.Margin.Left + ellipse.Height / 2 - size.Width / 2,
                         ellipse.Margin.Top + ellipse.Height / 2 - size.Height / 2,
                         0, 0);
-
                     }
                     catch
                     {
