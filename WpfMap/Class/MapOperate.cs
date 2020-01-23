@@ -48,7 +48,7 @@ namespace WpfMap
                 {
                     if (str == Records[nowIndex].Data)
                     {
-                        Console.WriteLine("Note:{0}【和之前地图一致,不保存】", note);
+                        MapOperate.SystemMsg.WriteLine("Note:{0}【和之前地图一致,不保存】", note);
                         return;
                     }
                 }
@@ -57,7 +57,7 @@ namespace WpfMap
                 {
                     //清除后面的记录
                     Records.RemoveRange(nowIndex + 1, Records.Count - nowIndex - 1);
-                    Console.WriteLine("nowIndex：{0}，清除了【{1}】条记录", nowIndex, Records.Count - nowIndex - 1);
+                    MapOperate.SystemMsg.WriteLine("nowIndex：{0}，清除了【{1}】条记录", nowIndex, Records.Count - nowIndex - 1);
                 }
                 Record record = new Record();
                 record.Data = str;
@@ -66,7 +66,6 @@ namespace WpfMap
                 //索引指到当前位置
                 nowIndex = Records.Count - 1;
                 //打印结果
-                Console.WriteLine("Index:{0},Note:{1}", nowIndex, record.Note);
                 MapOperate.SystemMsg.WriteLine("Index:{0},Note:{1}", nowIndex, record.Note);
             }
             /// <summary>
@@ -76,12 +75,12 @@ namespace WpfMap
             {
                 if (Records.Count == 0)
                 {
-                    Console.WriteLine("还没有记录^-^");
+                    MapOperate.SystemMsg.WriteLine("还没有记录^-^");
                     return;
                 }
                 if (History.nowIndex == 0)
                 {
-                    Console.WriteLine("到低了,不能再撤销了^-^");
+                    MapOperate.SystemMsg.WriteLine("到低了,不能再撤销了^-^");
                     return;
                 }
                 History.nowIndex--;
@@ -95,12 +94,12 @@ namespace WpfMap
             {
                 if (Records.Count == 0)
                 {
-                    Console.WriteLine("还没有记录^-^");
+                    MapOperate.SystemMsg.WriteLine("还没有记录^-^");
                     return;
                 }
                 if (History.nowIndex == Records.Count - 1)
                 {
-                    Console.WriteLine("到最后一步了^-^");
+                    MapOperate.SystemMsg.WriteLine("到最后一步了^-^");
                     return;
                 }
                 History.nowIndex++;

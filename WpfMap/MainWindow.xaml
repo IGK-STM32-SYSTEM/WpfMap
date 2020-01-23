@@ -22,7 +22,7 @@
         <Grid Grid.Row="0">
             <TextBlock Grid.Row="1"
                Padding="10,0"
-               Text="IGK map edit system. . ."
+               Text="IGK AGVS Map Edit System. . ."
                Style="{StaticResource Header}" />
         </Grid>
         <!--主体-->
@@ -175,7 +175,7 @@
                                         </Grid.RowDefinitions>
                                         <Border BorderThickness="0.5" BorderBrush="Gray"></Border>
                                         <StackPanel Grid.Row="0" >
-                                            <TextBlock  Name="tbSystemMsg" Text="{Binding Msg}" Padding="15"></TextBlock>
+                                            <TextBlock  Name="tbSystemMsg" Text="{Binding Msg}" Foreground="DarkCyan" FontWeight="Medium" FontSize="14" Padding="15"></TextBlock>
                                         </StackPanel>
                                         <TextBlock  Grid.Row="1" Padding="20,0" 
                                                     Style="{StaticResource Header}"
