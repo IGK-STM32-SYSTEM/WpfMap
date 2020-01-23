@@ -38,11 +38,29 @@ namespace WpfMap
             [Category("Non-Numeric Editors")]
             [Description("This property is a complex property and has no default editor.")]
             private int num;
-            public int Num { get { return num; } set { num = value;textBlock.Text = value.ToString(); } }
+            public int Num {
+                get { return num; }
+                set {
+                    num = value;
+                    textBlock.Text = value.ToString();
+                    try
+                    {
+                    //获取文本的尺寸
+                    Size size = CavnvasBase.GetTextBlockSize(textBlock);
+                    textBlock.Margin = new Thickness(
+                        ellipse.Margin.Left + ellipse.Height / 2 - size.Width / 2,
+                        ellipse.Margin.Top + ellipse.Height / 2 - size.Height / 2,
+                        0, 0);
+
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
             [Category("Non-Numeric Editors")]
             [Description("标签颜色")]
-            private Color color;
-            public Color Color { get { return color; } set { color = value; ellipse.Fill = new SolidColorBrush(color); } }
+            public Color Color { get { return (Color)ColorConverter.ConvertFromString(ellipse.Fill.ToString());} set { ellipse.Fill = new SolidColorBrush(value); } }
 
 
             /// <summary>
@@ -290,8 +308,8 @@ namespace WpfMap
             MapElement.CvRFID.Children.Add(rfid.ellipse);
             //显示编号
             CavnvasBase.DrawText(
-                rfid.ellipse.Margin.Left + 15,
-                rfid.ellipse.Margin.Top + 10,
+                rfid.ellipse.Margin.Left + Radius,
+                rfid.ellipse.Margin.Top + Radius,
                 rfid.Num.ToString(),
                 Colors.Black,
                 MapElement.CvRFID,
