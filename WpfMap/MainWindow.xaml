@@ -47,6 +47,7 @@
                                 <xcad:LayoutAnchorable Title="工具箱"
                                                ContentId="ToolBox"
                                                IsSelected="True" 
+                                                 AutoHideWidth="240"
                                                IconSource="Images/address-book-open.png">
                                     <Grid>
                                         <Grid.RowDefinitions>
@@ -119,6 +120,7 @@
                                 <xcad:LayoutAnchorable ContentId="mapOperate"
                                        Title="地图"
                                        IconSource="Images/alarm-clock-blue.png"
+                                                       AutoHideWidth="240"
                                        CanClose="True">
                                     <Grid>
                                         <Grid.RowDefinitions>
@@ -141,7 +143,7 @@
                                 </xcad:LayoutAnchorable>
                             </xcad:LayoutAnchorablePane>
                             <xcad:LayoutAnchorablePane DockWidth="200" DockHeight="1*">
-                                <xcad:LayoutAnchorable ContentId="layouDock"
+                                <xcad:LayoutAnchorable ContentId="layouDock" AutoHideWidth="240"
                                        Title="布局">
                                     <Grid>
                                         <Grid.RowDefinitions>
@@ -158,6 +160,28 @@
                                                     FontFamily="Segoe" 
                                                     TextWrapping="Wrap">
                                                 这里可以保存或加载布局！
+                                        </TextBlock>
+                                    </Grid>
+                                </xcad:LayoutAnchorable>
+                            </xcad:LayoutAnchorablePane>
+                            <xcad:LayoutAnchorablePane DockWidth="200" DockHeight="1*">
+                                <xcad:LayoutAnchorable ContentId="msgDock"
+                                       AutoHideWidth="240"
+                                       Title="消息">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="10*" />
+                                            <RowDefinition Height="50"/>
+                                        </Grid.RowDefinitions>
+                                        <Border BorderThickness="0.5" BorderBrush="Gray"></Border>
+                                        <StackPanel Grid.Row="0" >
+                                            <TextBlock  Name="tbSystemMsg" Text="{Binding Msg}" Padding="15"></TextBlock>
+                                        </StackPanel>
+                                        <TextBlock  Grid.Row="1" Padding="20,0" 
+                                                    Style="{StaticResource Header}"
+                                                    FontFamily="Segoe" 
+                                                    TextWrapping="Wrap">
+                                                消息区！
                                         </TextBlock>
                                     </Grid>
                                 </xcad:LayoutAnchorable>

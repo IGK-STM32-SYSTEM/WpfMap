@@ -13,6 +13,7 @@ namespace WpfMap
     {
         public class History
         {
+
             /// <summary>
             /// 记录对象
             /// </summary>
@@ -66,6 +67,7 @@ namespace WpfMap
                 nowIndex = Records.Count - 1;
                 //打印结果
                 Console.WriteLine("Index:{0},Note:{1}", nowIndex, record.Note);
+                MapOperate.SystemMsg.WriteLine("Index:{0},Note:{1}", nowIndex, record.Note);
             }
             /// <summary>
             /// 撤销
@@ -243,6 +245,8 @@ namespace WpfMap
 
         //底部消息栏
         public static BindHelper.ViewInfoBound ViewInfo = new BindHelper.ViewInfoBound();
+        //系统消息
+        public static BindHelper.SystemMsg SystemMsg = new BindHelper.SystemMsg();
 
         //选择框对象
         public static Rectangle SelectRectangle = new Rectangle();

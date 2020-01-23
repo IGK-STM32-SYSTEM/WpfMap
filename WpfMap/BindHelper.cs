@@ -6,6 +6,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace WpfMap
 {
@@ -117,6 +120,33 @@ namespace WpfMap
             }
         }
         #endregion
+
+
+        #region 系统消息
+        public class SystemMsg : BindableObject
+        {
+            private string msg = string.Empty;
+            /// <summary>
+            /// 系统消息
+            /// </summary>
+            public string Msg
+            {
+                get { return msg; }
+                set { SetProperty(ref msg, value); }
+            }
+            public void Write(String format, params object[] args)
+            {
+                string msg = string.Format(format, args);
+                Msg += msg;
+            }
+            public void WriteLine(String format, params object[] args)
+            {
+                string msg = string.Format(format, args);
+                Msg += msg + "\r\n";
+            }
+        }
+        #endregion
+
 
         #region 路径编辑
         public class RouteEditBound : BindableObject

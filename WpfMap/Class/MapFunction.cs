@@ -48,6 +48,8 @@ namespace WpfMap
         {
             if (MapElement.MapObject.RFIDS.Count == 0)
                 return false;
+            if (index == -1)
+                return false;
             Point pt = new Point(MapElement.MapObject.RFIDS[index].ellipse.Margin.Left + MapElement.RFID_Radius, MapElement.MapObject.RFIDS[index].ellipse.Margin.Top + MapElement.RFID_Radius);
             var distance = MathHelper.Distance(pt, point);
             //距离小于20,在当前站点上

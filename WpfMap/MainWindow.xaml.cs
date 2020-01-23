@@ -31,7 +31,8 @@ namespace WpfMap
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //绑定视图元素到界面
-            bottomstackPanel.DataContext = MapOperate.ViewInfo;
+            this.bottomstackPanel.DataContext = MapOperate.ViewInfo;
+            this.tbSystemMsg.DataContext = MapOperate.SystemMsg;
             //指定画布
             MapElement.CvGrid = cvGrid;//栅格
             MapElement.CvRFID = cvRFID;//标签

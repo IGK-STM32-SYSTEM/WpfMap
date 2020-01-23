@@ -2,7 +2,7 @@
 <LayoutRoot>
   <RootPanel Orientation="Horizontal">
     <LayoutAnchorablePaneGroup Orientation="Vertical" DockWidth="240">
-      <LayoutAnchorablePane Id="1700d62a-6193-4c3c-b53c-03700d90595f" DockHeight="0.6*">
+      <LayoutAnchorablePane DockHeight="0.6*">
         <LayoutAnchorable AutoHideWidth="240" AutoHideMinWidth="100" AutoHideMinHeight="100" Title="工具箱" IsSelected="True" ContentId="ToolBox" CanClose="False" />
       </LayoutAnchorablePane>
       <LayoutAnchorablePane DockWidth="200" DockHeight="1.5*">
@@ -11,7 +11,7 @@
     </LayoutAnchorablePaneGroup>
     <LayoutDocumentPaneGroup Orientation="Horizontal">
       <LayoutDocumentPane>
-        <LayoutDocument Title="绘 图 区   " IsSelected="True" IsLastFocusedDocument="True" ContentId="document1" CanClose="False" LastActivationTimeStamp="01/23/2020 16:54:50" />
+        <LayoutDocument Title="绘 图 区   " IsSelected="True" IsLastFocusedDocument="True" ContentId="document1" CanClose="False" LastActivationTimeStamp="01/23/2020 17:05:02" />
       </LayoutDocumentPane>
     </LayoutDocumentPaneGroup>
     <LayoutAnchorablePaneGroup Orientation="Vertical" DockWidth="240">
@@ -19,10 +19,10 @@
         <LayoutAnchorable AutoHideWidth="240" AutoHideMinWidth="100" AutoHideMinHeight="100" Title="地图" IsSelected="True" ContentId="mapOperate" />
       </LayoutAnchorablePane>
       <LayoutAnchorablePane DockWidth="200">
-        <LayoutAnchorable AutoHideWidth="240" AutoHideMinWidth="100" AutoHideMinHeight="100" Title="布局" IsSelected="True" ContentId="layouDock" CanClose="False" LastActivationTimeStamp="01/23/2020 16:55:07" />
+        <LayoutAnchorable AutoHideWidth="240" AutoHideMinWidth="100" AutoHideMinHeight="100" Title="布局" IsSelected="True" ContentId="layouDock" CanClose="False" LastActivationTimeStamp="01/23/2020 17:05:04" />
       </LayoutAnchorablePane>
-      <LayoutAnchorablePane Id="a0dc58be-9faf-4f06-9e82-7cc671196bae" DockWidth="200">
-        <LayoutAnchorable AutoHideWidth="240" AutoHideMinWidth="100" AutoHideMinHeight="100" Title="布局" IsSelected="True" ContentId="layouDock" CanClose="False" LastActivationTimeStamp="01/23/2020 16:55:04" />
+      <LayoutAnchorablePane DockWidth="200">
+        <LayoutAnchorable AutoHideWidth="240" AutoHideMinWidth="100" AutoHideMinHeight="100" Title="消息" IsSelected="True" ContentId="msgDock" CanClose="False" />
       </LayoutAnchorablePane>
     </LayoutAnchorablePaneGroup>
   </RootPanel>
