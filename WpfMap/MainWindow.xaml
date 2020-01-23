@@ -174,8 +174,17 @@
                                             <RowDefinition Height="50"/>
                                         </Grid.RowDefinitions>
                                         <Border BorderThickness="0.5" BorderBrush="Gray"></Border>
-                                        <StackPanel Grid.Row="0" >
-                                            <TextBlock  Name="tbSystemMsg" Text="{Binding Msg}" Foreground="DarkCyan" FontWeight="Medium" FontSize="14" Padding="15"></TextBlock>
+                                        <StackPanel Grid.Row="0" Name="msgStackPanel">
+                                            <TextBox  Name="tbSystemMsg"  
+                                                      Height="{Binding ActualHeight,ElementName=msgStackPanel}"
+                                                      Text="{Binding Msg}"
+                                                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                      TextChanged="TbSystemMsg_TextChanged"
+                                                      Foreground="DarkCyan"
+                                                      FontWeight="Medium" 
+                                                      FontSize="14" 
+                                                      Padding="15">
+                                            </TextBox>
                                         </StackPanel>
                                         <TextBlock  Grid.Row="1" Padding="20,0" 
                                                     Style="{StaticResource Header}"

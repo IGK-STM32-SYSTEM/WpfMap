@@ -1070,6 +1070,11 @@ namespace WpfMap
             Hyperlink link = sender as Hyperlink;
             Process.Start(new ProcessStartInfo(link.NavigateUri.AbsoluteUri));
         }
-
+        //消息变化事件，自动滚动到最后一行
+        private void TbSystemMsg_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBlock = sender as TextBox;
+            textBlock.ScrollToEnd();
+        }
     }
 }
