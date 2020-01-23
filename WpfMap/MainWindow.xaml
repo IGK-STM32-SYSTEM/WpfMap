@@ -192,36 +192,51 @@
             </xcad:DockingManager>
         </Grid>
         <!--底部信息-->
-        <StatusBar Grid.Row="2" FontSize="16" >
+        <StatusBar Grid.Row="2" FontSize="16" Name="bottomsStatusBar" >
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="1" />
+                            <ColumnDefinition Width="50" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="240" />
                         </Grid.ColumnDefinitions>
                     </Grid>
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
-            <StatusBarItem>
+            <StatusBarItem Grid.Column="0" >
                 <TextBlock Text="系统：就绪" />
             </StatusBarItem>
             <Separator Grid.Column="1" />
             <StatusBarItem Grid.Column="2">
-                <StackPanel Name="bottomstackPanel" Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
                     <Label Content="缩放:" VerticalAlignment="Center"/>
                     <Label Content="{Binding Scale}" VerticalAlignment="Center"/>
-                    <Label Content="平移:" VerticalAlignment="Center"/>
-                    <Label Content="{Binding Origin}" VerticalAlignment="Center"/>
-                    <Label Content="实时:" VerticalAlignment="Center"/>
-                    <Label Content="{Binding View}" VerticalAlignment="Center"/>
                 </StackPanel>
             </StatusBarItem>
             <Separator Grid.Column="3" />
             <StatusBarItem Grid.Column="4">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="平移:" VerticalAlignment="Center"/>
+                    <Label Content="{Binding Origin}" VerticalAlignment="Center"/>
+                </StackPanel>
+            </StatusBarItem>
+            <Separator Grid.Column="5" />
+            <StatusBarItem Grid.Column="6">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="实时:" VerticalAlignment="Center"/>
+                    <Label Content="{Binding View}" VerticalAlignment="Center"/>
+                </StackPanel>
+            </StatusBarItem>
+            <Separator Grid.Column="7" />
+            <StatusBarItem Grid.Column="8">
                 <Hyperlink NavigateUri="http://igeekiot.com" Name="companyLink" ToolTip="欢迎访问，爱极客官网"  Click="CompanyLink_Click" >
                     西安爱极客网络科技有限公司
                 </Hyperlink>
