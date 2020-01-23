@@ -15,7 +15,26 @@ namespace WpfMap.SaveMap
         /// <summary>
         /// 保存到文本文件
         /// </summary>
+        /// <param name="str">内容</param>
+        /// <param name="path">路径</param>
+        public static void SaveToFile(string str, string path)
+        {
+            if (path == "")
+            {
+                return;
+            }
+            using (FileStream fsWrite = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write))
+            {
+                byte[] buffer = Encoding.Default.GetBytes(str);
+                fsWrite.Write(buffer, 0, buffer.Length);
+            }
+            MessageBox.Show("保存成功");
+        }
+        /// <summary>
+        /// 保存到文本文件
+        /// </summary>
         /// <param name="str"></param>
+
         public static void SaveToFile(string str)
         {
             SaveFileDialog sfd = new SaveFileDialog();
@@ -52,6 +71,15 @@ namespace WpfMap.SaveMap
                 {
                     txt = sr.ReadToEnd();
                 }
+            }
+            return txt;
+        }
+        public static string LoadFromFile(string path)
+        {
+            string txt = string.Empty;
+            using (StreamReader sr = new StreamReader(path, Encoding.Default))
+            {
+                txt = sr.ReadToEnd();
             }
             return txt;
         }

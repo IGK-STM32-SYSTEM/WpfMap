@@ -41,6 +41,20 @@ namespace WpfMap
 
             //画背景栅格，大小为20*20
             MapElement.DrawGrid(1024 * 4, 768 * 4);
+
+            //加载地图
+            try
+            {
+                string str = SaveMap.Helper.LoadFromFile(@"map.json");
+                //重载
+                MapFunction.ReloadMap(str);
+                //记录当前状态
+                MapOperate.History.AddRecord("加载地图");
+            }
+            catch
+            {
+
+            }
         }
 
         #region 鼠标事件
@@ -835,10 +849,106 @@ namespace WpfMap
                 MapOperate.History.Redo();
             }
             else
-           //Ctrl+Z【撤销】
-           if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Z)
+            //Ctrl+Z【撤销】
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Z)
             {
                 MapOperate.History.Undo();
+            }
+            else
+            //Ctrl+X【剪切】
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.X)
+            {
+                //编辑单个
+                if (MapOperate.NowMode == MapOperate.EnumMode.EditElement)
+                {
+                    if (MapOperate.NowSelectIndex != -1)
+                    {
+                        //清空剪切板
+                        MapFunction.ClearClipBoard();
+                        //将元素复制到剪贴板
+                        switch (MapOperate.NowType)
+                        {
+                            case MapOperate.EnumElementType.None:
+                                break;
+                            case MapOperate.EnumElementType.RFID:
+                                //列化深度复制
+                                MapElement.RFID rfid = MapFunction.IgkClone.RFID(MapElement.MapObject.RFIDS[MapOperate.NowSelectIndex]);
+                                //添加到剪切板
+                                MapOperate.Clipboard.RFIDS.Add(rfid);
+                                //从地图删除
+                                MapFunction.RemoveRFID(MapElement.MapObject.RFIDS[MapOperate.NowSelectIndex]);
+                                MapOperate.NowSelectIndex = -1;
+                                //记录当前状态
+                                MapOperate.History.AddRecord("剪切掉了一个RFID");
+
+                                break;
+                            case MapOperate.EnumElementType.RouteLine:
+                                //列化深度复制
+                                MapElement.RouteLine routeLine = MapFunction.IgkClone.Line(MapElement.MapObject.Lines[MapOperate.NowSelectIndex]);
+                                //添加到剪切板
+                                MapOperate.Clipboard.Lines.Add(routeLine);
+                                //从地图删除
+                                MapFunction.RemoveRouteLine(MapElement.MapObject.Lines[MapOperate.NowSelectIndex]);
+                                MapOperate.NowSelectIndex = -1;
+                                //记录当前状态
+                                MapOperate.History.AddRecord("剪切掉了一条直线");
+                                break;
+                            case MapOperate.EnumElementType.RouteForkLine:
+                                //列化深度复制
+                                MapElement.RouteForkLine routeForkLine = MapFunction.IgkClone.ForkLine(MapElement.MapObject.ForkLines[MapOperate.NowSelectIndex]);
+                                //添加到剪切板
+                                MapOperate.Clipboard.ForkLines.Add(routeForkLine);
+                                //从地图删除
+                                MapFunction.RemoveForkLine(MapElement.MapObject.ForkLines[MapOperate.NowSelectIndex]);
+                                MapOperate.NowSelectIndex = -1;
+                                //记录当前状态
+                                MapOperate.History.AddRecord("剪切掉了一条分叉线");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                else
+                //编辑多个
+                if (MapOperate.NowMode == MapOperate.EnumMode.MultiEdit)
+                {
+                    //将元素复制到剪贴板
+                    MapFunction.CopyMultiSelectToClipBoard();
+                    //删除已选中所有元素
+                    int num = 0;
+                    //RFID
+                    foreach (var item in MapOperate.MultiSelected.RFIDS)
+                    {
+                        MapFunction.RemoveRFID(item);
+                        num++;
+                    }
+                    //Line
+                    foreach (var item in MapOperate.MultiSelected.Lines)
+                    {
+                        MapFunction.RemoveRouteLine(item);
+                        num++;
+                    }
+                    //ForkLine
+                    foreach (var item in MapOperate.MultiSelected.ForkLines)
+                    {
+                        MapFunction.RemoveForkLine(item);
+                        num++;
+                    }
+                    //清除已选中
+                    MapFunction.ClearAllSelect(MapOperate.MultiSelected);
+                    //记录当前状态
+                    MapOperate.History.AddRecord(string.Format("剪切了{0}个元件", num));
+                }
+            }
+            else
+            //Ctrl+S【保存】
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.S)
+            {
+                //获取字符串地图
+                string str = SaveMap.Helper.ObjToJson.MapOject(MapElement.MapObject);
+                //保存
+                SaveMap.Helper.SaveToFile(str, @"map.json");
             }
             //记录当前按键
             MapOperate.Userkey.Key = e.Key;
@@ -908,15 +1018,23 @@ namespace WpfMap
             MapOperate.NowMode = MapOperate.EnumMode.AddElement;
         }
         #endregion
-
+        //保存地图
         private void Btn_SaveMap_Click(object sender, RoutedEventArgs e)
+        {
+            //获取字符串地图
+            string str = SaveMap.Helper.ObjToJson.MapOject(MapElement.MapObject);
+            //保存
+            SaveMap.Helper.SaveToFile(str, @"map.json");
+        }
+        //另存地图
+        private void Btn_SaveMapAs_Click(object sender, RoutedEventArgs e)
         {
             //获取字符串地图
             string str = SaveMap.Helper.ObjToJson.MapOject(MapElement.MapObject);
             //保存
             SaveMap.Helper.SaveToFile(str);
         }
-
+        //加载地图
         private void Btn_LoadMap_Click(object sender, RoutedEventArgs e)
         {
             //读取
@@ -926,7 +1044,7 @@ namespace WpfMap
             //记录当前状态
             MapOperate.History.AddRecord("加载地图");
         }
-
+        //保存布局
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
             using (var writer = new StreamWriter("AvalonDockSavedFile.txt"))
@@ -935,7 +1053,7 @@ namespace WpfMap
                 layoutSerializer.Serialize(writer);
             }
         }
-
+        //加载布局
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
             using (var reader = new StreamReader("AvalonDockSavedFile.txt"))
@@ -944,11 +1062,12 @@ namespace WpfMap
                 layoutSerializer.Deserialize(reader);
             }
         }
-
+        //公司链接
         private void CompanyLink_Click(object sender, RoutedEventArgs e)
         {
             Hyperlink link = sender as Hyperlink;
             Process.Start(new ProcessStartInfo(link.NavigateUri.AbsoluteUri));
         }
+
     }
 }
