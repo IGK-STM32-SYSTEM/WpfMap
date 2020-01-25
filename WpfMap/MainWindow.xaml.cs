@@ -1076,5 +1076,14 @@ namespace WpfMap
             TextBox textBlock = sender as TextBox;
             textBlock.ScrollToEnd();
         }
+        //显示或隐藏栅格
+        private void CbShowGrid_Click(object sender, RoutedEventArgs e)
+        {
+            CheckBox check = sender as CheckBox;
+            if (check.IsChecked == true)
+                cvGrid.Visibility = Visibility.Visible;
+            else
+                cvGrid.Visibility = Visibility.Hidden;
+        }
     }
 }

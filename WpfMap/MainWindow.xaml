@@ -10,7 +10,7 @@
         PreviewKeyDown="drawViewScroll_PreviewKeyDown"
         PreviewKeyUp="drawViewScroll_PreviewKeyUp"
         Title="地图编辑" 
-        WindowState="Maximized" 
+        WindowState="Maximized" Height="1058.5" d:DesignWidth="1342.5" 
         >
     <Grid>
         <Grid.RowDefinitions>
@@ -129,6 +129,7 @@
                                         </Grid.RowDefinitions>
                                         <Border BorderThickness="0.5" BorderBrush="Gray"></Border>
                                         <StackPanel Grid.Row="0" Margin="20,10">
+                                            <CheckBox x:Name="cbShowGrid" IsChecked="True" Click="CbShowGrid_Click" >显示栅格</CheckBox>    
                                             <Button x:Name="Btn_SaveMap" Content="保存地图" Click="Btn_SaveMap_Click" Margin="5"  VerticalAlignment="Center" Height="30"/>
                                             <Button x:Name="Btn_SaveMapAs" Content="另存地图" Click="Btn_SaveMapAs_Click" Margin="5"  VerticalAlignment="Center" Height="30"/>
                                             <Button x:Name="Btn_LoadMap" Content="加载地图" Click="Btn_LoadMap_Click"  Margin="5"  VerticalAlignment="Center"  Height="30"/>
@@ -174,18 +175,15 @@
                                             <RowDefinition Height="50"/>
                                         </Grid.RowDefinitions>
                                         <Border BorderThickness="0.5" BorderBrush="Gray"></Border>
-                                        <StackPanel Grid.Row="0" Name="msgStackPanel">
-                                            <TextBox  Name="tbSystemMsg"  
-                                                      Height="{Binding ActualHeight,ElementName=msgStackPanel}"
+                                        <TextBox Grid.Row="0" Name="tbSystemMsg"  
                                                       Text="{Binding Msg}"
                                                       ScrollViewer.VerticalScrollBarVisibility="Auto"
                                                       TextChanged="TbSystemMsg_TextChanged"
-                                                      Foreground="DarkCyan"
+                                                      Foreground="#CF000000"
                                                       FontWeight="Medium" 
                                                       FontSize="14" 
                                                       Padding="15">
-                                            </TextBox>
-                                        </StackPanel>
+                                        </TextBox>
                                         <TextBlock  Grid.Row="1" Padding="20,0" 
                                                     Style="{StaticResource Header}"
                                                     FontFamily="Segoe" 
