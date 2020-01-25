@@ -172,6 +172,8 @@ namespace WpfMap
             LeftBtnDownStart:
             //记录按下时的位置
             MapOperate.mouseLeftBtnDownToMap = e.GetPosition(cvMap);
+            //清除左键按下后的移动状态【是否按住左键移动过】
+            MapOperate.MovedAfterLeftBtn = false;
             //编辑单个元素
             if (MapOperate.NowMode == MapOperate.EnumMode.EditElement)
             {
@@ -198,7 +200,8 @@ namespace WpfMap
                         //切换到调整整体
                         MapOperate.ElementEditMode = MapOperate.EnumElementEditMode.All;
                         //记录当前状态
-                        MapOperate.History.AddRecord("编辑直线");
+                        if (MapOperate.MovedAfterLeftBtn)
+                            MapOperate.History.AddRecord("编辑直线");
                     }
                 }
                 //情况1：如果目前是有选中的分叉线【圆弧】
@@ -224,7 +227,8 @@ namespace WpfMap
                         //切换到调整整体
                         MapOperate.ElementEditMode = MapOperate.EnumElementEditMode.All;
                         //记录当前状态
-                        MapOperate.History.AddRecord("编辑分叉");
+                        if (MapOperate.MovedAfterLeftBtn)
+                            MapOperate.History.AddRecord("编辑分叉");
                     }
                 }
                 //情况2：判断光标是否在直线上
@@ -318,8 +322,6 @@ namespace WpfMap
                 MapOperate.NowSelectIndex = -1;
                 //进入多选模式
                 MapOperate.NowMode = MapOperate.EnumMode.MultiSelect;
-                //清除移动状态【是否按住左键移动过】
-                MapOperate.MovedAfterLeftBtn = false;
             }
             else
             //编辑多个元素
@@ -353,17 +355,20 @@ namespace WpfMap
         {
             //记录按下时的位置
             MapOperate.mouseLeftBtnDownToMap = e.GetPosition(cvMap);
+
             //编辑单个元素
             if (MapOperate.NowMode == MapOperate.EnumMode.EditElement)
             {
                 //记录当前状态
-                MapOperate.History.AddRecord("编辑单个");
+                if (MapOperate.MovedAfterLeftBtn)
+                    MapOperate.History.AddRecord("编辑单个");
             }
             else
             if (MapOperate.NowMode == MapOperate.EnumMode.MultiEdit)
             {
                 //记录当前状态
-                MapOperate.History.AddRecord("编辑多个");
+                if (MapOperate.MovedAfterLeftBtn)
+                    MapOperate.History.AddRecord("编辑多个");
             }
             else
             //多选状态
@@ -498,6 +503,16 @@ namespace WpfMap
             //计算左键按下移动偏差
             MapOperate.mouseLeftBtnDownMoveDiff.X = nowPoint.X - MapOperate.mouseLeftBtnDownToMap.X;
             MapOperate.mouseLeftBtnDownMoveDiff.Y = nowPoint.Y - MapOperate.mouseLeftBtnDownToMap.Y;
+            //判断左键按下后是否发生移动
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                if (MapOperate.mouseLeftBtnDownToMap.X != nowPoint.X ||
+                        MapOperate.mouseLeftBtnDownToMap.Y != nowPoint.Y)
+                {
+                    //标记左键按下移动状态【是否按住左键移动过】
+                    MapOperate.MovedAfterLeftBtn = true;
+                }
+            }
 
             //移动视图【如果右键按下】
             if (e.RightButton == MouseButtonState.Pressed)
@@ -521,8 +536,7 @@ namespace WpfMap
                     //左键按下后，鼠标不移动也会进入移动事件，
                     //导致如果点击的位置不是中心，标签会动一下，
                     //很不美好，所以加坐标比较，没有变化就不进行移动
-                    if (MapOperate.mouseLeftBtnDownToMap.X == nowPoint.X &&
-                        MapOperate.mouseLeftBtnDownToMap.Y == nowPoint.Y)
+                    if (MapOperate.MovedAfterLeftBtn == false)
                         return;
                     if (MapOperate.NowSelectIndex != -1)
                     {
@@ -576,8 +590,6 @@ namespace WpfMap
             //多选模式
             if (MapOperate.NowMode == MapOperate.EnumMode.MultiSelect)
             {
-                //标记移动状态【是否按住左键移动过】
-                MapOperate.MovedAfterLeftBtn = true;
                 //绘制选择框   
                 MapOperate.DrawMultiSelectRect(nowPoint);
             }
@@ -1084,6 +1096,11 @@ namespace WpfMap
                 cvGrid.Visibility = Visibility.Visible;
             else
                 cvGrid.Visibility = Visibility.Hidden;
+        }
+        //清空消息
+        private void BtnClearMsg_Click(object sender, RoutedEventArgs e)
+        {
+            MapOperate.SystemMsg.Clear();
         }
     }
 }

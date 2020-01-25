@@ -10,7 +10,7 @@
         PreviewKeyDown="drawViewScroll_PreviewKeyDown"
         PreviewKeyUp="drawViewScroll_PreviewKeyUp"
         Title="地图编辑" 
-        WindowState="Maximized" Height="1058.5" d:DesignWidth="1342.5" 
+        WindowState="Maximized" Height="1058" d:DesignWidth="1342" 
         >
     <Grid>
         <Grid.RowDefinitions>
@@ -180,6 +180,7 @@
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="10*" />
+                                            <RowDefinition Height="30"/>
                                             <RowDefinition Height="50"/>
                                         </Grid.RowDefinitions>
                                         <Border BorderThickness="0.5" BorderBrush="Gray"></Border>
@@ -192,7 +193,8 @@
                                                       FontSize="14" 
                                                       Padding="15">
                                         </TextBox>
-                                        <TextBlock  Grid.Row="1" Padding="20,0" 
+                                        <Button Grid.Row="1" x:Name="BtnClearMsg" Margin="0,2" Click="BtnClearMsg_Click">清空</Button>
+                                        <TextBlock  Grid.Row="2" Padding="20,0" 
                                                     Style="{StaticResource Header}"
                                                     FontFamily="Segoe" 
                                                     TextWrapping="Wrap">

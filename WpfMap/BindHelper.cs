@@ -144,6 +144,10 @@ namespace WpfMap
                 string msg = string.Format(format, args);
                 Msg += msg + "\r\n";
             }
+            public void Clear()
+            {
+                Msg = string.Empty;
+            }
         }
         #endregion
 
