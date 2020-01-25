@@ -42,7 +42,9 @@
                 </xcad:DockingManager.DocumentHeaderTemplate>
                 <xcad:LayoutRoot x:Name="_layoutRoot" >
                     <xcad:LayoutPanel Orientation="Horizontal">
+                        <!--左侧栏-->
                         <xcad:LayoutAnchorablePaneGroup Orientation="Vertical" DockWidth="240">
+                            <!--工具栏-->
                             <xcad:LayoutAnchorablePane DockHeight="0.6*" >
                                 <xcad:LayoutAnchorable Title="工具箱"
                                                ContentId="ToolBox"
@@ -69,6 +71,7 @@
                                     </Grid>
                                 </xcad:LayoutAnchorable>
                             </xcad:LayoutAnchorablePane>
+                            <!--属性栏-->
                             <xcad:LayoutAnchorablePane DockWidth="200" DockHeight="1.5*">
                                 <xcad:LayoutAnchorable ContentId="properties"
                                          Title="属性"
@@ -83,6 +86,7 @@
                                 </xcad:LayoutAnchorable>
                             </xcad:LayoutAnchorablePane>
                         </xcad:LayoutAnchorablePaneGroup>
+                        <!--中间绘图区-->
                         <xcad:LayoutDocumentPaneGroup DockWidth="*">
                             <xcad:LayoutDocumentPane>
                                 <xcad:LayoutDocument ContentId="document1"
@@ -115,7 +119,9 @@
                                 </xcad:LayoutDocument>
                             </xcad:LayoutDocumentPane>
                         </xcad:LayoutDocumentPaneGroup >
+                        <!--右侧栏-->
                         <xcad:LayoutAnchorablePaneGroup Orientation="Vertical" DockWidth="240">
+                            <!--地图-->
                             <xcad:LayoutAnchorablePane DockHeight="1*" >
                                 <xcad:LayoutAnchorable ContentId="mapOperate"
                                        Title="地图"
@@ -143,6 +149,7 @@
                                     </Grid>
                                 </xcad:LayoutAnchorable>
                             </xcad:LayoutAnchorablePane>
+                            <!--布局-->
                             <xcad:LayoutAnchorablePane DockWidth="200" DockHeight="1*">
                                 <xcad:LayoutAnchorable ContentId="layouDock" AutoHideWidth="240"
                                        Title="布局">
@@ -165,6 +172,7 @@
                                     </Grid>
                                 </xcad:LayoutAnchorable>
                             </xcad:LayoutAnchorablePane>
+                            <!--消息区-->
                             <xcad:LayoutAnchorablePane DockWidth="200" DockHeight="1*">
                                 <xcad:LayoutAnchorable ContentId="msgDock"
                                        AutoHideWidth="240"
