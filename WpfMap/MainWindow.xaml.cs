@@ -41,7 +41,7 @@ namespace WpfMap
             MapElement.CvOperate = cvOperate;//操作层
 
             //画背景栅格，大小为20*20
-            MapElement.DrawGrid(1024 * 4, 768 * 4);
+            MapElement.DrawGrid(1024 * 2, 768 * 2);
 
             //加载地图
             try
