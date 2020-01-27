@@ -557,7 +557,7 @@ namespace WpfMap
             return false;
         }
         /// <summary>
-        /// 判断坐标是否在指定【起点】编辑器上
+        /// 判断坐标是否在指定【起点】【编辑器上】
         /// </summary>
         /// <param name="point">光标坐标</param>
         /// <returns>在：返回标签索引，不在：返回-1</returns>
@@ -575,7 +575,7 @@ namespace WpfMap
             return rs;
         }
         /// <summary>
-        /// 判断坐标是否在指定【终点】编辑器上
+        /// 判断坐标是否在指定【终点】【编辑器上】
         /// </summary>
         /// <param name="point">光标坐标</param>
         /// <returns>在：返回标签索引，不在：返回-1</returns>
@@ -593,7 +593,41 @@ namespace WpfMap
             return rs;
         }
         /// <summary>
-        /// 在某一个分叉线的终点
+        /// 是否在某一个分叉的【起点】上
+        /// </summary>
+        /// <param name="point"></param>
+        public static int IsOnForkLineStartPoint(Point point)
+        {
+            if (MapElement.MapObject.ForkLines.Count == 0)
+                return -1;
+            foreach (var item in MapElement.MapObject.ForkLines)
+            {
+                if (item.StartPoint.Equals(point))
+                {
+                    return MapElement.MapObject.ForkLines.IndexOf(item);
+                }
+            }
+            return -1;
+        }
+        /// <summary>
+        /// 是否在某一个分叉的【终点】上
+        /// </summary>
+        /// <param name="point"></param>
+        public static int IsOnForkLineEndPoint(Point point)
+        {
+            if (MapElement.MapObject.ForkLines.Count == 0)
+                return -1;
+            foreach (var item in MapElement.MapObject.ForkLines)
+            {
+                if (item.EndPoint.Equals(point))
+                {
+                    return MapElement.MapObject.ForkLines.IndexOf(item);
+                }
+            }
+            return -1;
+        }
+        /// <summary>
+        /// 在某一个分叉线的【终点】【编辑器】
         /// </summary>
         /// <param name="index"></param>
         /// <param name="point"></param>

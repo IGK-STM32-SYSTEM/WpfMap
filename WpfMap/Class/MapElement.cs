@@ -130,7 +130,16 @@ namespace WpfMap
             /// 编号
             /// </summary>
             public int Num = 0;
-
+            [Category("基础")]
+            [Description("圆弧编号")]
+            [JsonIgnore]
+            public int 编号
+            {
+                get { return Num; }
+            }
+            /// <summary>
+            /// 圆弧起点坐标
+            /// </summary>
             [Category("位置")]
             [Description("圆弧起点坐标")]
             [JsonIgnore]
@@ -150,6 +159,9 @@ namespace WpfMap
                     return start;
                 }
             }
+            /// <summary>
+            /// 圆弧终点坐标
+            /// </summary>
             [Category("位置")]
             [Description("圆弧终点坐标")]
             [JsonIgnore]

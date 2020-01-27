@@ -9,8 +9,380 @@ namespace WpfMap.Route
 {
     public class Helper
     {
-        //public void 
+        public class Base
+        {
+            //定义寻找范围
+            public class Range
+            {
+                /// <summary>
+                /// 最左边
+                /// </summary>
+                public static double MinX = 0;
+                /// <summary>
+                /// 最上边
+                /// </summary>
+                public static double MinY = 0;
+                /// <summary>
+                /// 最右边
+                /// </summary>
+                public static double MaxX = double.MaxValue;
+                /// <summary>
+                /// 最下边
+                /// </summary>
+                public static double MaxY = double.MaxValue;
+            }
+            /// <summary>
+            /// 搜索标签
+            /// </summary>
+            public class FindRFID
+            {
+                /// <summary>
+                /// 【向左】沿直线搜索标签
+                /// </summary>
+                /// <param name="index">当前标签索引</param>
+                /// <param name="point">当前坐标</param>
+                public static int Left(int index, Point point)
+                {
+                    //定义临时坐标
+                    Point pt = new Point(point.X, point.Y);
+                    //标签索引
+                    int id = -1;
+                    for (double i = pt.X; i > Range.MinX; i -= 1)
+                    {
+                        //更新当前位置
+                        pt.X = i;
+                        //当前点在直线上
+                        if (MapFunction.IsOnRouteLine(pt) != -1)
+                        {
+                            //当前点在标签上【非起点标签】
+                            id = MapFunction.IsOnRFID(pt);
+                            if (id != -1 && id != index)
+                            {
+                                //找到有效标签，结束搜索
+                                break;
+                            }
+                        }
+                        else
+                            break;
 
+                    }
+                    if (id != -1 && id != index)
+                    {
+                        return id;
+                    }
+                    else
+                        return -1;
+                }
+                /// <summary>
+                /// 【向右】沿直线搜索标签
+                /// </summary>
+                /// <param name="index">当前标签索引</param>
+                /// <param name="point">当前坐标</param>
+                public static int Right(int index, Point point)
+                {
+                    //定义临时坐标
+                    Point pt = new Point(point.X, point.Y);
+                    //标签索引
+                    int id = -1;
+                    for (double i = pt.X; i < Range.MaxX; i += 1)
+                    {
+                        //更新当前位置
+                        pt.X = i;
+                        //当前点在直线上
+                        if (MapFunction.IsOnRouteLine(pt) != -1)
+                        {
+                            //当前点在标签上【非起点标签】
+                            id = MapFunction.IsOnRFID(pt);
+                            if (id != -1 && id != index)
+                            {
+                                //找到有效标签，结束搜索
+                                break;
+                            }
+                        }
+                        else
+                            break;
+
+                    }
+                    if (id != -1 && id != index)
+                    {
+                        return id;
+                    }
+                    else
+                        return -1;
+                }
+                /// <summary>
+                /// 【向上】沿直线搜索标签
+                /// </summary>
+                /// <param name="index">当前标签索引</param>
+                /// <param name="point">当前坐标</param>
+                public static int Up(int index, Point point)
+                {
+                    //定义临时坐标
+                    Point pt = new Point(point.X, point.Y);
+                    //标签索引
+                    int id = -1;
+                    for (double i = pt.Y; i > Range.MinY; i -= 1)
+                    {
+                        //更新当前位置
+                        pt.Y = i;
+                        //当前点在直线上
+                        if (MapFunction.IsOnRouteLine(pt) != -1)
+                        {
+                            //当前点在标签上【非起点标签】
+                            id = MapFunction.IsOnRFID(pt);
+                            if (id != -1 && id != index)
+                            {
+                                //找到有效标签，结束搜索
+                                break;
+                            }
+                        }
+                        else
+                            break;
+
+                    }
+                    if (id != -1 && id != index)
+                    {
+                        return id;
+                    }
+                    else
+                        return -1;
+                }
+                /// <summary>
+                /// 【向下】沿直线搜索标签
+                /// </summary>
+                /// <param name="index">当前标签索引</param>
+                /// <param name="point">当前坐标</param>
+                public static int Down(int index, Point point)
+                {
+                    //定义临时坐标
+                    Point pt = new Point(point.X, point.Y);
+                    //标签索引
+                    int id = -1;
+                    for (double i = pt.Y; i < Range.MaxY; i += 1)
+                    {
+                        //更新当前位置
+                        pt.Y = i;
+                        //当前点在直线上
+                        if (MapFunction.IsOnRouteLine(pt) != -1)
+                        {
+                            //当前点在标签上【非起点标签】
+                            id = MapFunction.IsOnRFID(pt);
+                            if (id != -1 && id != index)
+                            {
+                                //找到有效标签，结束搜索
+                                break;
+                            }
+                        }
+                        else
+                            break;
+                    }
+                    if (id != -1 && id != index)
+                    {
+                        return id;
+                    }
+                    else
+                        return -1;
+                }
+                /// <summary>
+                /// 【在点上】沿直线搜索标签
+                /// </summary>
+                /// <param name="index">当前标签索引</param>
+                /// <param name="point">当前坐标</param>
+                public static int OnPoint(int index, Point point)
+                {
+                    //定义临时坐标
+                    Point pt = new Point(point.X, point.Y);
+                    //当前点在标签上
+                    int id = MapFunction.IsOnRFID(pt);
+                    if (id != -1 && id != index)
+                    {
+                        return id;
+                    }
+                    else
+                        return -1;
+                }
+            }
+            /// <summary>
+            /// 搜索分叉
+            /// </summary>
+            public class FindForkLine
+            {
+                /// <summary>
+                /// 【向左上】沿直线向左搜索朝上的分叉
+                /// </summary>
+                /// <param name="point">当前坐标</param>
+                /// <returns></returns>
+                public static int LeftUp(Point point)
+                {
+                    //定义临时坐标
+                    Point pt = new Point(point.X, point.Y);
+                    //分叉索引
+                    for (double i = pt.X; i > 0; i -= 1)
+                    {
+                        //更新当前位置
+                        pt.X = i;
+                        //在直线上
+                        if (MapFunction.IsOnRouteLine(pt) != -1)
+                        {
+                            //当前点是某一个分叉的终点
+                            foreach (var item in MapElement.MapObject.ForkLines)
+                            {
+                                if (item.EndPoint.Equals(pt))
+                                {
+                                    //找到，且起点在终点的左上
+                                    if (item.StartPoint.X < item.EndPoint.X
+                                        && item.StartPoint.Y < item.EndPoint.Y)
+                                    {
+                                        return MapElement.MapObject.ForkLines.IndexOf(item);
+                                    }
+
+                                }
+                                else
+                                {
+                                    //起点在终点右边【无效】，继续找
+                                    continue;
+                                }
+                            }
+                        }
+                        else
+                            return -1;
+
+                    }
+                    return -1;
+                }
+                /// <summary>
+                /// 【向左下】沿直线向左搜索朝下的分叉
+                /// </summary>
+                /// <param name="point">当前坐标</param>
+                /// <returns></returns>
+                public static int LeftDown(Point point)
+                {
+                    if (MapElement.MapObject.ForkLines.Count == 0)
+                        return -1;
+                    //定义临时坐标
+                    Point pt = new Point(point.X, point.Y);
+                    //分叉索引
+                    for (double i = pt.X; i > 0; i -= 1)
+                    {
+                        //更新当前位置
+                        pt.X = i;
+                        //在直线上
+                        if (MapFunction.IsOnRouteLine(pt) != -1)
+                        {
+                            //当前点是某一个分叉的终点
+                            foreach (var item in MapElement.MapObject.ForkLines)
+                            {
+                                if (item.EndPoint.Equals(pt))
+                                {
+                                    //找到，且起点在终点的左下
+                                    if (item.StartPoint.X < item.EndPoint.X
+                                        && item.StartPoint.Y > item.EndPoint.Y)
+                                    {
+                                        return MapElement.MapObject.ForkLines.IndexOf(item);
+                                    }
+
+                                }
+                                else
+                                {
+                                    //起点在终点右边【无效】，继续找
+                                    continue;
+                                }
+                            }
+                        }
+                        else
+                            return -1;
+                    }
+                    return -1;
+                }
+                /// <summary>
+                /// 【向右上】沿直线向右搜索朝上的分叉
+                /// </summary>
+                /// <param name="point">当前坐标</param>
+                /// <returns></returns>
+                public static int RightUp(Point point)
+                {
+                    //定义临时坐标
+                    Point pt = new Point(point.X, point.Y);
+                    //分叉索引
+                    for (double i = pt.X; i < Base.Range.MaxX; i += 1)
+                    {
+                        //更新当前位置
+                        pt.X = i;
+                        //在直线上
+                        if (MapFunction.IsOnRouteLine(pt) != -1)
+                        {
+                            //当前点是某一个分叉的终点
+                            foreach (var item in MapElement.MapObject.ForkLines)
+                            {
+                                if (item.EndPoint.Equals(pt))
+                                {
+                                    //找到，且起点在终点的左上
+                                    if (item.StartPoint.X > item.EndPoint.X
+                                        && item.StartPoint.Y < item.EndPoint.Y)
+                                    {
+                                        return MapElement.MapObject.ForkLines.IndexOf(item);
+                                    }
+
+                                }
+                                else
+                                {
+                                    //起点在终点右边【无效】，继续找
+                                    continue;
+                                }
+                            }
+                        }
+                        else
+                            return -1;
+
+                    }
+                    return -1;
+                }
+                /// <summary>
+                /// 【向右下】沿直线向右搜索朝下的分叉
+                /// </summary>
+                /// <param name="point">当前坐标</param>
+                /// <returns></returns>
+                public static int RightDown(Point point)
+                {
+                    if (MapElement.MapObject.ForkLines.Count == 0)
+                        return -1;
+                    //定义临时坐标
+                    Point pt = new Point(point.X, point.Y);
+                    //分叉索引
+                    for (double i = pt.X; i  < Base.Range.MaxX; i += 1)
+                    {
+                        //更新当前位置
+                        pt.X = i;
+                        //在直线上
+                        if (MapFunction.IsOnRouteLine(pt) != -1)
+                        {
+                            //当前点是某一个分叉的终点
+                            foreach (var item in MapElement.MapObject.ForkLines)
+                            {
+                                if (item.EndPoint.Equals(pt))
+                                {
+                                    //找到，且起点在终点的左下
+                                    if (item.StartPoint.X > item.EndPoint.X
+                                        && item.StartPoint.Y > item.EndPoint.Y)
+                                    {
+                                        return MapElement.MapObject.ForkLines.IndexOf(item);
+                                    }
+
+                                }
+                                else
+                                {
+                                    //起点在终点右边【无效】，继续找
+                                    continue;
+                                }
+                            }
+                        }
+                        else
+                            return -1;
+                    }
+                    return -1;
+                }
+            }
+        }
         /// <summary>
         /// 生成一个点的邻接关系
         /// </summary>
@@ -35,171 +407,82 @@ namespace WpfMap.Route
             Point pointRight = new Point(x + w, y + h / 2);
             Point pointUp = new Point(x + w / 2, y);
             Point pointDown = new Point(x + w / 2, y + h);
-            //找到的标签号
-            int id = -1;
-            Point point = new Point(pointLeft.X, pointLeft.Y);
-            /*-----------向左沿直线搜索标签----------------------*/
-            for (double i = point.X; i > 0; i -= 1)
-            {
-                //更新当前位置
-                point.X = i;
-                //当前点在直线上
-                if (MapFunction.IsOnRouteLine(point) != -1)
-                {
-                    //当前点在标签上【非起点标签】
-                    id = MapFunction.IsOnRFID(point);
-                    if (id != -1 && id != index)
-                    {
-                        //找到有效标签，结束搜索
-                        break;
-                    }
-                }
-                else
-                    break;
-
-            }
-            if (id != -1 && id != index)
+            /*-----------向左搜索----------------------*/
+            int id = Base.FindRFID.Left(index, pointLeft);
+            if (id != -1)
             {
                 //设置选中
                 MapFunction.SetRFIDIsSelected(id);
                 MapOperate.SystemMsg.WriteLine("向左找到【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
             }
-            else
+            /*-----------向右搜索----------------------*/
+            id = Base.FindRFID.Right(index, pointRight);
+            if (id != -1)
             {
-                MapOperate.SystemMsg.WriteLine("向左未找到标签!");
+                //设置选中
+                MapFunction.SetRFIDIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向右找到【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
             }
-            /*-----------向左沿直线搜索分叉----------------------*/
-            id = -1;
-            point = new Point(pointLeft.X, pointLeft.Y);
-            for (double i = point.X; i > 0; i -= 1)
+            /*-----------向上搜索----------------------*/
+            id = Base.FindRFID.Up(index, pointUp);
+            if (id != -1)
             {
-                //更新当前位置
-                point.X = i;
-                //当前点在直线上
-                if (MapFunction.IsOnRouteLine(point) != -1)
-                {
-                    //当前点是某一个分叉的终点
-                    id = MapFunction.IsOnForkLineEnd(point);
-                    //判断是否找到，且判断终点在起点的左边还是右边
-                    if (id != -1 && MapElement.MapObject.ForkLines[id].StartPoint.X < MapElement.MapObject.ForkLines[id].EndPoint.X)
-                    {
-                        //起点在终点左边【有效】，停止搜索
-                        break;
-                    }
-                    else
-                    {
-                        //起点在终点右边【无效】，继续找
-                        continue;
-                    }
-                }
-                else
-                    break;
+                //设置选中
+                MapFunction.SetRFIDIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向上找到【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
+            }
+            /*-----------向下搜索----------------------*/
+            id = Base.FindRFID.Down(index, pointDown);
+            if (id != -1)
+            {
+                //设置选中
+                MapFunction.SetRFIDIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向下找到【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
+            }
 
-            }
-            //找分叉，继续找标签
-            if (id != -1 && MapElement.MapObject.ForkLines[id].StartPoint.X < MapElement.MapObject.ForkLines[id].EndPoint.X)
+
+
+            /*-----------向【左上】搜索【分叉】----------------------*/
+            id = Base.FindForkLine.LeftUp(pointLeft);
+            //找到分叉，继续找标签
+            if (id != -1)
             {
                 //设置选中
                 MapFunction.SetForkLineIsSelected(id);
                 MapOperate.SystemMsg.WriteLine("向左找到【{0}】号分叉!", MapElement.MapObject.ForkLines[id].Num);
                 //沿分叉再找标签
             }
-            //未找到，结束
-            else
-            {
-                MapOperate.SystemMsg.WriteLine("向左未找到分叉!");
-            }
-            /*-----------向右搜索----------------------*/
-            id = -1;
-            point = new Point(pointRight.X, pointRight.Y);
-            for (double i = point.X; i < 2000; i += 1)
-            {
-                //更新当前位置
-                point.X = i;
-                //当前点在直线上
-                if (MapFunction.IsOnRouteLine(point) != -1)
-                {
-                    //当前点在标签上【非起点标签】
-                    id = MapFunction.IsOnRFID(point);
-                    if (id != -1 && id != index)
-                    {
-                        //找到有效标签，结束搜索
-                        break;
-                    }
-                }
-                else
-                    break;
-
-            }
-            if (id != -1 && id != index)
+            /*-----------向【左下】搜索【分叉】----------------------*/
+            id = Base.FindForkLine.LeftDown(pointLeft);
+            //找到分叉，继续找标签
+            if (id != -1)
             {
                 //设置选中
-                MapFunction.SetRFIDIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向右找到【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
+                MapFunction.SetForkLineIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向左找到【{0}】号分叉!", MapElement.MapObject.ForkLines[id].Num);
+                //沿分叉再找标签
             }
-            else
-                MapOperate.SystemMsg.WriteLine("向右未找到标签!");
-            /*-----------向上搜索----------------------*/
-            id = -1;
-            point = new Point(pointUp.X, pointUp.Y);
-            for (double i = point.Y; i > 0; i -= 1)
-            {
-                //更新当前位置
-                point.Y = i;
-                //当前点在直线上
-                if (MapFunction.IsOnRouteLine(point) != -1)
-                {
-                    //当前点在标签上【非起点标签】
-                    id = MapFunction.IsOnRFID(point);
-                    if (id != -1 && id != index)
-                    {
-                        //找到有效标签，结束搜索
-                        break;
-                    }
-                }
-                else
-                    break;
-
-            }
-            if (id != -1 && id != index)
+            /*-----------向【右上】搜索【分叉】----------------------*/
+            id = Base.FindForkLine.RightUp(pointRight);
+            //找到分叉，继续找标签
+            if (id != -1)
             {
                 //设置选中
-                MapFunction.SetRFIDIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向上找到【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
+                MapFunction.SetForkLineIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向右找到【{0}】号分叉!", MapElement.MapObject.ForkLines[id].Num);
+                //沿分叉再找标签
             }
-            else
-                MapOperate.SystemMsg.WriteLine("向上未找到标签!");
-            /*-----------向下搜索----------------------*/
-            id = -1;
-            point = new Point(pointDown.X, pointDown.Y);
-            for (double i = point.Y; i < 2000; i += 1)
-            {
-                //更新当前位置
-                point.Y = i;
-                //当前点在直线上
-                if (MapFunction.IsOnRouteLine(point) != -1)
-                {
-                    //当前点在标签上【非起点标签】
-                    id = MapFunction.IsOnRFID(point);
-                    if (id != -1 && id != index)
-                    {
-                        //找到有效标签，结束搜索
-                        break;
-                    }
-                }
-                else
-                    break;
-            }
-            if (id != -1 && id != index)
+            /*-----------向【右下】搜索【分叉】----------------------*/
+            id = Base.FindForkLine.RightDown(pointRight);
+            //找到分叉，继续找标签
+            if (id != -1)
             {
                 //设置选中
-                MapFunction.SetRFIDIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向下找到【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
+                MapFunction.SetForkLineIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向右找到【{0}】号分叉!", MapElement.MapObject.ForkLines[id].Num);
+                //沿分叉再找标签
             }
-            else
-                MapOperate.SystemMsg.WriteLine("向下未找到标签!");
-
-
+            MapOperate.SystemMsg.WriteLine("------------------------");
         }
     }
 }
