@@ -38,20 +38,22 @@ namespace WpfMap
             [Category("Non-Numeric Editors")]
             [Description("This property is a complex property and has no default editor.")]
             private int num;
-            public int Num {
+            public int Num
+            {
                 get { return num; }
-                set {
+                set
+                {
                     num = value;
                     textBlock.Text = value.ToString();
                     //这里如果是创建时触发，会出错，所以加入try catch
                     try
                     {
-                    //获取文本的尺寸
-                    Size size = CavnvasBase.GetTextBlockSize(textBlock);
-                    textBlock.Margin = new Thickness(
-                        ellipse.Margin.Left + ellipse.Height / 2 - size.Width / 2,
-                        ellipse.Margin.Top + ellipse.Height / 2 - size.Height / 2,
-                        0, 0);
+                        //获取文本的尺寸
+                        Size size = CavnvasBase.GetTextBlockSize(textBlock);
+                        textBlock.Margin = new Thickness(
+                            ellipse.Margin.Left + ellipse.Height / 2 - size.Width / 2,
+                            ellipse.Margin.Top + ellipse.Height / 2 - size.Height / 2,
+                            0, 0);
                     }
                     catch
                     {
@@ -60,7 +62,7 @@ namespace WpfMap
             }
             [Category("Non-Numeric Editors")]
             [Description("标签颜色")]
-            public Color Color { get { return (Color)ColorConverter.ConvertFromString(ellipse.Fill.ToString());} set { ellipse.Fill = new SolidColorBrush(value); } }
+            public Color Color { get { return (Color)ColorConverter.ConvertFromString(ellipse.Fill.ToString()); } set { ellipse.Fill = new SolidColorBrush(value); } }
 
 
             /// <summary>
@@ -128,6 +130,45 @@ namespace WpfMap
             /// 编号
             /// </summary>
             public int Num = 0;
+
+            [Category("位置")]
+            [Description("圆弧起点坐标")]
+            [JsonIgnore]
+            public Point StartPoint
+            {
+                get
+                {
+                    //找到圆弧起点和终点坐标
+                    PathGeometry pathGeometry = Path.Data as PathGeometry;
+                    PathFigure figure = pathGeometry.Figures.First();
+                    ArcSegment arc = figure.Segments.First() as ArcSegment;
+                    //圆弧起点
+                    Point start = figure.StartPoint;
+                    //做margin平移
+                    start.X += Path.Margin.Left;
+                    start.Y += Path.Margin.Top;
+                    return start;
+                }
+            }
+            [Category("位置")]
+            [Description("圆弧终点坐标")]
+            [JsonIgnore]
+            public Point EndPoint
+            {
+                get
+                {
+                    //找到圆弧起点和终点坐标
+                    PathGeometry pathGeometry = Path.Data as PathGeometry;
+                    PathFigure figure = pathGeometry.Figures.First();
+                    ArcSegment arc = figure.Segments.First() as ArcSegment;
+                    //圆弧终点
+                    Point end = arc.Point;
+                    //做margin平移
+                    end.X += Path.Margin.Left;
+                    end.Y += Path.Margin.Top;
+                    return end;
+                }
+            }
             /// <summary>
             /// 路径
             /// </summary>
@@ -355,8 +396,8 @@ namespace WpfMap
             //绘制
             MapElement.MapObject.Lines[index].line.Stroke = Brushes.Black;
             MapElement.MapObject.Lines[index].line.StrokeThickness = 3;//线的宽度
-            //MapElement.MapObject.MapLineList[index].line.HorizontalAlignment = HorizontalAlignment.Left;
-            //MapElement.MapObject.MapLineList[index].line.VerticalAlignment = VerticalAlignment.Center;
+                                                                       //MapElement.MapObject.MapLineList[index].line.HorizontalAlignment = HorizontalAlignment.Left;
+                                                                       //MapElement.MapObject.MapLineList[index].line.VerticalAlignment = VerticalAlignment.Center;
             MapElement.CvRouteLine.Children.Add(MapElement.MapObject.Lines[index].line);
 
             ////显示编号
@@ -454,7 +495,7 @@ namespace WpfMap
             MapElement.MapObject.Lines[index].SelectLine.Y2 = MapElement.MapObject.Lines[index].line.Y2;
             MapElement.MapObject.Lines[index].SelectLine.Margin = MapElement.MapObject.Lines[index].line.Margin;
             MapElement.MapObject.Lines[index].SelectLine.StrokeThickness = 1;//线的宽度
-            //虚线
+                                                                             //虚线
             MapElement.MapObject.Lines[index].SelectLine.StrokeDashArray = new DoubleCollection() { 3, 5 };
             //MapElement.MapObject.MapRFIDList[index].selectRectangle.StrokeDashCap = PenLineCap.Triangle;
             //MapElement.MapObject.MapLineList[index].SelectLine.HorizontalAlignment = HorizontalAlignment.Left;
@@ -470,7 +511,7 @@ namespace WpfMap
             routeLine.SelectLine.Y2 = routeLine.line.Y2;
             routeLine.SelectLine.Margin = routeLine.line.Margin;
             routeLine.SelectLine.StrokeThickness = 1;//线的宽度
-            //虚线
+                                                     //虚线
             routeLine.SelectLine.StrokeDashArray = new DoubleCollection() { 3, 5 };
             //MapElement.MapObject.MapRFIDList[index].selectRectangle.StrokeDashCap = PenLineCap.Triangle;
             //MapElement.MapObject.MapLineList[index].SelectLine.HorizontalAlignment = HorizontalAlignment.Left;

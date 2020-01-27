@@ -52,9 +52,9 @@ namespace WpfMap
                 //记录当前状态
                 MapOperate.History.AddRecord("加载地图");
             }
-            catch
+            catch(Exception ex)
             {
-
+                Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message.ToString());
             }
         }
 
@@ -284,6 +284,7 @@ namespace WpfMap
                         MapOperate.NowType = MapOperate.EnumElementType.RouteForkLine;
                         //设置调整模式为整体调节【默认】
                         MapOperate.ElementEditMode = MapOperate.EnumElementEditMode.All;
+                        this.DataContext = MapElement.MapObject.ForkLines[rs];
                         return;
                     }
                 }
@@ -310,6 +311,8 @@ namespace WpfMap
                         //更新当前元素
                         MapOperate.NowType = MapOperate.EnumElementType.RFID;
                         this.DataContext = MapElement.MapObject.RFIDS[rs];
+                        //搜索
+                        Route.Helper.GenerateNeighbour(rs);
                         return;
                     }
                 }

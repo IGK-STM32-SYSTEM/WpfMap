@@ -593,6 +593,30 @@ namespace WpfMap
             return rs;
         }
         /// <summary>
+        /// 在某一个分叉线的终点
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public static int IsOnForkLineEnd(Point point)
+        {
+            if (MapElement.MapObject.ForkLines.Count == 0)
+                return -1;
+            foreach (var item in MapElement.MapObject.ForkLines)
+            {
+                //拿到编辑器的矩形
+                Rectangle rectangle = item.EndRect;
+                Point pt = point;
+                //平移margin，让当前点和矩形在同一坐标系
+                pt.X -= rectangle.Margin.Left;
+                pt.Y -= rectangle.Margin.Top;
+                bool rs = MathHelper.PointInRect(new Rect(0, 0, rectangle.Width, rectangle.Height), pt);
+                if (rs)
+                    return MapElement.MapObject.ForkLines.IndexOf(item);
+            }
+            return -1;
+        }
+        /// <summary>
         /// 设置标到正常状态
         /// </summary>
         /// <param name="index"></param>
@@ -993,7 +1017,7 @@ namespace WpfMap
             MapElement.MapObjectClass tt = SaveMap.Helper.JsonToObj.MapObject(str);
             if (tt == null)
             {
-                MessageBox.Show("地图格式不正确，加载失败！");
+                Xceed.Wpf.Toolkit.MessageBox.Show("地图格式不正确，加载失败！");
                 return;
             }
             else
