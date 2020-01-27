@@ -25,10 +25,12 @@ namespace WpfMap.SaveMap
             }
             using (FileStream fsWrite = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write))
             {
+                //如果本次写入长度小于之前，那么之前的内容还会保留，所以先设置长度为0
+                fsWrite.SetLength(0);
                 byte[] buffer = Encoding.Default.GetBytes(str);
                 fsWrite.Write(buffer, 0, buffer.Length);
             }
-            MessageBox.Show("保存成功");
+            MapOperate.SystemMsg.WriteLine("保存成功");
         }
         /// <summary>
         /// 保存到文本文件
@@ -51,10 +53,12 @@ namespace WpfMap.SaveMap
             }
             using (FileStream fsWrite = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write))
             {
+                //如果本次写入长度小于之前，那么之前的内容还会保留，所以先设置长度为0
+                fsWrite.SetLength(0);
                 byte[] buffer = Encoding.Default.GetBytes(str);
                 fsWrite.Write(buffer, 0, buffer.Length);
             }
-            MessageBox.Show("保存成功");
+            MapOperate.SystemMsg.WriteLine("保存成功");
         }
         /// <summary>
         /// 从文件读取
