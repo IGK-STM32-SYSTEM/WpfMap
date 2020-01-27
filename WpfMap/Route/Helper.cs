@@ -214,10 +214,12 @@ namespace WpfMap.Route
                 /// <returns></returns>
                 public static int LeftUp(Point point)
                 {
+                    if (MapElement.MapObject.ForkLines.Count == 0)
+                        return -1;
                     //定义临时坐标
                     Point pt = new Point(point.X, point.Y);
                     //分叉索引
-                    for (double i = pt.X; i > 0; i -= 1)
+                    for (double i = pt.X; i > Range.MinX; i -= 1)
                     {
                         //更新当前位置
                         pt.X = i;
@@ -235,18 +237,11 @@ namespace WpfMap.Route
                                     {
                                         return MapElement.MapObject.ForkLines.IndexOf(item);
                                     }
-
-                                }
-                                else
-                                {
-                                    //起点在终点右边【无效】，继续找
-                                    continue;
                                 }
                             }
                         }
                         else
                             return -1;
-
                     }
                     return -1;
                 }
@@ -262,7 +257,7 @@ namespace WpfMap.Route
                     //定义临时坐标
                     Point pt = new Point(point.X, point.Y);
                     //分叉索引
-                    for (double i = pt.X; i > 0; i -= 1)
+                    for (double i = pt.X; i > Range.MinX; i -= 1)
                     {
                         //更新当前位置
                         pt.X = i;
@@ -280,12 +275,6 @@ namespace WpfMap.Route
                                     {
                                         return MapElement.MapObject.ForkLines.IndexOf(item);
                                     }
-
-                                }
-                                else
-                                {
-                                    //起点在终点右边【无效】，继续找
-                                    continue;
                                 }
                             }
                         }
@@ -301,6 +290,8 @@ namespace WpfMap.Route
                 /// <returns></returns>
                 public static int RightUp(Point point)
                 {
+                    if (MapElement.MapObject.ForkLines.Count == 0)
+                        return -1;
                     //定义临时坐标
                     Point pt = new Point(point.X, point.Y);
                     //分叉索引
@@ -322,12 +313,6 @@ namespace WpfMap.Route
                                     {
                                         return MapElement.MapObject.ForkLines.IndexOf(item);
                                     }
-
-                                }
-                                else
-                                {
-                                    //起点在终点右边【无效】，继续找
-                                    continue;
                                 }
                             }
                         }
@@ -367,12 +352,159 @@ namespace WpfMap.Route
                                     {
                                         return MapElement.MapObject.ForkLines.IndexOf(item);
                                     }
-
                                 }
-                                else
+                            }
+                        }
+                        else
+                            return -1;
+                    }
+                    return -1;
+                }
+                
+                /// <summary>
+                /// 【向上左】沿直线向上搜索朝左的分叉
+                /// </summary>
+                /// <param name="point">当前坐标</param>
+                /// <returns></returns>
+                public static int UpLeft(Point point)
+                {
+                    if (MapElement.MapObject.ForkLines.Count == 0)
+                        return -1;
+                    //定义临时坐标
+                    Point pt = new Point(point.X, point.Y);
+                    //分叉索引
+                    for (double i = pt.Y; i > Range.MinY; i -= 1)
+                    {
+                        //更新当前位置
+                        pt.Y = i;
+                        //在直线上
+                        if (MapFunction.IsOnRouteLine(pt) != -1)
+                        {
+                            //当前点是某一个分叉的起点
+                            foreach (var item in MapElement.MapObject.ForkLines)
+                            {
+                                if (item.StartPoint.Equals(pt))
                                 {
-                                    //起点在终点右边【无效】，继续找
-                                    continue;
+                                    //找到，且终点在起点的上左
+                                    if (item.EndPoint.X < item.StartPoint.X
+                                        && item.EndPoint.Y < item.StartPoint.Y)
+                                    {
+                                        return MapElement.MapObject.ForkLines.IndexOf(item);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                            return -1;
+                    }
+                    return -1;
+                }
+                /// <summary>
+                /// 【向上右】沿直线向上搜索朝右的分叉
+                /// </summary>
+                /// <param name="point">当前坐标</param>
+                /// <returns></returns>
+                public static int UpRight(Point point)
+                {
+                    if (MapElement.MapObject.ForkLines.Count == 0)
+                        return -1;
+                    //定义临时坐标
+                    Point pt = new Point(point.X, point.Y);
+                    //分叉索引
+                    for (double i = pt.Y; i > Range.MinY; i -= 1)
+                    {
+                        //更新当前位置
+                        pt.Y = i;
+                        //在直线上
+                        if (MapFunction.IsOnRouteLine(pt) != -1)
+                        {
+                            //当前点是某一个分叉的起点
+                            foreach (var item in MapElement.MapObject.ForkLines)
+                            {
+                                if (item.StartPoint.Equals(pt))
+                                {
+                                    //找到，且终点在起点的上左
+                                    if (item.EndPoint.X > item.StartPoint.X
+                                        && item.EndPoint.Y < item.StartPoint.Y)
+                                    {
+                                        return MapElement.MapObject.ForkLines.IndexOf(item);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                            return -1;
+                    }
+                    return -1;
+                }
+                /// <summary>
+                /// 【向下左】沿直线向下搜索朝左的分叉
+                /// </summary>
+                /// <param name="point">当前坐标</param>
+                /// <returns></returns>
+                public static int DownLeft(Point point)
+                {
+                    if (MapElement.MapObject.ForkLines.Count == 0)
+                        return -1;
+                    //定义临时坐标
+                    Point pt = new Point(point.X, point.Y);
+                    //分叉索引
+                    for (double i = pt.Y; i < Range.MaxY; i += 1)
+                    {
+                        //更新当前位置
+                        pt.Y = i;
+                        //在直线上
+                        if (MapFunction.IsOnRouteLine(pt) != -1)
+                        {
+                            //当前点是某一个分叉的起点
+                            foreach (var item in MapElement.MapObject.ForkLines)
+                            {
+                                if (item.StartPoint.Equals(pt))
+                                {
+                                    //找到，且终点在起点的上左
+                                    if (item.EndPoint.X < item.StartPoint.X
+                                        && item.EndPoint.Y < item.StartPoint.Y)
+                                    {
+                                        return MapElement.MapObject.ForkLines.IndexOf(item);
+                                    }
+                                }
+                            }
+                        }
+                        else
+                            return -1;
+                    }
+                    return -1;
+                }
+                /// <summary>
+                /// 【向下右】沿直线向下搜索朝右的分叉
+                /// </summary>
+                /// <param name="point">当前坐标</param>
+                /// <returns></returns>
+                public static int DownRight(Point point)
+                {
+                    if (MapElement.MapObject.ForkLines.Count == 0)
+                        return -1;
+                    //定义临时坐标
+                    Point pt = new Point(point.X, point.Y);
+                    //分叉索引
+                    for (double i = pt.Y; i < Range.MaxY; i += 1)
+                    {
+                        //更新当前位置
+                        pt.Y = i;
+                        //在直线上
+                        if (MapFunction.IsOnRouteLine(pt) != -1)
+                        {
+                            //当前点是某一个分叉的起点
+                            foreach (var item in MapElement.MapObject.ForkLines)
+                            {
+                                if (item.StartPoint.Equals(pt))
+                                {
+                                    //找到，且终点在起点的上左
+                                    if (item.EndPoint.X > item.StartPoint.X
+                                        && item.EndPoint.Y < item.StartPoint.Y)
+                                    {
+                                        return MapElement.MapObject.ForkLines.IndexOf(item);
+                                    }
                                 }
                             }
                         }
@@ -407,7 +539,8 @@ namespace WpfMap.Route
             Point pointRight = new Point(x + w, y + h / 2);
             Point pointUp = new Point(x + w / 2, y);
             Point pointDown = new Point(x + w / 2, y + h);
-            /*-----------向左搜索----------------------*/
+                            
+            /*-----------向左搜索【标签】----------------------*/
             int id = Base.FindRFID.Left(index, pointLeft);
             if (id != -1)
             {
@@ -415,7 +548,7 @@ namespace WpfMap.Route
                 MapFunction.SetRFIDIsSelected(id);
                 MapOperate.SystemMsg.WriteLine("向左找到【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
             }
-            /*-----------向右搜索----------------------*/
+            /*-----------向右搜索【标签】----------------------*/
             id = Base.FindRFID.Right(index, pointRight);
             if (id != -1)
             {
@@ -423,7 +556,7 @@ namespace WpfMap.Route
                 MapFunction.SetRFIDIsSelected(id);
                 MapOperate.SystemMsg.WriteLine("向右找到【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
             }
-            /*-----------向上搜索----------------------*/
+            /*-----------向上搜索【标签】----------------------*/
             id = Base.FindRFID.Up(index, pointUp);
             if (id != -1)
             {
@@ -431,7 +564,7 @@ namespace WpfMap.Route
                 MapFunction.SetRFIDIsSelected(id);
                 MapOperate.SystemMsg.WriteLine("向上找到【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
             }
-            /*-----------向下搜索----------------------*/
+            /*-----------向下搜索【标签】----------------------*/
             id = Base.FindRFID.Down(index, pointDown);
             if (id != -1)
             {
@@ -442,46 +575,90 @@ namespace WpfMap.Route
 
 
 
-            /*-----------向【左上】搜索【分叉】----------------------*/
+            /*-----------向【左】搜索【上分叉】----------------------*/
             id = Base.FindForkLine.LeftUp(pointLeft);
             //找到分叉，继续找标签
             if (id != -1)
             {
                 //设置选中
                 MapFunction.SetForkLineIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向左找到【{0}】号分叉!", MapElement.MapObject.ForkLines[id].Num);
+                MapOperate.SystemMsg.WriteLine("向左找到【{0}】号【上分叉】!", MapElement.MapObject.ForkLines[id].Num);
                 //沿分叉再找标签
             }
-            /*-----------向【左下】搜索【分叉】----------------------*/
+            /*-----------向【左】搜索【下分叉】----------------------*/
             id = Base.FindForkLine.LeftDown(pointLeft);
             //找到分叉，继续找标签
             if (id != -1)
             {
                 //设置选中
                 MapFunction.SetForkLineIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向左找到【{0}】号分叉!", MapElement.MapObject.ForkLines[id].Num);
+                MapOperate.SystemMsg.WriteLine("向左找到【{0}】号【下分叉】!", MapElement.MapObject.ForkLines[id].Num);
                 //沿分叉再找标签
             }
-            /*-----------向【右上】搜索【分叉】----------------------*/
+            /*-----------向【右】搜索【上分叉】----------------------*/
             id = Base.FindForkLine.RightUp(pointRight);
             //找到分叉，继续找标签
             if (id != -1)
             {
                 //设置选中
                 MapFunction.SetForkLineIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向右找到【{0}】号分叉!", MapElement.MapObject.ForkLines[id].Num);
+                MapOperate.SystemMsg.WriteLine("向右找到【{0}】号【上分叉】!", MapElement.MapObject.ForkLines[id].Num);
                 //沿分叉再找标签
             }
-            /*-----------向【右下】搜索【分叉】----------------------*/
+            /*-----------向【右】搜索【下分叉】----------------------*/
             id = Base.FindForkLine.RightDown(pointRight);
             //找到分叉，继续找标签
             if (id != -1)
             {
                 //设置选中
                 MapFunction.SetForkLineIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向右找到【{0}】号分叉!", MapElement.MapObject.ForkLines[id].Num);
+                MapOperate.SystemMsg.WriteLine("向右找到【{0}】号【下分叉】!", MapElement.MapObject.ForkLines[id].Num);
                 //沿分叉再找标签
             }
+
+
+            /*-----------向【上】搜索【左分叉】----------------------*/
+            id = Base.FindForkLine.UpLeft(pointUp);
+            //找到分叉，继续找标签
+            if (id != -1)
+            {
+                //设置选中
+                MapFunction.SetForkLineIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向上找到【{0}】号【左分叉】!", MapElement.MapObject.ForkLines[id].Num);
+                //沿分叉再找标签
+            }
+            /*-----------向【上】搜索【右分叉】----------------------*/
+            id = Base.FindForkLine.UpRight(pointUp);
+            //找到分叉，继续找标签
+            if (id != -1)
+            {
+                //设置选中
+                MapFunction.SetForkLineIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向上找到【{0}】号【右分叉】!", MapElement.MapObject.ForkLines[id].Num);
+                //沿分叉再找标签
+            }
+            /*-----------向【下】搜索【左分叉】----------------------*/
+            id = Base.FindForkLine.DownLeft(pointDown);
+            //找到分叉，继续找标签
+            if (id != -1)
+            {
+                //设置选中
+                MapFunction.SetForkLineIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向下找到【{0}】号【左分叉】!", MapElement.MapObject.ForkLines[id].Num);
+                //沿分叉再找标签
+            }
+            /*-----------向【下】搜索【右分叉】----------------------*/
+            id = Base.FindForkLine.DownRight(pointDown);
+            //找到分叉，继续找标签
+            if (id != -1)
+            {
+                //设置选中
+                MapFunction.SetForkLineIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向下找到【{0}】号【右分叉】!", MapElement.MapObject.ForkLines[id].Num);
+                //沿分叉再找标签
+            }
+
+
             MapOperate.SystemMsg.WriteLine("------------------------");
         }
     }
