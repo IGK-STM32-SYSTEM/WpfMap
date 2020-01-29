@@ -579,19 +579,6 @@ namespace WpfMap.Route
             }
 
 
-            #region 【向上找右分叉】
-            UpRight:
-            id = Base.FindForkLine.UpRight(pt,1);
-            //找到分叉，继续找标签
-            if (id != -1)
-            {
-                //设置选中
-                MapFunction.SetForkLineIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向上找到【{0}】号【右分叉】!", MapElement.MapObject.ForkLines[id].Num);
-                //沿分叉再找标签
-            }
-            #endregion
-
             #region 【向上找左分叉】
             UpLeft:
             id = Base.FindForkLine.UpLeft(pt, range.MinY);
@@ -600,25 +587,80 @@ namespace WpfMap.Route
             {
                 //设置选中
                 MapFunction.SetForkLineIsSelected(id);
-                //MapOperate.SystemMsg.WriteLine("向上找到【{0}】号【左分叉】!", MapElement.MapObject.ForkLines[id].Num);
-                //【向左找标签】
+                MapOperate.SystemMsg.WriteLine("向上找到【{0}】号【左分叉】!", MapElement.MapObject.ForkLines[id].Num);
+                //更新搜索起点
                 pt = new Point(MapElement.MapObject.ForkLines[id].EndPoint.X, MapElement.MapObject.ForkLines[id].EndPoint.Y);
-                id = Base.FindRFID.Left(index, pt, range);
-                if (id != -1)
-                {
-                    //设置选中
-                    MapFunction.SetRFIDIsSelected(id);
-                    //【完成】
-                    return true;
-                }
-                else
-                    //【向左找上分叉】
-                    goto LeftUp;
+                //跳转【向左找标签】
+                goto RFID_Left;
+            }
+            else
+            {
+                //【向上找右分叉】
+                goto UpRight;
             }
             #endregion
 
+            #region 【向上找右分叉】
+            UpRight:
+            id = Base.FindForkLine.UpRight(pt, range.MinY);
+            //找到分叉
+            if (id != -1)
+            {
+                //设置选中
+                MapFunction.SetForkLineIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向上找到【{0}】号【右分叉】!", MapElement.MapObject.ForkLines[id].Num);
+                //更新搜索起点
+                pt = new Point(MapElement.MapObject.ForkLines[id].EndPoint.X, MapElement.MapObject.ForkLines[id].EndPoint.Y);
+                //跳转【向右找标签】
+                goto RFID_Right;
+            }
+            else
+            {
+                return false;
+            }
+            #endregion
+
+            #region 【向下找左分叉】
             DownLeft:
+            id = Base.FindForkLine.DownLeft(pt, range.MaxY);
+            //找到分叉
+            if (id != -1)
+            {
+                //设置选中
+                MapFunction.SetForkLineIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向下找到【{0}】号【左分叉】!", MapElement.MapObject.ForkLines[id].Num);
+                //更新搜索起点
+                pt = new Point(MapElement.MapObject.ForkLines[id].EndPoint.X, MapElement.MapObject.ForkLines[id].EndPoint.Y);
+                //跳转【向左找标签】
+                goto RFID_Left;
+            }
+            else
+            {
+                //【向下找右分叉】
+                goto DownRight;
+            }
+            #endregion
+
+            #region 【向下找右分叉】
             DownRight:
+            id = Base.FindForkLine.DownRight(pt, range.MaxY);
+            //找到分叉
+            if (id != -1)
+            {
+                //设置选中
+                MapFunction.SetForkLineIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向下找到【{0}】号【右分叉】!", MapElement.MapObject.ForkLines[id].Num);
+                //更新搜索起点
+                pt = new Point(MapElement.MapObject.ForkLines[id].EndPoint.X, MapElement.MapObject.ForkLines[id].EndPoint.Y);
+                //跳转【向右找标签】
+                goto RFID_Right;
+            }
+            else
+            {
+                //【完成】
+                return false;
+            }
+            #endregion
 
             #region 【向左找上分叉】
             LeftUp:
@@ -629,8 +671,9 @@ namespace WpfMap.Route
                 //设置选中
                 MapFunction.SetForkLineIsSelected(id);
                 MapOperate.SystemMsg.WriteLine("向左找到【{0}】号【上分叉】!", MapElement.MapObject.ForkLines[id].Num);
-                //向上找标签
+                //更新搜索起点坐标
                 pt = new Point(MapElement.MapObject.ForkLines[id].StartPoint.X, MapElement.MapObject.ForkLines[id].StartPoint.Y);
+                //跳转【向上找标签】
                 goto RFID_Up;
             }
             else
@@ -638,15 +681,126 @@ namespace WpfMap.Route
                 goto LeftDown;
             #endregion
 
+            #region 【向左找下分叉】
             LeftDown:
-            RightUp:
-            RightDown:
+            id = Base.FindForkLine.LeftDown(pt, range.MinX);
+            //找到分叉
+            if (id != -1)
+            {
+                //设置选中
+                MapFunction.SetForkLineIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向左找到【{0}】号【下分叉】!", MapElement.MapObject.ForkLines[id].Num);
+                //更新搜索起点坐标
+                pt = new Point(MapElement.MapObject.ForkLines[id].StartPoint.X, MapElement.MapObject.ForkLines[id].StartPoint.Y);
+                //跳转【向下找标签】
+                goto RFID_Down;
+            }
+            else
+                //【完成】
+                return false;
+            #endregion
 
+            #region 【向右找上分叉】
+            RightUp:
+            id = Base.FindForkLine.RightUp(pt, range.MaxX);
+            //找到分叉
+            if (id != -1)
+            {
+                //设置选中
+                MapFunction.SetForkLineIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向右找到【{0}】号【上分叉】!", MapElement.MapObject.ForkLines[id].Num);
+                //更新搜索起点坐标
+                pt = new Point(MapElement.MapObject.ForkLines[id].StartPoint.X, MapElement.MapObject.ForkLines[id].StartPoint.Y);
+                //跳转【向上找标签】
+                goto RFID_Up;
+            }
+            else
+                //跳转【向右找下分叉】
+                goto RightDown;
+            #endregion
+
+            #region 【向右找下分叉】
+            RightDown:
+            id = Base.FindForkLine.RightDown(pt, range.MaxX);
+            //找到分叉
+            if (id != -1)
+            {
+                //设置选中
+                MapFunction.SetForkLineIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向右找到【{0}】号【下分叉】!", MapElement.MapObject.ForkLines[id].Num);
+                //更新搜索起点坐标
+                pt = new Point(MapElement.MapObject.ForkLines[id].StartPoint.X, MapElement.MapObject.ForkLines[id].StartPoint.Y);
+                //跳转【向下找标签】
+                goto RFID_Down;
+            }
+            else
+                //【完成】
+                return false;
+            #endregion
+
+            #region 【向上找标签】
             RFID_Up:
+            id = Base.FindRFID.Up(index, pt, range);
+            if (id != -1)
+            {
+                //设置选中
+                MapFunction.SetRFIDIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向上找到【{0}】号【标签】!", MapElement.MapObject.RFIDS[id].Num);
+                //【完成】
+                return true;
+            }
+            else
+                //【向上找左分叉】
+                goto UpLeft;
+            #endregion
+
+            #region 【向下找标签】
             RFID_Down:
+            id = Base.FindRFID.Down(index, pt, range);
+            if (id != -1)
+            {
+                //设置选中
+                MapFunction.SetRFIDIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向下找到【{0}】号【标签】!", MapElement.MapObject.RFIDS[id].Num);
+                //【完成】
+                return true;
+            }
+            else
+                //【向下找左分叉】
+                goto DownLeft;
+            #endregion
+
+            #region 【向左找标签】
             RFID_Left:
+            id = Base.FindRFID.Left(index, pt, range);
+            if (id != -1)
+            {
+                //设置选中
+                MapFunction.SetRFIDIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向左找到【{0}】号【标签】!", MapElement.MapObject.RFIDS[id].Num);
+                //【完成】
+                return true;
+            }
+            else
+                //【向左找上分叉】
+                goto LeftUp;
+            #endregion
+
+            #region 【向右找标签】
             RFID_Right:
-            return false;
+            id = Base.FindRFID.Right(index, pt, range);
+            if (id != -1)
+            {
+                //设置选中
+                MapFunction.SetRFIDIsSelected(id);
+                MapOperate.SystemMsg.WriteLine("向右找到【{0}】号【标签】!", MapElement.MapObject.RFIDS[id].Num);
+                //【完成】
+                return true;
+            }
+            else
+                //【向右找上分叉】
+                goto RightUp;
+            #endregion
         }
 
         /// <summary>
@@ -692,17 +846,6 @@ namespace WpfMap.Route
                         MapOperate.SystemMsg.WriteLine("向上直行->到达【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
                     }
                 }
-
-                ////找下分叉
-                //id = Base.FindForkLine.LeftDown(rfid.LeftPoint, MapElement.MapObject.RFIDS[id].RightPoint.X);
-                ////找到分叉，继续找标签
-                //if (id != -1)
-                //{
-                //    //设置选中
-                //    MapFunction.SetForkLineIsSelected(id);
-                //    MapOperate.SystemMsg.WriteLine("向左找到【{0}】号【下分叉】!", MapElement.MapObject.ForkLines[id].Num);
-                //    //沿分叉再找标签
-                //}
             }
             else
             //未搜到标签
