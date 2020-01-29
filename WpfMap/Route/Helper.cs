@@ -516,7 +516,7 @@ namespace WpfMap.Route
                                 {
                                     //找到，且终点在起点的上左
                                     if (item.EndPoint.X > item.StartPoint.X
-                                        && item.EndPoint.Y < item.StartPoint.Y)
+                                        && item.EndPoint.Y > item.StartPoint.Y)
                                     {
                                         return MapElement.MapObject.ForkLines.IndexOf(item);
                                     }
@@ -850,7 +850,7 @@ namespace WpfMap.Route
             else
             //未搜到标签
             {
-
+                Process(index, rfid.LeftPoint,ProcessState.LeftUp,new Base.Range ());
             }
 
             #endregion
