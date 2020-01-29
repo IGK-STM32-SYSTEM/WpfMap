@@ -14,22 +14,29 @@ namespace WpfMap.Route
             //定义寻找范围
             public class Range
             {
+                public Range()
+                {
+                    MinX = 0;
+                    MinY = 0;
+                    MaxX = double.MaxValue;
+                    MaxY = double.MaxValue;
+                }
                 /// <summary>
                 /// 最左边
                 /// </summary>
-                public const double MinX = 0;
+                public double MinX;
                 /// <summary>
                 /// 最上边
                 /// </summary>
-                public const double MinY = 0;
+                public double MinY;
                 /// <summary>
                 /// 最右边
                 /// </summary>
-                public const double MaxX = double.MaxValue;
+                public double MaxX;
                 /// <summary>
                 /// 最下边
                 /// </summary>
-                public const double MaxY = double.MaxValue;
+                public double MaxY;
             }
             /// <summary>
             /// 搜索标签
@@ -41,13 +48,13 @@ namespace WpfMap.Route
                 /// </summary>
                 /// <param name="index">当前标签索引</param>
                 /// <param name="point">当前坐标</param>
-                public static int Left(int index, Point point)
+                public static int Left(int index, Point point, Range range)
                 {
                     //定义临时坐标
                     Point pt = new Point(point.X, point.Y);
                     //标签索引
                     int id = -1;
-                    for (double i = pt.X; i > Range.MinX; i -= 1)
+                    for (double i = pt.X; i > range.MinX; i -= 1)
                     {
                         //更新当前位置
                         pt.X = i;
@@ -78,13 +85,13 @@ namespace WpfMap.Route
                 /// </summary>
                 /// <param name="index">当前标签索引</param>
                 /// <param name="point">当前坐标</param>
-                public static int Right(int index, Point point)
+                public static int Right(int index, Point point, Range range)
                 {
                     //定义临时坐标
                     Point pt = new Point(point.X, point.Y);
                     //标签索引
                     int id = -1;
-                    for (double i = pt.X; i < Range.MaxX; i += 1)
+                    for (double i = pt.X; i < range.MaxX; i += 1)
                     {
                         //更新当前位置
                         pt.X = i;
@@ -115,13 +122,13 @@ namespace WpfMap.Route
                 /// </summary>
                 /// <param name="index">当前标签索引</param>
                 /// <param name="point">当前坐标</param>
-                public static int Up(int index, Point point)
+                public static int Up(int index, Point point, Range range)
                 {
                     //定义临时坐标
                     Point pt = new Point(point.X, point.Y);
                     //标签索引
                     int id = -1;
-                    for (double i = pt.Y; i > Range.MinY; i -= 1)
+                    for (double i = pt.Y; i > range.MinY; i -= 1)
                     {
                         //更新当前位置
                         pt.Y = i;
@@ -152,13 +159,13 @@ namespace WpfMap.Route
                 /// </summary>
                 /// <param name="index">当前标签索引</param>
                 /// <param name="point">当前坐标</param>
-                public static int Down(int index, Point point)
+                public static int Down(int index, Point point, Range range)
                 {
                     //定义临时坐标
                     Point pt = new Point(point.X, point.Y);
                     //标签索引
                     int id = -1;
-                    for (double i = pt.Y; i < Range.MaxY; i += 1)
+                    for (double i = pt.Y; i < range.MaxY; i += 1)
                     {
                         //更新当前位置
                         pt.Y = i;
@@ -213,7 +220,7 @@ namespace WpfMap.Route
                 /// <param name="point">当前坐标</param>
                 /// <param name="minX">搜索极限</param>
                 /// <returns></returns>
-                public static int LeftUp(Point point, double minX = Base.Range.MinX)
+                public static int LeftUp(Point point, double minX)
                 {
                     if (MapElement.MapObject.ForkLines.Count == 0)
                         return -1;
@@ -252,7 +259,7 @@ namespace WpfMap.Route
                 /// <param name="point">当前坐标</param>
                 /// <param name="minX">搜索极限</param>
                 /// <returns></returns>
-                public static int LeftDown(Point point, double minX = Base.Range.MinX)
+                public static int LeftDown(Point point, double minX)
                 {
                     if (MapElement.MapObject.ForkLines.Count == 0)
                         return -1;
@@ -291,7 +298,7 @@ namespace WpfMap.Route
                 /// <param name="point">当前坐标</param>
                 /// <param name="maxX">搜索极限</param>
                 /// <returns></returns>
-                public static int RightUp(Point point, double maxX = Base.Range.MaxX)
+                public static int RightUp(Point point, double maxX)
                 {
                     if (MapElement.MapObject.ForkLines.Count == 0)
                         return -1;
@@ -331,7 +338,7 @@ namespace WpfMap.Route
                 /// <param name="point">当前坐标</param>
                 /// <param name="maxX">搜索极限</param>
                 /// <returns></returns>
-                public static int RightDown(Point point, double maxX = Base.Range.MaxX)
+                public static int RightDown(Point point, double maxX)
                 {
                     if (MapElement.MapObject.ForkLines.Count == 0)
                         return -1;
@@ -371,7 +378,7 @@ namespace WpfMap.Route
                 /// <param name="point">当前坐标</param>
                 /// <param name="minY">搜索极限</param>
                 /// <returns></returns>
-                public static int UpLeft(Point point, double minY = Base.Range.MinY)
+                public static int UpLeft(Point point, double minY)
                 {
                     if (MapElement.MapObject.ForkLines.Count == 0)
                         return -1;
@@ -410,7 +417,7 @@ namespace WpfMap.Route
                 /// <param name="point">当前坐标</param>
                 /// <param name="minY">搜索极限</param>
                 /// <returns></returns>
-                public static int UpRight(Point point, double minY = Base.Range.MinY)
+                public static int UpRight(Point point, double minY)
                 {
                     if (MapElement.MapObject.ForkLines.Count == 0)
                         return -1;
@@ -449,7 +456,7 @@ namespace WpfMap.Route
                 /// <param name="point">当前坐标</param>
                 /// <param name="maxY">搜索极限</param>
                 /// <returns></returns>
-                public static int DownLeft(Point point, double maxY = Base.Range.MaxY)
+                public static int DownLeft(Point point, double maxY)
                 {
                     if (MapElement.MapObject.ForkLines.Count == 0)
                         return -1;
@@ -488,7 +495,7 @@ namespace WpfMap.Route
                 /// <param name="point">当前坐标</param>
                 /// <param name="maxY">搜索极限</param>
                 /// <returns></returns>
-                public static int DownRight(Point point, double maxY = Base.Range.MaxY)
+                public static int DownRight(Point point, double maxY)
                 {
                     if (MapElement.MapObject.ForkLines.Count == 0)
                         return -1;
@@ -543,11 +550,8 @@ namespace WpfMap.Route
         /// <param name="index"></param>
         /// <param name="point"></param>
         /// <param name="state"></param>
-        /// <param name="minX"></param>
-        /// <param name="maxX"></param>
-        /// <param name="minY"></param>
-        /// <param name="maxY"></param>
-        public static bool Process(int index, Point point, ProcessState state, double minX = Base.Range.MinX, double maxX = Base.Range.MaxX, double minY = Base.Range.MinY, double maxY = Base.Range.MaxY)
+        /// <param name="range"></param>
+        public static bool Process(int index, Point point, ProcessState state, Base.Range range)
         {
             int id = -1;
             Point pt = new Point(point.X, point.Y);
@@ -577,7 +581,7 @@ namespace WpfMap.Route
 
             #region 【向上找右分叉】
             UpRight:
-            id = Base.FindForkLine.UpRight(pt);
+            id = Base.FindForkLine.UpRight(pt,1);
             //找到分叉，继续找标签
             if (id != -1)
             {
@@ -590,7 +594,7 @@ namespace WpfMap.Route
 
             #region 【向上找左分叉】
             UpLeft:
-            id = Base.FindForkLine.UpLeft(pt);
+            id = Base.FindForkLine.UpLeft(pt, range.MinY);
             //找到分叉
             if (id != -1)
             {
@@ -599,7 +603,7 @@ namespace WpfMap.Route
                 //MapOperate.SystemMsg.WriteLine("向上找到【{0}】号【左分叉】!", MapElement.MapObject.ForkLines[id].Num);
                 //【向左找标签】
                 pt = new Point(MapElement.MapObject.ForkLines[id].EndPoint.X, MapElement.MapObject.ForkLines[id].EndPoint.Y);
-                id = Base.FindRFID.Left(index, pt);
+                id = Base.FindRFID.Left(index, pt, range);
                 if (id != -1)
                 {
                     //设置选中
@@ -618,7 +622,7 @@ namespace WpfMap.Route
 
             #region 【向左找上分叉】
             LeftUp:
-            id = Base.FindForkLine.LeftUp(pt);
+            id = Base.FindForkLine.LeftUp(pt, range.MinX);
             //找到分叉
             if (id != -1)
             {
@@ -663,7 +667,7 @@ namespace WpfMap.Route
             }
             #region 向左搜索
             /*-----------搜索【标签】----------------------*/
-            int id = Base.FindRFID.Left(index, rfid.LeftPoint);
+            int id = Base.FindRFID.Left(index, rfid.LeftPoint, new Base.Range());
             //搜到标签
             if (id != -1)
             {
@@ -679,7 +683,7 @@ namespace WpfMap.Route
                     MapFunction.SetForkLineIsSelected(id);
                     MapOperate.SystemMsg.WriteLine("向左找到【{0}】号【上分叉】!", MapElement.MapObject.ForkLines[id].Num);
                     //沿分叉再向上找标签
-                    id = Base.FindRFID.Up(index, MapElement.MapObject.ForkLines[id].StartPoint);
+                    id = Base.FindRFID.Up(index, MapElement.MapObject.ForkLines[id].StartPoint, new Base.Range());
                     //搜到标签
                     if (id != -1)
                     {
@@ -710,7 +714,7 @@ namespace WpfMap.Route
 
 
             /*-----------向右搜索【标签】----------------------*/
-            id = Base.FindRFID.Right(index, rfid.RightPoint);
+            id = Base.FindRFID.Right(index, rfid.RightPoint, new Base.Range());
             if (id != -1)
             {
                 //设置选中
@@ -718,7 +722,7 @@ namespace WpfMap.Route
                 MapOperate.SystemMsg.WriteLine("向右找到【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
             }
             /*-----------向上搜索【标签】----------------------*/
-            id = Base.FindRFID.Up(index, rfid.UpPoint);
+            id = Base.FindRFID.Up(index, rfid.UpPoint, new Base.Range());
             if (id != -1)
             {
                 //设置选中
@@ -726,7 +730,7 @@ namespace WpfMap.Route
                 MapOperate.SystemMsg.WriteLine("向上找到【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
             }
             /*-----------向下搜索【标签】----------------------*/
-            id = Base.FindRFID.Down(index, rfid.DownPoint);
+            id = Base.FindRFID.Down(index, rfid.DownPoint, new Base.Range());
             if (id != -1)
             {
                 //设置选中
