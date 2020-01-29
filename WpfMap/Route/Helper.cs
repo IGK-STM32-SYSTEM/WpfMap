@@ -317,7 +317,7 @@ namespace WpfMap.Route
                             {
                                 if (item.EndPoint.Equals(pt))
                                 {
-                                    //找到，且起点在终点的左上
+                                    //找到，且起点在终点的右上
                                     if (item.StartPoint.X > item.EndPoint.X
                                         && item.StartPoint.Y < item.EndPoint.Y)
                                     {
@@ -357,7 +357,7 @@ namespace WpfMap.Route
                             {
                                 if (item.EndPoint.Equals(pt))
                                 {
-                                    //找到，且起点在终点的左下
+                                    //找到，且起点在终点的右下
                                     if (item.StartPoint.X > item.EndPoint.X
                                         && item.StartPoint.Y > item.EndPoint.Y)
                                     {
@@ -397,7 +397,7 @@ namespace WpfMap.Route
                             {
                                 if (item.StartPoint.Equals(pt))
                                 {
-                                    //找到，且终点在起点的上左
+                                    //找到，且终点在起点的左上
                                     if (item.EndPoint.X < item.StartPoint.X
                                         && item.EndPoint.Y < item.StartPoint.Y)
                                     {
@@ -436,7 +436,7 @@ namespace WpfMap.Route
                             {
                                 if (item.StartPoint.Equals(pt))
                                 {
-                                    //找到，且终点在起点的上左
+                                    //找到，且终点在起点的右上
                                     if (item.EndPoint.X > item.StartPoint.X
                                         && item.EndPoint.Y < item.StartPoint.Y)
                                     {
@@ -475,9 +475,9 @@ namespace WpfMap.Route
                             {
                                 if (item.StartPoint.Equals(pt))
                                 {
-                                    //找到，且终点在起点的上左
+                                    //找到，且终点在起点的左下
                                     if (item.EndPoint.X < item.StartPoint.X
-                                        && item.EndPoint.Y < item.StartPoint.Y)
+                                        && item.EndPoint.Y > item.StartPoint.Y)
                                     {
                                         return MapElement.MapObject.ForkLines.IndexOf(item);
                                     }
@@ -514,7 +514,7 @@ namespace WpfMap.Route
                             {
                                 if (item.StartPoint.Equals(pt))
                                 {
-                                    //找到，且终点在起点的上左
+                                    //找到，且终点在起点的右下
                                     if (item.EndPoint.X > item.StartPoint.X
                                         && item.EndPoint.Y > item.StartPoint.Y)
                                     {
@@ -532,6 +532,7 @@ namespace WpfMap.Route
         }
         /// <summary>
         /// 流程图的状态位置
+        /// 搜索原则，先上后下，先左后右
         /// </summary>
         public enum ProcessState
         {
@@ -808,7 +809,7 @@ namespace WpfMap.Route
         //（向右直行）（到达）5（号标签）
         public static List<string> ProcessString(int index, Point point, ProcessState state, Base.Range range)
         {
-            //第一次搜索
+            //第一次搜索标志，第一次搜索可能右范围限制，之后不再对搜索范围进行限制
             bool isFirst = true;
             List<string> vs = new List<string>();
             int id = -1;
@@ -842,6 +843,12 @@ namespace WpfMap.Route
             //找到分叉
             if (id != -1)
             {
+                //第一次搜索后不再对搜索范围进行限制
+                if (isFirst)
+                {
+                    isFirst = false;
+                    range = new Base.Range();
+                }
                 //记录
                 vs.Add(string.Format("上左{0}", id));
                 //设置选中
@@ -865,6 +872,12 @@ namespace WpfMap.Route
             //找到分叉
             if (id != -1)
             {
+                //第一次搜索后不再对搜索范围进行限制
+                if (isFirst)
+                {
+                    isFirst = false;
+                    range = new Base.Range();
+                }
                 //记录
                 vs.Add(string.Format("上右{0}", id));
                 //设置选中
@@ -887,6 +900,12 @@ namespace WpfMap.Route
             //找到分叉
             if (id != -1)
             {
+                //第一次搜索后不再对搜索范围进行限制
+                if (isFirst)
+                {
+                    isFirst = false;
+                    range = new Base.Range();
+                }
                 //记录
                 vs.Add(string.Format("下左{0}", id));
                 //设置选中
@@ -910,6 +929,12 @@ namespace WpfMap.Route
             //找到分叉
             if (id != -1)
             {
+                //第一次搜索后不再对搜索范围进行限制
+                if (isFirst)
+                {
+                    isFirst = false;
+                    range = new Base.Range();
+                }
                 //记录
                 vs.Add(string.Format("下右{0}", id));
                 //设置选中
@@ -933,6 +958,12 @@ namespace WpfMap.Route
             //找到分叉
             if (id != -1)
             {
+                //第一次搜索后不再对搜索范围进行限制
+                if (isFirst)
+                {
+                    isFirst = false;
+                    range = new Base.Range();
+                }
                 //记录
                 vs.Add(string.Format("左上{0}", id));
                 //设置选中
@@ -954,6 +985,12 @@ namespace WpfMap.Route
             //找到分叉
             if (id != -1)
             {
+                //第一次搜索后不再对搜索范围进行限制
+                if (isFirst)
+                {
+                    isFirst = false;
+                    range = new Base.Range();
+                }
                 //记录
                 vs.Add(string.Format("左下{0}", id));
                 //设置选中
@@ -975,6 +1012,12 @@ namespace WpfMap.Route
             //找到分叉
             if (id != -1)
             {
+                //第一次搜索后不再对搜索范围进行限制
+                if (isFirst)
+                {
+                    isFirst = false;
+                    range = new Base.Range();
+                }
                 //记录
                 vs.Add(string.Format("右上{0}", id));
                 //设置选中
@@ -996,6 +1039,12 @@ namespace WpfMap.Route
             //找到分叉
             if (id != -1)
             {
+                //第一次搜索后不再对搜索范围进行限制
+                if (isFirst)
+                {
+                    isFirst = false;
+                    range = new Base.Range();
+                }
                 //记录
                 vs.Add(string.Format("右下{0}", id));
                 //设置选中
@@ -1113,19 +1162,21 @@ namespace WpfMap.Route
                 //设置搜索的x终点坐标【X的最小值为找的的标签的右侧中心坐标】
                 range.MinX = MapElement.MapObject.RFIDS[id].RightPoint.X;
             }
-            else
-            //未搜到标签
+            //向左找上分叉
+            List<string> vs1 = ProcessString(index, rfid.LeftPoint, ProcessState.LeftUp, range);
+            //找到了继续向左找下分叉
+            if (vs1 != null)
             {
-                //向左找上分叉
-                List<string> vs1 = ProcessString(index, rfid.LeftPoint, ProcessState.LeftUp, new Base.Range());
-                //找到了继续向左找下分叉
-                if (vs1 != null)
+                //打印结果
+                MapOperate.SystemMsg.WriteLine("=============");
+                MapOperate.SystemMsg.WriteLine(String.Join("-", vs1.ToArray()));
+                MapOperate.SystemMsg.WriteLine("=============");
+
+                List<string> vs2 = null;
+                //判断第一次通过状态机找到的是不是左上【如果不是左上那就是左下，接下来的搜索左下就不需要进行了】
+                if (vs1.First().StartsWith("左上"))
                 {
-                    //打印结果
-                    MapOperate.SystemMsg.WriteLine("=============");
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs1.ToArray()));
-                    MapOperate.SystemMsg.WriteLine("=============");
-                    List<string> vs2 = ProcessString(index, rfid.LeftPoint, ProcessState.LeftDown, new Base.Range());
+                    vs2 = ProcessString(index, rfid.LeftPoint, ProcessState.LeftDown, range);
                     //找到下分叉
                     if (vs2 != null)
                     {
@@ -1134,146 +1185,233 @@ namespace WpfMap.Route
                         MapOperate.SystemMsg.WriteLine(String.Join("-", vs2.ToArray()));
                         MapOperate.SystemMsg.WriteLine("=============");
                     }
-                    /*-----------------------------------------------------------------------
-                     * 避开第一个和第二个分叉【如果没有第二个就不用处理】继续找
-                     * ---------------------------------------------------------------------*/
-                    //获取第一个分叉的索引
-                    int idx1 = int.Parse(vs1.First().Substring(2, vs1.First().Length - 2));
-                    //获取x坐标【取起点是为了避免再次搜索到该分叉】
-                    double x1 = MapElement.MapObject.ForkLines[idx1].StartPoint.X;
-                    double x2 = double.MaxValue;
-                    //获取第二个分叉的索引
-                    if (vs2 != null)
-                    {
-                        int idx2 = int.Parse(vs2.First().Substring(2, vs2.First().Length - 2));
-                        x2 = MapElement.MapObject.ForkLines[idx2].StartPoint.X;
-                    }
-                    //获取y坐标【y坐标相同，取任意一个】
-                    double y = MapElement.MapObject.ForkLines[idx1].EndPoint.Y;
-                    //从比较靠左的分叉开始继续向左找分叉
-                    Point pt = new Point(x1 < x2 ? x1 : x2, y);
-                    List<string> vs3 = ProcessString(index, pt, ProcessState.LeftUp, new Base.Range());
-                    if (vs3 != null)
-                    {
-                        //打印结果
-                        MapOperate.SystemMsg.WriteLine("=============");
-                        MapOperate.SystemMsg.WriteLine(String.Join("-", vs3.ToArray()));
-                        MapOperate.SystemMsg.WriteLine("=============");
-                    }
+                }
+                /*-----------------------------------------------------------------------
+                 * 避开第一个和第二个分叉【如果没有第二个就不用处理】继续找
+                 * ---------------------------------------------------------------------*/
+                //获取第一个分叉的索引
+                int idx1 = int.Parse(vs1.First().Substring(2, vs1.First().Length - 2));
+                //获取x坐标【取起点是为了避免再次搜索到该分叉】
+                double x1 = MapElement.MapObject.ForkLines[idx1].StartPoint.X;
+                double x2 = double.MaxValue;
+                //获取第二个分叉的索引
+                if (vs2 != null)
+                {
+                    int idx2 = int.Parse(vs2.First().Substring(2, vs2.First().Length - 2));
+                    x2 = MapElement.MapObject.ForkLines[idx2].StartPoint.X;
+                }
+                //获取y坐标【y坐标相同，取任意一个】
+                double y = MapElement.MapObject.ForkLines[idx1].EndPoint.Y;
+                //从比较靠左的分叉开始继续向左找分叉【针对三叉路口】
+                Point pt = new Point(x1 < x2 ? x1 : x2, y);
+                List<string> vs3 = ProcessString(index, pt, ProcessState.LeftUp, range);
+                if (vs3 != null)
+                {
+                    //打印结果
+                    MapOperate.SystemMsg.WriteLine("=============");
+                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs3.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("=============");
                 }
             }
-
             #endregion
 
-
+            #region 向右搜索
             /*-----------向右搜索【标签】----------------------*/
             id = Base.FindRFID.Right(index, rfid.RightPoint, new Base.Range());
+            range = new Base.Range();
+            //搜到标签
             if (id != -1)
             {
                 //设置选中
                 MapFunction.SetRFIDIsSelected(id);
                 MapOperate.SystemMsg.WriteLine("向右找到【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
+                //设置搜索的x终点坐标【X的最大值为找的的标签的左侧中心坐标】
+                range.MaxX = MapElement.MapObject.RFIDS[id].LeftPoint.X;
             }
+            //向右找上分叉
+            vs1 = ProcessString(index, rfid.RightPoint, ProcessState.RightUp, range);
+            //找到了继续向右找下分叉
+            if (vs1 != null)
+            {
+                //打印结果
+                MapOperate.SystemMsg.WriteLine("=============");
+                MapOperate.SystemMsg.WriteLine(String.Join("-", vs1.ToArray()));
+                MapOperate.SystemMsg.WriteLine("=============");
+
+                List<string> vs2 = null;
+                //判断第一次通过状态机找到的是不是右上【如果不是右上那就是右下，接下来的搜索右下就不需要进行了】
+                if (vs1.First().StartsWith("右上"))
+                {
+                    vs2 = ProcessString(index, rfid.RightPoint, ProcessState.RightDown, range);
+                    //找到下分叉
+                    if (vs2 != null)
+                    {
+                        //打印结果
+                        MapOperate.SystemMsg.WriteLine("=============");
+                        MapOperate.SystemMsg.WriteLine(String.Join("-", vs2.ToArray()));
+                        MapOperate.SystemMsg.WriteLine("=============");
+                    }
+                }
+                /*-----------------------------------------------------------------------
+                 * 避开第一个和第二个分叉【如果没有第二个就不用处理】继续找
+                 * ---------------------------------------------------------------------*/
+                //获取第一个分叉的索引
+                int idx1 = int.Parse(vs1.First().Substring(2, vs1.First().Length - 2));
+                //获取x坐标【取起点是为了避免再次搜索到该分叉】
+                double x1 = MapElement.MapObject.ForkLines[idx1].StartPoint.X;
+                double x2 = double.MinValue;
+                //获取第二个分叉的索引
+                if (vs2 != null)
+                {
+                    int idx2 = int.Parse(vs2.First().Substring(2, vs2.First().Length - 2));
+                    x2 = MapElement.MapObject.ForkLines[idx2].StartPoint.X;
+                }
+                //获取y坐标【y坐标相同，取任意一个】
+                double y = MapElement.MapObject.ForkLines[idx1].EndPoint.Y;
+                //从比较靠右的分叉开始继续向右找分叉【针对三叉路口】
+                Point pt = new Point(x1 > x2 ? x1 : x2, y);
+                List<string> vs3 = ProcessString(index, pt, ProcessState.RightUp, range);
+                if (vs3 != null)
+                {
+                    //打印结果
+                    MapOperate.SystemMsg.WriteLine("=============");
+                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs3.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("=============");
+                }
+            }
+            #endregion
+
+            #region 向上搜索
             /*-----------向上搜索【标签】----------------------*/
             id = Base.FindRFID.Up(index, rfid.UpPoint, new Base.Range());
+            range = new Base.Range();
+            //搜到标签
             if (id != -1)
             {
                 //设置选中
                 MapFunction.SetRFIDIsSelected(id);
                 MapOperate.SystemMsg.WriteLine("向上找到【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
+                //设置搜索的y终点坐标【Y的最小值为找的的标签的下侧中心坐标】
+                range.MinY = MapElement.MapObject.RFIDS[id].DownPoint.Y;
             }
+            //向上找左分叉
+            vs1 = ProcessString(index, rfid.UpPoint, ProcessState.UpLeft, range);
+            //找到了继续向上找右分叉
+            if (vs1 != null)
+            {
+                //打印结果
+                MapOperate.SystemMsg.WriteLine("=============");
+                MapOperate.SystemMsg.WriteLine(String.Join("-", vs1.ToArray()));
+                MapOperate.SystemMsg.WriteLine("=============");
+
+                List<string> vs2 = null;
+                //判断第一次通过状态机找到的是不是上左【如果不是上左那就是上右，接下来的搜索上右就不需要进行了】
+                if (vs1.First().StartsWith("上左"))
+                {
+                    vs2 = ProcessString(index, rfid.UpPoint, ProcessState.UpRight, range);
+                    //找到分叉
+                    if (vs2 != null)
+                    {
+                        //打印结果
+                        MapOperate.SystemMsg.WriteLine("=============");
+                        MapOperate.SystemMsg.WriteLine(String.Join("-", vs2.ToArray()));
+                        MapOperate.SystemMsg.WriteLine("=============");
+                    }
+                }
+                /*-----------------------------------------------------------------------
+                 * 避开第一个和第二个分叉【如果没有第二个就不用处理】继续找
+                 * ---------------------------------------------------------------------*/
+                //获取第一个分叉的索引
+                int idx1 = int.Parse(vs1.First().Substring(2, vs1.First().Length - 2));
+                //获取Y坐标【取终点是为了避免再次搜索到该分叉】
+                double y1 = MapElement.MapObject.ForkLines[idx1].EndPoint.Y;
+                double y2 = double.MaxValue;
+                //获取第二个分叉的索引
+                if (vs2 != null)
+                {
+                    int idx2 = int.Parse(vs2.First().Substring(2, vs2.First().Length - 2));
+                    y2 = MapElement.MapObject.ForkLines[idx2].EndPoint.Y;
+                }
+                //获取x坐标【x坐标相同，取任意一个】
+                double x = MapElement.MapObject.ForkLines[idx1].StartPoint.X;
+                //从比较靠上的分叉开始继续向上找分叉【针对三叉路口】
+                Point pt = new Point(x, y1 < y2 ? y1 : y2);
+                List<string> vs3 = ProcessString(index, pt, ProcessState.UpLeft, range);
+                if (vs3 != null)
+                {
+                    //打印结果
+                    MapOperate.SystemMsg.WriteLine("=============");
+                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs3.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("=============");
+                }
+            }
+            #endregion
+
+            #region 向下搜索
             /*-----------向下搜索【标签】----------------------*/
             id = Base.FindRFID.Down(index, rfid.DownPoint, new Base.Range());
+            range = new Base.Range();
+            //搜到标签
             if (id != -1)
             {
                 //设置选中
                 MapFunction.SetRFIDIsSelected(id);
                 MapOperate.SystemMsg.WriteLine("向下找到【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
+                //设置搜索的y终点坐标【Y的最大值为找的的标签的上侧中心坐标】
+                range.MaxY = MapElement.MapObject.RFIDS[id].UpPoint.Y;
             }
+            //向下找左分叉
+            vs1 = ProcessString(index, rfid.DownPoint, ProcessState.DownLeft, range);
+            //找到了继续向下找右分叉
+            if (vs1 != null)
+            {
+                //打印结果
+                MapOperate.SystemMsg.WriteLine("=============");
+                MapOperate.SystemMsg.WriteLine(String.Join("-", vs1.ToArray()));
+                MapOperate.SystemMsg.WriteLine("=============");
 
-            ///*-----------向【左】搜索【上分叉】----------------------*/
-            //id = Base.FindForkLine.LeftUp(pointLeft);
-            ////找到分叉，继续找标签
-            //if (id != -1)
-            //{
-            //    //设置选中
-            //    MapFunction.SetForkLineIsSelected(id);
-            //    MapOperate.SystemMsg.WriteLine("向左找到【{0}】号【上分叉】!", MapElement.MapObject.ForkLines[id].Num);
-            //    //沿分叉再找标签
-            //}
-            ///*-----------向【左】搜索【下分叉】----------------------*/
-            //id = Base.FindForkLine.LeftDown(pointLeft);
-            ////找到分叉，继续找标签
-            //if (id != -1)
-            //{
-            //    //设置选中
-            //    MapFunction.SetForkLineIsSelected(id);
-            //    MapOperate.SystemMsg.WriteLine("向左找到【{0}】号【下分叉】!", MapElement.MapObject.ForkLines[id].Num);
-            //    //沿分叉再找标签
-            //}
-            ///*-----------向【右】搜索【上分叉】----------------------*/
-            //id = Base.FindForkLine.RightUp(pointRight);
-            ////找到分叉，继续找标签
-            //if (id != -1)
-            //{
-            //    //设置选中
-            //    MapFunction.SetForkLineIsSelected(id);
-            //    MapOperate.SystemMsg.WriteLine("向右找到【{0}】号【上分叉】!", MapElement.MapObject.ForkLines[id].Num);
-            //    //沿分叉再找标签
-            //}
-            ///*-----------向【右】搜索【下分叉】----------------------*/
-            //id = Base.FindForkLine.RightDown(pointRight);
-            ////找到分叉，继续找标签
-            //if (id != -1)
-            //{
-            //    //设置选中
-            //    MapFunction.SetForkLineIsSelected(id);
-            //    MapOperate.SystemMsg.WriteLine("向右找到【{0}】号【下分叉】!", MapElement.MapObject.ForkLines[id].Num);
-            //    //沿分叉再找标签
-            //}
-
-
-            ///*-----------向【上】搜索【左分叉】----------------------*/
-            //id = Base.FindForkLine.UpLeft(pointUp);
-            ////找到分叉，继续找标签
-            //if (id != -1)
-            //{
-            //    //设置选中
-            //    MapFunction.SetForkLineIsSelected(id);
-            //    MapOperate.SystemMsg.WriteLine("向上找到【{0}】号【左分叉】!", MapElement.MapObject.ForkLines[id].Num);
-            //    //沿分叉再找标签
-            //}
-            ///*-----------向【上】搜索【右分叉】----------------------*/
-            //id = Base.FindForkLine.UpRight(pointUp);
-            ////找到分叉，继续找标签
-            //if (id != -1)
-            //{
-            //    //设置选中
-            //    MapFunction.SetForkLineIsSelected(id);
-            //    MapOperate.SystemMsg.WriteLine("向上找到【{0}】号【右分叉】!", MapElement.MapObject.ForkLines[id].Num);
-            //    //沿分叉再找标签
-            //}
-            ///*-----------向【下】搜索【左分叉】----------------------*/
-            //id = Base.FindForkLine.DownLeft(pointDown);
-            ////找到分叉，继续找标签
-            //if (id != -1)
-            //{
-            //    //设置选中
-            //    MapFunction.SetForkLineIsSelected(id);
-            //    MapOperate.SystemMsg.WriteLine("向下找到【{0}】号【左分叉】!", MapElement.MapObject.ForkLines[id].Num);
-            //    //沿分叉再找标签
-            //}
-            ///*-----------向【下】搜索【右分叉】----------------------*/
-            //id = Base.FindForkLine.DownRight(pointDown);
-            ////找到分叉，继续找标签
-            //if (id != -1)
-            //{
-            //    //设置选中
-            //    MapFunction.SetForkLineIsSelected(id);
-            //    MapOperate.SystemMsg.WriteLine("向下找到【{0}】号【右分叉】!", MapElement.MapObject.ForkLines[id].Num);
-            //    //沿分叉再找标签
-            //}
-
+                List<string> vs2 = null;
+                //判断第一次通过状态机找到的是不是下左【如果不是下左那就是下右，接下来的搜索下右就不需要进行了】
+                if (vs1.First().StartsWith("下左"))
+                {
+                    vs2 = ProcessString(index, rfid.DownPoint, ProcessState.DownRight, range);
+                    //找到分叉
+                    if (vs2 != null)
+                    {
+                        //打印结果
+                        MapOperate.SystemMsg.WriteLine("=============");
+                        MapOperate.SystemMsg.WriteLine(String.Join("-", vs2.ToArray()));
+                        MapOperate.SystemMsg.WriteLine("=============");
+                    }
+                }
+                /*-----------------------------------------------------------------------
+                 * 避开第一个和第二个分叉【如果没有第二个就不用处理】继续找
+                 * ---------------------------------------------------------------------*/
+                //获取第一个分叉的索引
+                int idx1 = int.Parse(vs1.First().Substring(2, vs1.First().Length - 2));
+                //获取Y坐标【取终点是为了避免再次搜索到该分叉】
+                double y1 = MapElement.MapObject.ForkLines[idx1].EndPoint.Y;
+                double y2 = double.MinValue;
+                //获取第二个分叉的索引
+                if (vs2 != null)
+                {
+                    int idx2 = int.Parse(vs2.First().Substring(2, vs2.First().Length - 2));
+                    y2 = MapElement.MapObject.ForkLines[idx2].EndPoint.Y;
+                }
+                //获取x坐标【x坐标相同，取任意一个】
+                double x = MapElement.MapObject.ForkLines[idx1].StartPoint.X;
+                //从比较靠上的分叉开始继续向上找分叉【针对三叉路口】
+                Point pt = new Point(x, y1 > y2 ? y1 : y2);
+                List<string> vs3 = ProcessString(index, pt, ProcessState.DownLeft, range);
+                if (vs3 != null)
+                {
+                    //打印结果
+                    MapOperate.SystemMsg.WriteLine("=============");
+                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs3.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("=============");
+                }
+            }
+            #endregion
 
             MapOperate.SystemMsg.WriteLine("------------------------");
         }
