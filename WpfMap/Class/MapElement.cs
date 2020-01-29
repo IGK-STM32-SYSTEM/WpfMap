@@ -60,6 +60,78 @@ namespace WpfMap
                     }
                 }
             }
+            /// <summary>
+            /// 左边中心点坐标
+            /// </summary>
+            [Category("坐标")]
+            [Description("左边中心点坐标")]
+            [JsonIgnore]
+            public Point LeftPoint
+            {
+                get
+                {
+                    //计算标签上下左右四个点坐标
+                    double x = ellipse.Margin.Left;
+                    double y = ellipse.Margin.Top;
+                    double h = SelectRectangle.Height;
+                    double w = SelectRectangle.Width;
+                    return new Point(x, y + h / 2);
+                }
+            }
+            /// <summary>
+            /// 右边中心点坐标
+            /// </summary>
+            [Category("坐标")]
+            [Description("右边中心点坐标")]
+            [JsonIgnore]
+            public Point RightPoint
+            {
+                get
+                {
+                    //计算标签上下左右四个点坐标
+                    double x = ellipse.Margin.Left;
+                    double y = ellipse.Margin.Top;
+                    double h = SelectRectangle.Height;
+                    double w = SelectRectangle.Width;
+                    return new Point(x + w, y + h / 2);
+                }
+            }
+            /// <summary>
+            /// 上边中心点坐标
+            /// </summary>
+            [Category("坐标")]
+            [Description("上边中心点坐标")]
+            [JsonIgnore]
+            public Point UpPoint
+            {
+                get
+                {
+                    //计算标签上下左右四个点坐标
+                    double x = ellipse.Margin.Left;
+                    double y = ellipse.Margin.Top;
+                    double h = SelectRectangle.Height;
+                    double w = SelectRectangle.Width;
+                    return new Point(x + w / 2, y);
+                }
+            }
+            /// <summary>
+            /// 下边中心点坐标
+            /// </summary>
+            [Category("坐标")]
+            [Description("下边中心点坐标")]
+            [JsonIgnore]
+            public Point DownPoint
+            {
+                get
+                {
+                    //计算标签上下左右四个点坐标
+                    double x = ellipse.Margin.Left;
+                    double y = ellipse.Margin.Top;
+                    double h = SelectRectangle.Height;
+                    double w = SelectRectangle.Width;
+                    return new Point(x + w / 2, y + h);
+                }
+            }
             [Category("Non-Numeric Editors")]
             [Description("标签颜色")]
             public Color Color { get { return (Color)ColorConverter.ConvertFromString(ellipse.Fill.ToString()); } set { ellipse.Fill = new SolidColorBrush(value); } }
