@@ -1268,7 +1268,7 @@ namespace WpfMap.Route
                             /*--------按照当前方向搜索--------*/
                             //1.避开这个继续搜左下
                             pt = new Point(startPt.X, endPt.Y);
-                            List<string> v1 = ProcessString(index, pt, ProcessState.LeftDown, range);
+                            List<string> v1 = ProcessString(index, pt, ProcessState.LeftUp, range);
                             //将前面的部分补齐
                             if (v1 != null)
                             {
@@ -1396,7 +1396,7 @@ namespace WpfMap.Route
                             /*--------按照当前方向搜索--------*/
                             //1.避开这个继续搜右下
                             pt = new Point(startPt.X, endPt.Y);
-                            List<string> v1 = ProcessString(index, pt, ProcessState.RightDown, range);
+                            List<string> v1 = ProcessString(index, pt, ProcessState.RightUp, range);
                             //将前面的部分补齐
                             if (v1 != null)
                             {
@@ -1598,7 +1598,7 @@ namespace WpfMap.Route
                             /*--------按照当前方向搜索--------*/
                             //1.避开这个上左继续搜上右
                             pt = new Point(startPt.X, endPt.Y);
-                            List<string> v1 = ProcessString(index, pt, ProcessState.UpRight, range);
+                            List<string> v1 = ProcessString(index, pt, ProcessState.UpLeft, range);
                             //将前面的部分补齐
                             if (v1 != null)
                             {
@@ -1652,7 +1652,7 @@ namespace WpfMap.Route
                             /*--------按照当前方向搜索--------*/
                             //1.避开这个上左继续搜下右
                             pt = new Point(startPt.X, endPt.Y);
-                            List<string> v1 = ProcessString(index, pt, ProcessState.DownRight, range);
+                            List<string> v1 = ProcessString(index, pt, ProcessState.DownLeft, range);
                             //将前面的部分补齐
                             if (v1 != null)
                             {
@@ -1782,7 +1782,7 @@ namespace WpfMap.Route
                             /*--------按照当前方向搜索--------*/
                             //1.避开这个继续搜左下
                             pt = new Point(startPt.X, endPt.Y);
-                            List<string> v1 = ProcessString(index, pt, ProcessState.LeftDown, range);
+                            List<string> v1 = ProcessString(index, pt, ProcessState.LeftUp, range);
                             //将前面的部分补齐
                             if (v1 != null)
                             {
@@ -1878,7 +1878,7 @@ namespace WpfMap.Route
                             /*--------按照当前方向搜索--------*/
                             //1.避开这个继续搜右下
                             pt = new Point(startPt.X, endPt.Y);
-                            List<string> v1 = ProcessString(index, pt, ProcessState.RightDown, range);
+                            List<string> v1 = ProcessString(index, pt, ProcessState.RightUp, range);
                             //将前面的部分补齐
                             if (v1 != null)
                             {
@@ -2025,7 +2025,7 @@ namespace WpfMap.Route
                             /*--------按照当前方向搜索--------*/
                             //1.避开这个上左继续搜上右
                             pt = new Point(startPt.X, endPt.Y);
-                            List<string> v1 = ProcessString(index, pt, ProcessState.UpRight, range);
+                            List<string> v1 = ProcessString(index, pt, ProcessState.UpLeft, range);
                             //将前面的部分补齐
                             if (v1 != null)
                             {
@@ -2067,7 +2067,7 @@ namespace WpfMap.Route
                             /*--------按照当前方向搜索--------*/
                             //1.避开这个上左继续搜下右
                             pt = new Point(startPt.X, endPt.Y);
-                            List<string> v1 = ProcessString(index, pt, ProcessState.DownRight, range);
+                            List<string> v1 = ProcessString(index, pt, ProcessState.DownLeft, range);
                             //将前面的部分补齐
                             if (v1 != null)
                             {
@@ -2161,42 +2161,44 @@ namespace WpfMap.Route
             {
                 List<string> vs2 = null;
                 List<string> vs3 = null;
-                List<string> vs4 = null;
                 //第二次搜索
                 if (vs1.Count > 1)
                     FindSecond(index, vs1, ref vs2, ref vs3, range);
                 //第三次搜索
-                if (vs2 != null && vs3 == null)
+                if (!(vs1 != null && vs2 != null && id != -1))
                 {
-                    List<string> vs = new List<string>();
-                    bool p = false;
-                    int num = 0;
-                    for (int i = 0; i < vs2.Count; i++)
+                    //不够三条路才进行第三次搜索
+                    if (vs2 != null && vs3 == null)
                     {
-
-                        if (p == false)
+                        List<string> vs = new List<string>();
+                        bool p = false;
+                        int num = 0;
+                        for (int i = 0; i < vs2.Count; i++)
                         {
-                            if (vs2[i] == vs1[i])
-                                continue;
-                            else
-                            { p = true; num = i; }
-                        }
-                        if (p)
-                            vs.Add(vs2[i]);
-                    }
-                    FindThird(index, vs1, vs, ref vs3);
-                    //补齐前段
-                    if (vs3 != null)
-                        vs3.InsertRange(0, vs2.GetRange(0, num));
-                }
 
+                            if (p == false)
+                            {
+                                if (vs2[i] == vs1[i])
+                                    continue;
+                                else
+                                { p = true; num = i; }
+                            }
+                            if (p)
+                                vs.Add(vs2[i]);
+                        }
+                        FindThird(index, vs1, vs, ref vs3);
+                        //补齐前段
+                        if (vs3 != null)
+                            vs3.InsertRange(0, vs2.GetRange(0, num));
+                    }
+                }
                 //打印结果
                 if (vs1 != null)
-                    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num.ToString());
                 if (vs2 != null)
-                    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num.ToString());
                 if (vs3 != null)
-                    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num.ToString());
             }
 
             #endregion
@@ -2221,42 +2223,44 @@ namespace WpfMap.Route
             {
                 List<string> vs2 = null;
                 List<string> vs3 = null;
-                List<string> vs4 = null;
                 //第二次搜索
                 if (vs1.Count > 1)
                     FindSecond(index, vs1, ref vs2, ref vs3, range);
                 //第三次搜索
-                if (vs2 != null && vs3 == null)
+                if (!(vs1 != null && vs2 != null && id != -1))
                 {
-                    List<string> vs = new List<string>();
-                    bool p = false;
-                    int num = 0;
-                    for (int i = 0; i < vs2.Count; i++)
+                    //不够三条路才进行第三次搜索 
+                    if (vs2 != null && vs3 == null)
                     {
-
-                        if (p == false)
+                        List<string> vs = new List<string>();
+                        bool p = false;
+                        int num = 0;
+                        for (int i = 0; i < vs2.Count; i++)
                         {
-                            if (vs2[i] == vs1[i])
-                                continue;
-                            else
-                            { p = true; num = i; }
-                        }
-                        if (p)
-                            vs.Add(vs2[i]);
-                    }
-                    FindThird(index, vs1, vs, ref vs3);
-                    //补齐前段
-                    if (vs3 != null)
-                        vs3.InsertRange(0, vs2.GetRange(0, num));
-                }
 
+                            if (p == false)
+                            {
+                                if (vs2[i] == vs1[i])
+                                    continue;
+                                else
+                                { p = true; num = i; }
+                            }
+                            if (p)
+                                vs.Add(vs2[i]);
+                        }
+                        FindThird(index, vs1, vs, ref vs3);
+                        //补齐前段
+                        if (vs3 != null)
+                            vs3.InsertRange(0, vs2.GetRange(0, num));
+                    }
+                }
                 //打印结果
                 if (vs1 != null)
-                    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num.ToString());
                 if (vs2 != null)
-                    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num.ToString());
                 if (vs3 != null)
-                    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num.ToString());
             }
             #endregion
 
@@ -2280,42 +2284,44 @@ namespace WpfMap.Route
             {
                 List<string> vs2 = null;
                 List<string> vs3 = null;
-                List<string> vs4 = null;
                 //第二次搜索
                 if (vs1.Count > 1)
                     FindSecond(index, vs1, ref vs2, ref vs3, range);
                 //第三次搜索
-                if (vs2 != null && vs3 == null)
+                if (!(vs1 != null && vs2 != null && id != -1))
                 {
-                    List<string> vs = new List<string>();
-                    bool p = false;
-                    int num = 0;
-                    for (int i = 0; i < vs2.Count; i++)
+                    //不够三条路才进行第三次搜索 
+                    if (vs2 != null && vs3 == null)
                     {
-
-                        if (p == false)
+                        List<string> vs = new List<string>();
+                        bool p = false;
+                        int num = 0;
+                        for (int i = 0; i < vs2.Count; i++)
                         {
-                            if (vs2[i] == vs1[i])
-                                continue;
-                            else
-                            { p = true; num = i; }
-                        }
-                        if (p)
-                            vs.Add(vs2[i]);
-                    }
-                    FindThird(index, vs1, vs, ref vs3);
-                    //补齐前段
-                    if (vs3 != null)
-                        vs3.InsertRange(0, vs2.GetRange(0, num));
-                }
 
+                            if (p == false)
+                            {
+                                if (vs2[i] == vs1[i])
+                                    continue;
+                                else
+                                { p = true; num = i; }
+                            }
+                            if (p)
+                                vs.Add(vs2[i]);
+                        }
+                        FindThird(index, vs1, vs, ref vs3);
+                        //补齐前段
+                        if (vs3 != null)
+                            vs3.InsertRange(0, vs2.GetRange(0, num));
+                    }
+                }
                 //打印结果
                 if (vs1 != null)
-                    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num.ToString());
                 if (vs2 != null)
-                    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num.ToString());
                 if (vs3 != null)
-                    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num.ToString());
             }
             #endregion
 
@@ -2339,42 +2345,45 @@ namespace WpfMap.Route
             {
                 List<string> vs2 = null;
                 List<string> vs3 = null;
-                List<string> vs4 = null;
                 //第二次搜索
                 if (vs1.Count > 1)
                     FindSecond(index, vs1, ref vs2, ref vs3, range);
                 //第三次搜索
-                if (vs2 != null && vs3 == null)
+                if (!(vs1 != null && vs2 != null && id != -1))
                 {
-                    List<string> vs = new List<string>();
-                    bool p = false;
-                    int num = 0;
-                    for (int i = 0; i < vs2.Count; i++)
+                    //不够三条路才进行第三次搜索
+                    if (vs2 != null && vs3 == null)
                     {
-
-                        if (p == false)
+                        List<string> vs = new List<string>();
+                        bool p = false;
+                        int num = 0;
+                        for (int i = 0; i < vs2.Count; i++)
                         {
-                            if (vs2[i] == vs1[i])
-                                continue;
-                            else
-                            { p = true; num = i; }
+
+                            if (p == false)
+                            {
+                                if (vs2[i] == vs1[i])
+                                    continue;
+                                else
+                                { p = true; num = i; }
+                            }
+                            if (p)
+                                vs.Add(vs2[i]);
                         }
-                        if (p)
-                            vs.Add(vs2[i]);
+                        FindThird(index, vs1, vs, ref vs3);
+                        //补齐前段
+                        if (vs3 != null)
+                            vs3.InsertRange(0, vs2.GetRange(0, num));
                     }
-                    FindThird(index, vs1, vs, ref vs3);
-                    //补齐前段
-                    if (vs3 != null)
-                        vs3.InsertRange(0, vs2.GetRange(0, num));
                 }
 
                 //打印结果
                 if (vs1 != null)
-                    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()) +"标签："+ MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num.ToString());
                 if (vs2 != null)
-                    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num.ToString());
                 if (vs3 != null)
-                    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num.ToString());
             }
             #endregion
             MapOperate.SystemMsg.WriteLine("-----------END-------------");
