@@ -1176,12 +1176,11 @@ namespace WpfMap.Route
         /// </summary>
         /// <param name="index"></param>
         /// <param name="vs1"></param>
-        public static List<string> FindSecond(int index, List<string> vs1,ref List<string> vs5)
+        public static void FindSecond(int index, List<string> vs1, ref List<string> vs2, ref List<string> vs3, Base.Range range)
         {
-            Base.Range range = new Base.Range();
-            List<string> vs4 = null;
+            vs2 = null;
+            vs3 = null;
             Point pt = new Point();
-            //第一个点不用处理【vs2和vs3已经处理过了】，最后一个点是终点标签，不用处理
             for (int i = 0; i < vs1.Count - 1; i++)
             {
                 //获取分叉的起点和终点坐标
@@ -1194,13 +1193,13 @@ namespace WpfMap.Route
                         {
                             //1.避开这个左上继续搜左上
                             pt = new Point(startPt.X, endPt.Y);
-                            vs4 = ProcessString(index, pt, ProcessState.LeftUp, range);
+                            vs2 = ProcessString(index, pt, ProcessState.LeftUp, range);
                             //2.从终点开始搜左下
-                            if (vs4 == null)
+                            if (vs2 == null)
                             {
-                                vs4 = ProcessString(index, endPt, ProcessState.LeftDown, range);
+                                vs2 = ProcessString(index, endPt, ProcessState.LeftDown, range);
                                 //3.从起点开始搜上右
-                                if (vs4 == null)
+                                if (vs2 == null)
                                 {
                                     //向上找标签
                                     int id = Base.FindRFID.Up(index, startPt, new Base.Range());
@@ -1209,23 +1208,29 @@ namespace WpfMap.Route
                                         range = new Base.Range();
                                         range.MinY = MapElement.MapObject.RFIDS[id].DownPoint.Y;
                                     }
-                                    vs4 = ProcessString(index, startPt, ProcessState.UpLeft, range);
+                                    vs2 = ProcessString(index, startPt, ProcessState.UpLeft, range);
                                     //将前面的部分补齐
-                                    if (vs4 != null)
+                                    if (vs2 != null)
                                     {
-                                        vs4.InsertRange(0, vs1.GetRange(0, i + 1));
-                                        vs5 = ProcessString(index, startPt, ProcessState.UpRight, range);
-                                        if (vs5 != null)
+                                        vs2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                        vs3 = ProcessString(index, startPt, ProcessState.UpRight, range);
+                                        if (vs3 != null)
                                         {
-                                            vs5.InsertRange(0, vs1.GetRange(0, i + 1));
-                                            if (vs5.Equals(vs4))
-                                                vs5 = null;
+                                            vs3.InsertRange(0, vs1.GetRange(0, i + 1));
+                                            if (vs3.Equals(vs2))
+                                                vs3 = null;
                                         }
                                     }
                                 }
                             }
-                            if (vs4 != null && vs4.Last() != vs1.Last())
-                                return vs4;
+                            else
+                            {
+                                //将前面的部分补齐
+                                vs2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                vs2.RemoveAt(i);
+                            }
+                            if (vs2 != null && vs2.Last() != vs1.Last())
+                                return;
                             else
                                 break;
                         }
@@ -1233,9 +1238,9 @@ namespace WpfMap.Route
                         {
                             //1.避开这个左下继续搜左下
                             pt = new Point(startPt.X, endPt.Y);
-                            vs4 = ProcessString(index, pt, ProcessState.LeftDown, range);
+                            vs2 = ProcessString(index, pt, ProcessState.LeftDown, range);
                             //2.从起点开始搜下右
-                            if (vs4 == null)
+                            if (vs2 == null)
                             {
                                 //向下找标签
                                 int id = Base.FindRFID.Down(index, startPt, new Base.Range());
@@ -1244,22 +1249,28 @@ namespace WpfMap.Route
                                     range = new Base.Range();
                                     range.MaxY = MapElement.MapObject.RFIDS[id].UpPoint.Y;
                                 }
-                                vs4 = ProcessString(index, startPt, ProcessState.DownLeft, range);
+                                vs2 = ProcessString(index, startPt, ProcessState.DownLeft, range);
                                 //将前面的部分补齐
-                                if (vs4 != null)
+                                if (vs2 != null)
                                 {
-                                    vs4.InsertRange(0, vs1.GetRange(0, i + 1));
-                                    vs5 = ProcessString(index, startPt, ProcessState.DownRight, range);
-                                    if (vs5 != null)
+                                    vs2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                    vs3 = ProcessString(index, startPt, ProcessState.DownRight, range);
+                                    if (vs3 != null)
                                     {
-                                        vs5.InsertRange(0, vs1.GetRange(0, i + 1));
-                                        if (vs5.Equals(vs4))
-                                            vs5 = null;
+                                        vs3.InsertRange(0, vs1.GetRange(0, i + 1));
+                                        if (vs3.Equals(vs2))
+                                            vs3 = null;
                                     }
                                 }
                             }
-                            if (vs4 != null && vs4.Last() != vs1.Last())
-                                return vs4;
+                            else
+                            {
+                                //将前面的部分补齐
+                                vs2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                vs2.RemoveAt(i);
+                            }
+                            if (vs2 != null && vs2.Last() != vs1.Last())
+                                return;
                             else
                                 break;
                         }
@@ -1267,13 +1278,13 @@ namespace WpfMap.Route
                         {
                             //1.避开这个右上继续搜右上
                             pt = new Point(startPt.X, endPt.Y);
-                            vs4 = ProcessString(index, pt, ProcessState.RightUp, range);
+                            vs2 = ProcessString(index, pt, ProcessState.RightUp, range);
                             //2.从终点开始搜右下
-                            if (vs4 == null)
+                            if (vs2 == null)
                             {
-                                vs4 = ProcessString(index, endPt, ProcessState.RightDown, range);
+                                vs2 = ProcessString(index, endPt, ProcessState.RightDown, range);
                                 //3.从起点开始搜上右
-                                if (vs4 == null)
+                                if (vs2 == null)
                                 {
                                     //向上找标签
                                     int id = Base.FindRFID.Up(index, startPt, new Base.Range());
@@ -1282,23 +1293,29 @@ namespace WpfMap.Route
                                         range = new Base.Range();
                                         range.MinY = MapElement.MapObject.RFIDS[id].DownPoint.Y;
                                     }
-                                    vs4 = ProcessString(index, startPt, ProcessState.UpLeft, range);
+                                    vs2 = ProcessString(index, startPt, ProcessState.UpLeft, range);
                                     //将前面的部分补齐
-                                    if (vs4 != null)
+                                    if (vs2 != null)
                                     {
-                                        vs4.InsertRange(0, vs1.GetRange(0, i + 1));
-                                        vs5 = ProcessString(index, startPt, ProcessState.UpRight, range);
-                                        if (vs5 != null)
+                                        vs2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                        vs3 = ProcessString(index, startPt, ProcessState.UpRight, range);
+                                        if (vs3 != null)
                                         {
-                                            vs5.InsertRange(0, vs1.GetRange(0, i + 1));
-                                            if (vs5.Equals(vs4))
-                                                vs5 = null;
+                                            vs3.InsertRange(0, vs1.GetRange(0, i + 1));
+                                            if (vs3.Equals(vs2))
+                                                vs3 = null;
                                         }
                                     }
                                 }
                             }
-                            if (vs4 != null && vs4.Last() != vs1.Last())
-                                return vs4;
+                            else
+                            {
+                                //将前面的部分补齐
+                                vs2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                vs2.RemoveAt(i);
+                            }
+                            if (vs2 != null && vs2.Last() != vs1.Last())
+                                return;
                             else
                                 break;
                         }
@@ -1306,9 +1323,9 @@ namespace WpfMap.Route
                         {
                             //1.避开这个右下继续搜右下
                             pt = new Point(startPt.X, endPt.Y);
-                            vs4 = ProcessString(index, pt, ProcessState.RightDown, range);
+                            vs2 = ProcessString(index, pt, ProcessState.RightDown, range);
                             //2.从起点开始搜下右
-                            if (vs4 == null)
+                            if (vs2 == null)
                             {
                                 //向下找标签
                                 int id = Base.FindRFID.Down(index, startPt, new Base.Range());
@@ -1317,22 +1334,28 @@ namespace WpfMap.Route
                                     range = new Base.Range();
                                     range.MaxY = MapElement.MapObject.RFIDS[id].UpPoint.Y;
                                 }
-                                vs4 = ProcessString(index, startPt, ProcessState.DownLeft, range);
+                                vs2 = ProcessString(index, startPt, ProcessState.DownLeft, range);
                                 //将前面的部分补齐
-                                if (vs4 != null)
+                                if (vs2 != null)
                                 {
-                                    vs4.InsertRange(0, vs1.GetRange(0, i + 1));
-                                    vs5 = ProcessString(index, startPt, ProcessState.DownRight, range);
-                                    if (vs5 != null)
+                                    vs2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                    vs3 = ProcessString(index, startPt, ProcessState.DownRight, range);
+                                    if (vs3 != null)
                                     {
-                                        vs5.InsertRange(0, vs1.GetRange(0, i + 1));
-                                        if (vs5.Equals(vs4))
-                                            vs5 = null;
+                                        vs3.InsertRange(0, vs1.GetRange(0, i + 1));
+                                        if (vs3.Equals(vs2))
+                                            vs3 = null;
                                     }
                                 }
                             }
-                            if (vs4 != null && vs4.Last() != vs1.Last())
-                                return vs4;
+                            else
+                            {
+                                //将前面的部分补齐
+                                vs2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                vs2.RemoveAt(i);
+                            }
+                            if (vs2 != null && vs2.Last() != vs1.Last())
+                                return;
                             else
                                 break;
                         }
@@ -1340,13 +1363,13 @@ namespace WpfMap.Route
                         {
                             //1.避开这个上左继续搜上左
                             pt = new Point(startPt.X, endPt.Y);
-                            vs4 = ProcessString(index, pt, ProcessState.UpLeft, range);
+                            vs2 = ProcessString(index, pt, ProcessState.UpLeft, range);
                             //2.从起点开始搜上右
-                            if (vs4 == null)
+                            if (vs2 == null)
                             {
-                                vs4 = ProcessString(index, startPt, ProcessState.UpRight, range);
+                                vs2 = ProcessString(index, startPt, ProcessState.UpRight, range);
                                 //3.从终点开始搜左下
-                                if (vs4 == null)
+                                if (vs2 == null)
                                 {
                                     //向左找标签
                                     int id = Base.FindRFID.Left(index, endPt, new Base.Range());
@@ -1355,23 +1378,29 @@ namespace WpfMap.Route
                                         range = new Base.Range();
                                         range.MinX = MapElement.MapObject.RFIDS[id].RightPoint.X;
                                     }
-                                    vs4 = ProcessString(index, endPt, ProcessState.LeftUp, range);
+                                    vs2 = ProcessString(index, endPt, ProcessState.LeftUp, range);
                                     //将前面的部分补齐
-                                    if (vs4 != null)
+                                    if (vs2 != null)
                                     {
-                                        vs4.InsertRange(0, vs1.GetRange(0, i + 1));
-                                        vs5 = ProcessString(index, endPt, ProcessState.LeftDown, range);
-                                        if (vs5 != null)
+                                        vs2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                        vs3 = ProcessString(index, endPt, ProcessState.LeftDown, range);
+                                        if (vs3 != null)
                                         {
-                                            vs5.InsertRange(0, vs1.GetRange(0, i + 1));
-                                            if (vs5.Equals(vs4))
-                                                vs5 = null;
+                                            vs3.InsertRange(0, vs1.GetRange(0, i + 1));
+                                            if (vs3.Equals(vs2))
+                                                vs3 = null;
                                         }
                                     }
                                 }
                             }
-                            if (vs4 != null && vs4.Last() != vs1.Last())
-                                return vs4;
+                            else
+                            {
+                                //将前面的部分补齐
+                                vs2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                vs2.RemoveAt(i);
+                            }
+                            if (vs2 != null && vs2.Last() != vs1.Last())
+                                return;
                             else
                                 break;
                         }
@@ -1379,13 +1408,13 @@ namespace WpfMap.Route
                         {
                             //1.避开这个下左继续搜下左
                             pt = new Point(startPt.X, endPt.Y);
-                            vs4 = ProcessString(index, pt, ProcessState.DownLeft, range);
+                            vs2 = ProcessString(index, pt, ProcessState.DownLeft, range);
                             //2.从起点开始搜下右
-                            if (vs4 == null)
+                            if (vs2 == null)
                             {
-                                vs4 = ProcessString(index, startPt, ProcessState.DownRight, range);
+                                vs2 = ProcessString(index, startPt, ProcessState.DownRight, range);
                                 //3.从终点开始搜左下
-                                if (vs4 == null)
+                                if (vs2 == null)
                                 {
                                     //向左找标签
                                     int id = Base.FindRFID.Left(index, endPt, new Base.Range());
@@ -1394,23 +1423,29 @@ namespace WpfMap.Route
                                         range = new Base.Range();
                                         range.MinX = MapElement.MapObject.RFIDS[id].RightPoint.X;
                                     }
-                                    vs4 = ProcessString(index, endPt, ProcessState.LeftUp, range);
+                                    vs2 = ProcessString(index, endPt, ProcessState.LeftUp, range);
                                     //将前面的部分补齐
-                                    if (vs4 != null)
+                                    if (vs2 != null)
                                     {
-                                        vs4.InsertRange(0, vs1.GetRange(0, i + 1));
-                                        vs5 = ProcessString(index, endPt, ProcessState.LeftDown, range);
-                                        if (vs5 != null)
+                                        vs2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                        vs3 = ProcessString(index, endPt, ProcessState.LeftDown, range);
+                                        if (vs3 != null)
                                         {
-                                            vs5.InsertRange(0, vs1.GetRange(0, i + 1));
-                                            if (vs5.Equals(vs4))
-                                                vs5 = null;
+                                            vs3.InsertRange(0, vs1.GetRange(0, i + 1));
+                                            if (vs3.Equals(vs2))
+                                                vs3 = null;
                                         }
                                     }
                                 }
                             }
-                            if (vs4 != null && vs4.Last() != vs1.Last())
-                                return vs4;
+                            else
+                            {
+                                //将前面的部分补齐
+                                vs2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                vs2.RemoveAt(i);
+                            }
+                            if (vs2 != null && vs2.Last() != vs1.Last())
+                                return;
                             else
                                 break;
                         }
@@ -1418,9 +1453,9 @@ namespace WpfMap.Route
                         {
                             //1.避开这个上右继续搜上右
                             pt = new Point(startPt.X, endPt.Y);
-                            vs4 = ProcessString(index, pt, ProcessState.UpRight, range);
+                            vs2 = ProcessString(index, pt, ProcessState.UpRight, range);
                             //2.从终点开始搜右下
-                            if (vs4 == null)
+                            if (vs2 == null)
                             {
                                 //向右找标签
                                 int id = Base.FindRFID.Right(index, endPt, new Base.Range());
@@ -1429,22 +1464,28 @@ namespace WpfMap.Route
                                     range = new Base.Range();
                                     range.MaxX = MapElement.MapObject.RFIDS[id].LeftPoint.X;
                                 }
-                                vs4 = ProcessString(index, endPt, ProcessState.RightUp, range);
+                                vs2 = ProcessString(index, endPt, ProcessState.RightUp, range);
                                 //将前面的部分补齐
-                                if (vs4 != null)
+                                if (vs2 != null)
                                 {
-                                    vs4.InsertRange(0, vs1.GetRange(0, i + 1));
-                                    vs5 = ProcessString(index, endPt, ProcessState.RightDown, range);
-                                    if (vs5 != null)
+                                    vs2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                    vs3 = ProcessString(index, endPt, ProcessState.RightDown, range);
+                                    if (vs3 != null)
                                     {
-                                        vs5.InsertRange(0, vs1.GetRange(0, i + 1));
-                                        if (vs5.Equals(vs4))
-                                            vs5 = null;
+                                        vs3.InsertRange(0, vs1.GetRange(0, i + 1));
+                                        if (vs3.Equals(vs2))
+                                            vs3 = null;
                                     }
                                 }
                             }
-                            if (vs4 != null && vs4.Last() != vs1.Last())
-                                return vs4;
+                            else
+                            {
+                                //将前面的部分补齐
+                                vs2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                vs2.RemoveAt(i);
+                            }
+                            if (vs2 != null && vs2.Last() != vs1.Last())
+                                return;
                             else
                                 break;
                         }
@@ -1452,9 +1493,9 @@ namespace WpfMap.Route
                         {
                             //1.避开这个下右继续搜下右
                             pt = new Point(startPt.X, endPt.Y);
-                            vs4 = ProcessString(index, pt, ProcessState.DownRight, range);
+                            vs2 = ProcessString(index, pt, ProcessState.DownRight, range);
                             //2.从终点开始搜右下
-                            if (vs4 == null)
+                            if (vs2 == null)
                             {
                                 //向右找标签
                                 int id = Base.FindRFID.Right(index, endPt, new Base.Range());
@@ -1463,22 +1504,28 @@ namespace WpfMap.Route
                                     range = new Base.Range();
                                     range.MaxX = MapElement.MapObject.RFIDS[id].LeftPoint.X;
                                 }
-                                vs4 = ProcessString(index, endPt, ProcessState.RightUp, range);
+                                vs2 = ProcessString(index, endPt, ProcessState.RightUp, range);
                                 //将前面的部分补齐
-                                if (vs4 != null)
+                                if (vs2 != null)
                                 {
-                                    vs4.InsertRange(0, vs1.GetRange(0, i + 1));
-                                    vs5 = ProcessString(index, endPt, ProcessState.RightDown, range);
-                                    if (vs5 != null)
+                                    vs2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                    vs3 = ProcessString(index, endPt, ProcessState.RightDown, range);
+                                    if (vs3 != null)
                                     {
-                                        vs5.InsertRange(0, vs1.GetRange(0, i + 1));
-                                        if (vs5.Equals(vs4))
-                                            vs5 = null;
+                                        vs3.InsertRange(0, vs1.GetRange(0, i + 1));
+                                        if (vs3.Equals(vs2))
+                                            vs3 = null;
                                     }
                                 }
                             }
-                            if (vs4 != null && vs4.Last() != vs1.Last())
-                                return vs4;
+                            else
+                            {
+                                //将前面的部分补齐
+                                vs2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                vs2.RemoveAt(i);
+                            }
+                            if (vs2 != null && vs2.Last() != vs1.Last())
+                                return;
                             else
                                 break;
                         }
@@ -1486,8 +1533,23 @@ namespace WpfMap.Route
                         break;
                 }
             }
-            return null;
         }
+
+        public static bool ListEquls(List<string> vs1, List<string> vs2)
+        {
+            if (vs1 == null && vs2 == null)
+                return true;
+            if (vs1 == null || vs2 == null)
+                return false;
+
+            string str1 = String.Join("-", vs1.ToArray());
+            string str2 = String.Join("-", vs2.ToArray());
+            if (str1 == str2)
+                return true;
+            else
+                return false;
+        }
+
         /// <summary>
         /// 生成一个点的邻接关系
         /// </summary>
@@ -1525,45 +1587,44 @@ namespace WpfMap.Route
                 List<string> vs2 = null;
                 List<string> vs3 = null;
                 List<string> vs4 = null;
-                List<string> vs5 = null;
-                //判断第一次通过状态机找到的是不是左上【如果不是左上那就是左下，接下来的搜索左下就不需要进行了】
-                if (vs1.First().StartsWith("左上"))
-                    vs2 = ProcessString(index, rfid.LeftPoint, ProcessState.LeftDown, range);
-                /*-----------------------------------------------------------------------
-                 * 避开第一个和第二个分叉【如果没有第二个就不用处理】继续找
-                 * ---------------------------------------------------------------------*/
-                //获取第一个分叉的索引
-                int idx1 = int.Parse(vs1.First().Substring(2, vs1.First().Length - 2));
-                //获取x坐标【取起点是为了避免再次搜索到该分叉】
-                double x1 = MapElement.MapObject.ForkLines[idx1].StartPoint.X;
-                double x2 = double.MaxValue;
-                //获取第二个分叉的索引
-                if (vs2 != null)
+                ////【系统采用先左后右，先上后下的原则，所有拐弯过多会出现搜索不到】
+                if (vs1.Count > 1)
+                    FindSecond(index, vs1, ref vs2, ref vs3, range);
+                if (vs2 != null && vs3 == null)
                 {
-                    int idx2 = int.Parse(vs2.First().Substring(2, vs2.First().Length - 2));
-                    x2 = MapElement.MapObject.ForkLines[idx2].StartPoint.X;
+                    List<string> vs = new List<string>();
+                    bool p = false;
+                    int num = 0;
+                    for (int i = 0; i < vs2.Count; i++)
+                    {
+                        if (p)
+                            vs.Add(vs2[i]);
+                        if (p == false)
+                        {
+                            if (vs2[i] == vs1[i])
+                                continue;
+                            else
+                            { p = true; num = i; }
+                        }
+                    }
+                    FindSecond(index, vs, ref vs3, ref vs4, new Base.Range());
+                    //补齐前段
+                    if (vs3 != null)
+                        vs3.InsertRange(0, vs2.GetRange(0, num + 1));
                 }
-                //获取y坐标【y坐标相同，取任意一个】
-                double y = MapElement.MapObject.ForkLines[idx1].EndPoint.Y;
-                //从比较靠左的分叉开始继续向左找分叉【针对三叉路口】
-                Point pt = new Point(x1 < x2 ? x1 : x2, y);
-                vs3 = ProcessString(index, pt, ProcessState.LeftUp, range);
-
-                //判断后两步有没有找到，如果没有找到，再根据第一步搜索一遍
-                //【系统采用先左后右，先上后下的原则，所有拐弯过多会出现搜索不到】
-                if (vs2 == null && vs3 == null && vs1.Count > 1)
-                    vs4 = FindSecond(index, vs1,ref vs5);
+                if (ListEquls(vs1, vs2))
+                    vs2 = null;
+                if (ListEquls(vs1, vs3))
+                    vs3 = null;
+                if (ListEquls(vs2, vs3))
+                    vs3 = null;
                 //打印结果
                 if (vs1 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs1.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()));
                 if (vs2 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs2.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()));
                 if (vs3 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs3.ToArray()));
-                if (vs4 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs4.ToArray()));
-                if (vs5 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs5.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()));
             }
 
             #endregion
@@ -1589,44 +1650,44 @@ namespace WpfMap.Route
                 List<string> vs2 = null;
                 List<string> vs3 = null;
                 List<string> vs4 = null;
-                List<string> vs5 = null;
-                //判断第一次通过状态机找到的是不是右上【如果不是右上那就是右下，接下来的搜索右下就不需要进行了】
-                if (vs1.First().StartsWith("右上"))
-                    vs2 = ProcessString(index, rfid.RightPoint, ProcessState.RightDown, range);
-                /*-----------------------------------------------------------------------
-                 * 避开第一个和第二个分叉【如果没有第二个就不用处理】继续找
-                 * ---------------------------------------------------------------------*/
-                //获取第一个分叉的索引
-                int idx1 = int.Parse(vs1.First().Substring(2, vs1.First().Length - 2));
-                //获取x坐标【取起点是为了避免再次搜索到该分叉】
-                double x1 = MapElement.MapObject.ForkLines[idx1].StartPoint.X;
-                double x2 = double.MinValue;
-                //获取第二个分叉的索引
-                if (vs2 != null)
+                ////【系统采用先左后右，先上后下的原则，所有拐弯过多会出现搜索不到】
+                if (vs1.Count > 1)
+                    FindSecond(index, vs1, ref vs2, ref vs3, range);
+                if (vs2 != null && vs3 == null)
                 {
-                    int idx2 = int.Parse(vs2.First().Substring(2, vs2.First().Length - 2));
-                    x2 = MapElement.MapObject.ForkLines[idx2].StartPoint.X;
+                    List<string> vs = new List<string>();
+                    bool p = false;
+                    int num = 0;
+                    for (int i = 0; i < vs2.Count; i++)
+                    {
+                        if (p)
+                            vs.Add(vs2[i]);
+                        if (p == false)
+                        {
+                            if (vs2[i] == vs1[i])
+                                continue;
+                            else
+                            { p = true; num = i; }
+                        }
+                    }
+                    FindSecond(index, vs, ref vs3, ref vs4, new Base.Range());
+                    //补齐前段
+                    if (vs3 != null)
+                        vs3.InsertRange(0, vs2.GetRange(0, num + 1));
                 }
-                //获取y坐标【y坐标相同，取任意一个】
-                double y = MapElement.MapObject.ForkLines[idx1].EndPoint.Y;
-                //从比较靠右的分叉开始继续向右找分叉【针对三叉路口】
-                Point pt = new Point(x1 > x2 ? x1 : x2, y);
-                vs3 = ProcessString(index, pt, ProcessState.RightUp, range);
-                //判断后两步有没有找到，如果没有找到，再根据第一步搜索一遍
-                //【系统采用先左后右，先上后下的原则，所有拐弯过多会出现搜索不到】
-                if (vs2 == null && vs3 == null && vs1.Count > 1)
-                    vs4 = FindSecond(index, vs1,ref vs5);
+                if (ListEquls(vs1, vs2))
+                    vs2 = null;
+                if (ListEquls(vs1, vs3))
+                    vs3 = null;
+                if (ListEquls(vs2, vs3))
+                    vs3 = null;
                 //打印结果
                 if (vs1 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs1.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()));
                 if (vs2 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs2.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()));
                 if (vs3 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs3.ToArray()));
-                if (vs4 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs4.ToArray()));
-                if (vs5 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs5.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()));
             }
             #endregion
 
@@ -1651,44 +1712,44 @@ namespace WpfMap.Route
                 List<string> vs2 = null;
                 List<string> vs3 = null;
                 List<string> vs4 = null;
-                List<string> vs5 = null;
-                //判断第一次通过状态机找到的是不是上左【如果不是上左那就是上右，接下来的搜索上右就不需要进行了】
-                if (vs1.First().StartsWith("上左"))
-                    vs2 = ProcessString(index, rfid.UpPoint, ProcessState.UpRight, range);
-                /*-----------------------------------------------------------------------
-                 * 避开第一个和第二个分叉【如果没有第二个就不用处理】继续找
-                 * ---------------------------------------------------------------------*/
-                //获取第一个分叉的索引
-                int idx1 = int.Parse(vs1.First().Substring(2, vs1.First().Length - 2));
-                //获取Y坐标【取终点是为了避免再次搜索到该分叉】
-                double y1 = MapElement.MapObject.ForkLines[idx1].EndPoint.Y;
-                double y2 = double.MaxValue;
-                //获取第二个分叉的索引
-                if (vs2 != null)
+                ////【系统采用先左后右，先上后下的原则，所有拐弯过多会出现搜索不到】
+                if (vs1.Count > 1)
+                    FindSecond(index, vs1, ref vs2, ref vs3, range);
+                if (vs2 != null && vs3 == null)
                 {
-                    int idx2 = int.Parse(vs2.First().Substring(2, vs2.First().Length - 2));
-                    y2 = MapElement.MapObject.ForkLines[idx2].EndPoint.Y;
+                    List<string> vs = new List<string>();
+                    bool p = false;
+                    int num = 0;
+                    for (int i = 0; i < vs2.Count; i++)
+                    {
+                        if (p)
+                            vs.Add(vs2[i]);
+                        if (p == false)
+                        {
+                            if (vs2[i] == vs1[i])
+                                continue;
+                            else
+                            { p = true; num = i; }
+                        }
+                    }
+                    FindSecond(index, vs, ref vs3, ref vs4, new Base.Range());
+                    //补齐前段
+                    if (vs3 != null)
+                        vs3.InsertRange(0, vs2.GetRange(0, num + 1));
                 }
-                //获取x坐标【x坐标相同，取任意一个】
-                double x = MapElement.MapObject.ForkLines[idx1].StartPoint.X;
-                //从比较靠上的分叉开始继续向上找分叉【针对三叉路口】
-                Point pt = new Point(x, y1 < y2 ? y1 : y2);
-                vs3 = ProcessString(index, pt, ProcessState.UpLeft, range);
-                //判断后两步有没有找到，如果没有找到，再根据第一步搜索一遍
-                //【系统采用先左后右，先上后下的原则，所有拐弯过多会出现搜索不到】
-                if (vs2 == null && vs3 == null && vs1.Count > 1)
-                    vs4 = FindSecond(index, vs1,ref vs5);
+                if (ListEquls(vs1, vs2))
+                    vs2 = null;
+                if (ListEquls(vs1, vs3))
+                    vs3 = null;
+                if (ListEquls(vs2, vs3))
+                    vs3 = null;
                 //打印结果
                 if (vs1 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs1.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()));
                 if (vs2 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs2.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()));
                 if (vs3 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs3.ToArray()));
-                if (vs4 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs4.ToArray()));
-                if (vs5 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs5.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()));
             }
             #endregion
 
@@ -1713,44 +1774,44 @@ namespace WpfMap.Route
                 List<string> vs2 = null;
                 List<string> vs3 = null;
                 List<string> vs4 = null;
-                List<string> vs5 = null;
-                //判断第一次通过状态机找到的是不是下左【如果不是下左那就是下右，接下来的搜索下右就不需要进行了】
-                if (vs1.First().StartsWith("下左"))
-                    vs2 = ProcessString(index, rfid.DownPoint, ProcessState.DownRight, range);
-                /*-----------------------------------------------------------------------
-                 * 避开第一个和第二个分叉【如果没有第二个就不用处理】继续找
-                 * ---------------------------------------------------------------------*/
-                //获取第一个分叉的索引
-                int idx1 = int.Parse(vs1.First().Substring(2, vs1.First().Length - 2));
-                //获取Y坐标【取终点是为了避免再次搜索到该分叉】
-                double y1 = MapElement.MapObject.ForkLines[idx1].EndPoint.Y;
-                double y2 = double.MinValue;
-                //获取第二个分叉的索引
-                if (vs2 != null)
+                ////【系统采用先左后右，先上后下的原则，所有拐弯过多会出现搜索不到】
+                if (vs1.Count > 1)
+                    FindSecond(index, vs1, ref vs2, ref vs3, range);
+                if (vs2 != null && vs3 == null)
                 {
-                    int idx2 = int.Parse(vs2.First().Substring(2, vs2.First().Length - 2));
-                    y2 = MapElement.MapObject.ForkLines[idx2].EndPoint.Y;
+                    List<string> vs = new List<string>();
+                    bool p = false;
+                    int num = 0;
+                    for (int i = 0; i < vs2.Count; i++)
+                    {
+                        if (p)
+                            vs.Add(vs2[i]);
+                        if (p == false)
+                        {
+                            if (vs2[i] == vs1[i])
+                                continue;
+                            else
+                            { p = true; num = i; }
+                        }
+                    }
+                    FindSecond(index, vs, ref vs3, ref vs4, new Base.Range());
+                    //补齐前段
+                    if (vs3 != null)
+                        vs3.InsertRange(0, vs2.GetRange(0, num + 1));
                 }
-                //获取x坐标【x坐标相同，取任意一个】
-                double x = MapElement.MapObject.ForkLines[idx1].StartPoint.X;
-                //从比较靠上的分叉开始继续向上找分叉【针对三叉路口】
-                Point pt = new Point(x, y1 > y2 ? y1 : y2);
-                vs3 = ProcessString(index, pt, ProcessState.DownLeft, range);
-                //判断后两步有没有找到，如果没有找到，再根据第一步搜索一遍
-                //【系统采用先左后右，先上后下的原则，所有拐弯过多会出现搜索不到】
-                if (vs2 == null && vs3 == null && vs1.Count > 1)
-                    vs4 = FindSecond(index, vs1,ref vs5);
+                if (ListEquls(vs1, vs2))
+                    vs2 = null;
+                if (ListEquls(vs1, vs3))
+                    vs3 = null;
+                if (ListEquls(vs2, vs3))
+                    vs3 = null;
                 //打印结果
                 if (vs1 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs1.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()));
                 if (vs2 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs2.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()));
                 if (vs3 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs3.ToArray()));
-                if (vs4 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs4.ToArray()));
-                if (vs5 != null)
-                    MapOperate.SystemMsg.WriteLine(String.Join("-", vs5.ToArray()));
+                    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()));
             }
             #endregion
             MapOperate.SystemMsg.WriteLine("-----------END-------------");
