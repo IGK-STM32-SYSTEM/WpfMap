@@ -1134,6 +1134,196 @@ namespace WpfMap.Route
         }
 
         /// <summary>
+        /// 二次搜索
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="vs1"></param>
+        public static void FindSecond(int index, List<string> vs1)
+        {
+            Base.Range range = new Base.Range();
+            List<string> vs4 = null;
+            Point pt = new Point();
+            //第一个点不用处理【vs2和vs3已经处理过了】，最后一个点是终点标签，不用处理
+            for (int i = 1; i < vs1.Count - 1; i++)
+            {
+                //获取分叉的起点和终点坐标
+                int ids = int.Parse(vs1[i].Substring(2, vs1[i].Length - 2));
+                Point startPt = MapElement.MapObject.ForkLines[ids].StartPoint;
+                Point endPt = MapElement.MapObject.ForkLines[ids].EndPoint;
+                switch (vs1[i].Substring(0, 2))
+                {
+                    case "左上":
+                        {
+                            //1.避开这个左上继续搜左上
+                            pt = new Point(startPt.X, endPt.Y);
+                            vs4 = ProcessString(index, pt, ProcessState.LeftUp, range);
+                            //2.从终点开始搜左下
+                            if (vs4 == null)
+                            {
+                                vs4 = ProcessString(index, endPt, ProcessState.LeftDown, range);
+                                //3.从起点开始搜上右
+                                if (vs4 == null)
+                                {
+                                    //向上找标签
+                                    int id = Base.FindRFID.Up(index, startPt, new Base.Range());
+                                    if (id.ToString() != vs1.Last())
+                                        vs4 = ProcessString(index, startPt, ProcessState.UpRight, range);
+                                }
+                            }
+                            if (vs4 != null && vs4.Last() != vs1.Last())
+                                return;
+                            else
+                                break;
+                        }
+                    case "左下":
+                        {
+                            //1.避开这个左下继续搜左下
+                            pt = new Point(startPt.X, endPt.Y);
+                            vs4 = ProcessString(index, pt, ProcessState.LeftDown, range);
+                            //2.从起点开始搜下右
+                            if (vs4 == null)
+                            {
+                                //向下找标签
+                                int id = Base.FindRFID.Down(index, startPt, new Base.Range());
+                                if (id.ToString() != vs1.Last())
+                                {
+                                    vs4 = ProcessString(index, startPt, ProcessState.DownRight, range);
+                                }
+                            }
+                            if (vs4 != null && vs4.Last() != vs1.Last())
+                                return;
+                            else
+                                break;
+                        }
+                    case "右上":
+                        {
+                            //1.避开这个右上继续搜右上
+                            pt = new Point(startPt.X, endPt.Y);
+                            vs4 = ProcessString(index, pt, ProcessState.RightUp, range);
+                            //2.从终点开始搜右下
+                            if (vs4 == null)
+                            {
+                                vs4 = ProcessString(index, endPt, ProcessState.RightDown, range);
+                                //3.从起点开始搜上右
+                                if (vs4 == null)
+                                {
+                                    //向上找标签
+                                    int id = Base.FindRFID.Up(index, startPt, new Base.Range());
+                                    if (id.ToString() != vs1.Last())
+                                        vs4 = ProcessString(index, startPt, ProcessState.UpRight, range);
+                                }
+                            }
+                            if (vs4 != null && vs4.Last() != vs1.Last())
+                                return;
+                            else
+                                break;
+                        }
+                    case "右下":
+                        {
+                            //1.避开这个右下继续搜右下
+                            pt = new Point(startPt.X, endPt.Y);
+                            vs4 = ProcessString(index, pt, ProcessState.RightDown, range);
+                            //2.从起点开始搜下右
+                            if (vs4 == null)
+                            {
+                                //向下找标签
+                                int id = Base.FindRFID.Down(index, startPt, new Base.Range());
+                                if (id.ToString() != vs1.Last())
+                                    vs4 = ProcessString(index, startPt, ProcessState.DownRight, range);
+                            }
+                            if (vs4 != null && vs4.Last() != vs1.Last())
+                                return;
+                            else
+                                break;
+                        }
+                    case "上左":
+                        {
+                            //1.避开这个上左继续搜上左
+                            pt = new Point(startPt.X, endPt.Y);
+                            vs4 = ProcessString(index, pt, ProcessState.UpLeft, range);
+                            //2.从起点开始搜上右
+                            if (vs4 == null)
+                            {
+                                vs4 = ProcessString(index, startPt, ProcessState.UpRight, range);
+                                //3.从终点开始搜左下
+                                if (vs4 == null)
+                                {
+                                    //向左找标签
+                                    int id = Base.FindRFID.Left(index, endPt, new Base.Range());
+                                    if (id.ToString() != vs1.Last())
+                                        vs4 = ProcessString(index, endPt, ProcessState.LeftDown, range);
+                                }
+                            }
+                            if (vs4 != null && vs4.Last() != vs1.Last())
+                                return;
+                            else
+                                break;
+                        }
+                    case "下左":
+                        {
+                            //1.避开这个下左继续搜下左
+                            pt = new Point(startPt.X, endPt.Y);
+                            vs4 = ProcessString(index, pt, ProcessState.DownLeft, range);
+                            //2.从起点开始搜下右
+                            if (vs4 == null)
+                            {
+                                vs4 = ProcessString(index, startPt, ProcessState.DownRight, range);
+                                //3.从终点开始搜左下
+                                if (vs4 == null)
+                                {
+                                    //向左找标签
+                                    int id = Base.FindRFID.Left(index, endPt, new Base.Range());
+                                    if (id.ToString() != vs1.Last())
+                                        vs4 = ProcessString(index, endPt, ProcessState.LeftDown, range);
+                                }
+                            }
+                            if (vs4 != null && vs4.Last() != vs1.Last())
+                                return;
+                            else
+                                break;
+                        }
+                    case "上右":
+                        {
+                            //1.避开这个上右继续搜上右
+                            pt = new Point(startPt.X, endPt.Y);
+                            vs4 = ProcessString(index, pt, ProcessState.UpRight, range);
+                            //2.从终点开始搜右下
+                            if (vs4 == null)
+                            {
+                                //向右找标签
+                                int id = Base.FindRFID.Right(index, endPt, new Base.Range());
+                                if (id.ToString() != vs1.Last())
+                                    vs4 = ProcessString(index, endPt, ProcessState.RightDown, range);
+                            }
+                            if (vs4 != null && vs4.Last() != vs1.Last())
+                                return;
+                            else
+                                break;
+                        }
+                    case "下右":
+                        {
+                            //1.避开这个下右继续搜下右
+                            pt = new Point(startPt.X, endPt.Y);
+                            vs4 = ProcessString(index, pt, ProcessState.DownRight, range);
+                            //2.从终点开始搜右下
+                            if (vs4 == null)
+                            {
+                                //向右找标签
+                                int id = Base.FindRFID.Right(index, endPt, new Base.Range());
+                                if (id.ToString() != vs1.Last())
+                                    vs4 = ProcessString(index, endPt, ProcessState.RightDown, range);
+                            }
+                            if (vs4 != null && vs4.Last() != vs1.Last())
+                                return;
+                            else
+                                break;
+                        }
+                    default:
+                        break;
+                }
+            }
+        }
+        /// <summary>
         /// 生成一个点的邻接关系
         /// </summary>
         /// <param name="index">标签号</param>
@@ -1212,7 +1402,14 @@ namespace WpfMap.Route
                     MapOperate.SystemMsg.WriteLine(String.Join("-", vs3.ToArray()));
                     MapOperate.SystemMsg.WriteLine("=============");
                 }
+                //判断后两步有没有找到，如果没有找到，再根据第一步搜索一遍
+                //【系统采用先左后右，先上后下的原则，所有拐弯过多会出现搜索不到】
+                if (vs2 == null && vs3 == null && vs1.Count > 2)
+                {
+                    FindSecond(index, vs1);
+                }
             }
+
             #endregion
 
             #region 向右搜索
@@ -1277,6 +1474,12 @@ namespace WpfMap.Route
                     MapOperate.SystemMsg.WriteLine("=============");
                     MapOperate.SystemMsg.WriteLine(String.Join("-", vs3.ToArray()));
                     MapOperate.SystemMsg.WriteLine("=============");
+                }
+                //判断后两步有没有找到，如果没有找到，再根据第一步搜索一遍
+                //【系统采用先左后右，先上后下的原则，所有拐弯过多会出现搜索不到】
+                if (vs2 == null && vs3 == null && vs1.Count > 2)
+                {
+                    FindSecond(index, vs1);
                 }
             }
             #endregion
@@ -1344,6 +1547,12 @@ namespace WpfMap.Route
                     MapOperate.SystemMsg.WriteLine(String.Join("-", vs3.ToArray()));
                     MapOperate.SystemMsg.WriteLine("=============");
                 }
+                //判断后两步有没有找到，如果没有找到，再根据第一步搜索一遍
+                //【系统采用先左后右，先上后下的原则，所有拐弯过多会出现搜索不到】
+                if (vs2 == null && vs3 == null && vs1.Count > 2)
+                {
+                    FindSecond(index, vs1);
+                }
             }
             #endregion
 
@@ -1409,6 +1618,12 @@ namespace WpfMap.Route
                     MapOperate.SystemMsg.WriteLine("=============");
                     MapOperate.SystemMsg.WriteLine(String.Join("-", vs3.ToArray()));
                     MapOperate.SystemMsg.WriteLine("=============");
+                }
+                //判断后两步有没有找到，如果没有找到，再根据第一步搜索一遍
+                //【系统采用先左后右，先上后下的原则，所有拐弯过多会出现搜索不到】
+                if (vs2 == null && vs3 == null && vs1.Count > 2)
+                {
+                    FindSecond(index, vs1);
                 }
             }
             #endregion

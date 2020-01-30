@@ -86,6 +86,7 @@
     </ApplicationDefinition>
     <Compile Include="Class\MapCommon.cs" />
     <Compile Include="Class\MapProperty.cs" />
+    <Compile Include="Route\Helper.cs" />
     <Compile Include="SaveMap\Convert.cs" />
     <Compile Include="SaveMap\Helper.cs" />
     <Compile Include="SaveMap\ShapesBase.cs" />
