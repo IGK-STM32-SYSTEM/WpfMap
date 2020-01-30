@@ -1191,340 +1191,915 @@ namespace WpfMap.Route
                 {
                     case "左上":
                         {
-                            //1.避开这个左上继续搜左上
+                            /*--------按照当前方向搜索--------*/
+                            //1.避开这个继续搜左上
                             pt = new Point(startPt.X, endPt.Y);
-                            vs2 = ProcessString(index, pt, ProcessState.LeftUp, range);
-                            //2.从终点开始搜左下
-                            if (vs2 == null)
+                            List<string> v1 = ProcessString(index, pt, ProcessState.LeftUp, range);
+                            //将前面的部分补齐
+                            if (v1 != null)
                             {
-                                vs2 = ProcessString(index, endPt, ProcessState.LeftDown, range);
-                                //3.从起点开始搜上右
-                                if (vs2 == null)
-                                {
-                                    //向上找标签
-                                    int id = Base.FindRFID.Up(index, startPt, new Base.Range());
-                                    if (id != -1)
-                                    {
-                                        range = new Base.Range();
-                                        range.MinY = MapElement.MapObject.RFIDS[id].DownPoint.Y;
-                                    }
-                                    vs2 = ProcessString(index, startPt, ProcessState.UpLeft, range);
-                                    //将前面的部分补齐
-                                    if (vs2 != null)
-                                    {
-                                        vs2.InsertRange(0, vs1.GetRange(0, i + 1));
-                                        vs3 = ProcessString(index, startPt, ProcessState.UpRight, range);
-                                        if (vs3 != null)
-                                        {
-                                            vs3.InsertRange(0, vs1.GetRange(0, i + 1));
-                                            if (vs3.Equals(vs2))
-                                                vs3 = null;
-                                        }
-                                    }
-                                }
+                                v1.InsertRange(0, vs1.GetRange(0, i + 1));
+                                v1.RemoveAt(i);
+                            }
+                            //2.从终点开始搜左下
+                            List<string> v2 = ProcessString(index, endPt, ProcessState.LeftDown, range);
+                            if (v2 != null)
+                            {
+                                v2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                v2.RemoveAt(i);
+                            }
+                            /*--------改变方向搜索--------*/
+                            //3.向上找标签
+                            int id = Base.FindRFID.Up(index, startPt, new Base.Range());
+                            //更新搜索范围
+                            range = new Base.Range();
+                            if (id != -1)
+                                range.MinY = MapElement.MapObject.RFIDS[id].DownPoint.Y;
+                            //从起点开始搜上左
+                            List<string> v3 = ProcessString(index, startPt, ProcessState.UpLeft, range);
+                            //将前面的部分补齐
+                            if (v3 != null)
+                                v3.InsertRange(0, vs1.GetRange(0, i + 1));
+                            //4.从起点开始搜上右
+                            List<string> v4 = ProcessString(index, startPt, ProcessState.UpRight, range);
+                            if (v4 != null)
+                                v4.InsertRange(0, vs1.GetRange(0, i + 1));
+                            /*--------整理搜索结果--------*/
+                            if (v1 != null && ListEquls(vs1, v1) == false)
+                            {
+                                vs2 = v1;
+                                if (v2 != null && ListEquls(vs1, v2) == false && ListEquls(vs2, v2) == false)
+                                    vs3 = v2;
+                                else
+                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                    vs3 = v3;
+                                else
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
                             }
                             else
+                            if (v2 != null && ListEquls(vs1, v2) == false)
                             {
-                                //将前面的部分补齐
-                                vs2.InsertRange(0, vs1.GetRange(0, i + 1));
-                                vs2.RemoveAt(i);
+                                vs2 = v2;
+                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                    vs3 = v3;
+                                else
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
                             }
-                            if (vs2 != null && vs2.Last() != vs1.Last())
+                            else
+                            if (v3 != null && ListEquls(vs1, v3) == false)
+                            {
+                                vs2 = v3;
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
+                            }
+                            else
+                            if (v4 != null && ListEquls(vs1, v4) == false)
+                                vs2 = v4;
+                            //有一个分叉就不再继续搜了
+                            if (vs2 != null && ListEquls(vs1, vs2) == false)
                                 return;
                             else
                                 break;
                         }
                     case "左下":
                         {
-                            //1.避开这个左下继续搜左下
+                            /*--------按照当前方向搜索--------*/
+                            //1.避开这个继续搜左下
                             pt = new Point(startPt.X, endPt.Y);
-                            vs2 = ProcessString(index, pt, ProcessState.LeftDown, range);
-                            //2.从起点开始搜下右
-                            if (vs2 == null)
+                            List<string> v1 = ProcessString(index, pt, ProcessState.LeftDown, range);
+                            //将前面的部分补齐
+                            if (v1 != null)
                             {
-                                //向下找标签
-                                int id = Base.FindRFID.Down(index, startPt, new Base.Range());
-                                if (id != -1)
-                                {
-                                    range = new Base.Range();
-                                    range.MaxY = MapElement.MapObject.RFIDS[id].UpPoint.Y;
-                                }
-                                vs2 = ProcessString(index, startPt, ProcessState.DownLeft, range);
-                                //将前面的部分补齐
-                                if (vs2 != null)
-                                {
-                                    vs2.InsertRange(0, vs1.GetRange(0, i + 1));
-                                    vs3 = ProcessString(index, startPt, ProcessState.DownRight, range);
-                                    if (vs3 != null)
-                                    {
-                                        vs3.InsertRange(0, vs1.GetRange(0, i + 1));
-                                        if (vs3.Equals(vs2))
-                                            vs3 = null;
-                                    }
-                                }
+                                v1.InsertRange(0, vs1.GetRange(0, i + 1));
+                                v1.RemoveAt(i);
+                            }
+                            /*--------改变方向搜索--------*/
+                            //3. 向下找标签
+                            int id = Base.FindRFID.Down(index, startPt, new Base.Range());
+                            //更新搜索范围
+                            range = new Base.Range();
+                            if (id != -1)
+                                range.MaxY = MapElement.MapObject.RFIDS[id].UpPoint.Y;
+                            //从起点开始搜下左
+                            List<string> v3 = ProcessString(index, startPt, ProcessState.DownLeft, range);
+                            //将前面的部分补齐
+                            if (v3 != null)
+                                v3.InsertRange(0, vs1.GetRange(0, i + 1));
+                            //4.从起点开始搜下右
+                            List<string> v4 = ProcessString(index, startPt, ProcessState.DownRight, range);
+                            if (v4 != null)
+                                v4.InsertRange(0, vs1.GetRange(0, i + 1));
+                            /*--------整理搜索结果--------*/
+                            if (v1 != null && ListEquls(vs1, v1) == false)
+                            {
+                                vs2 = v1;
+                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                    vs3 = v3;
+                                else
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
                             }
                             else
+                            if (v3 != null && ListEquls(vs1, v3) == false)
                             {
-                                //将前面的部分补齐
-                                vs2.InsertRange(0, vs1.GetRange(0, i + 1));
-                                vs2.RemoveAt(i);
+                                vs2 = v3;
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
                             }
-                            if (vs2 != null && vs2.Last() != vs1.Last())
+                            else
+                            if (v4 != null && ListEquls(vs1, v4) == false)
+                                vs2 = v4;
+                            //有一个分叉就不再继续搜了
+                            if (vs2 != null && ListEquls(vs1, vs2) == false)
                                 return;
                             else
                                 break;
                         }
                     case "右上":
                         {
-                            //1.避开这个右上继续搜右上
+                            /*--------按照当前方向搜索--------*/
+                            //1.避开这个继续搜右上
                             pt = new Point(startPt.X, endPt.Y);
-                            vs2 = ProcessString(index, pt, ProcessState.RightUp, range);
-                            //2.从终点开始搜右下
-                            if (vs2 == null)
+                            List<string> v1 = ProcessString(index, pt, ProcessState.RightUp, range);
+                            //将前面的部分补齐
+                            if (v1 != null)
                             {
-                                vs2 = ProcessString(index, endPt, ProcessState.RightDown, range);
-                                //3.从起点开始搜上右
-                                if (vs2 == null)
-                                {
-                                    //向上找标签
-                                    int id = Base.FindRFID.Up(index, startPt, new Base.Range());
-                                    if (id != -1)
-                                    {
-                                        range = new Base.Range();
-                                        range.MinY = MapElement.MapObject.RFIDS[id].DownPoint.Y;
-                                    }
-                                    vs2 = ProcessString(index, startPt, ProcessState.UpLeft, range);
-                                    //将前面的部分补齐
-                                    if (vs2 != null)
-                                    {
-                                        vs2.InsertRange(0, vs1.GetRange(0, i + 1));
-                                        vs3 = ProcessString(index, startPt, ProcessState.UpRight, range);
-                                        if (vs3 != null)
-                                        {
-                                            vs3.InsertRange(0, vs1.GetRange(0, i + 1));
-                                            if (vs3.Equals(vs2))
-                                                vs3 = null;
-                                        }
-                                    }
-                                }
+                                v1.InsertRange(0, vs1.GetRange(0, i + 1));
+                                v1.RemoveAt(i);
+                            }
+                            //2.从终点开始搜右下
+                            List<string> v2 = ProcessString(index, endPt, ProcessState.RightDown, range);
+                            if (v2 != null)
+                            {
+                                v2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                v2.RemoveAt(i);
+                            }
+                            /*--------改变方向搜索--------*/
+                            //3.向上找标签
+                            int id = Base.FindRFID.Up(index, startPt, new Base.Range());
+                            //更新搜索范围
+                            range = new Base.Range();
+                            if (id != -1)
+                                range.MinY = MapElement.MapObject.RFIDS[id].DownPoint.Y;
+                            //从起点开始搜上左
+                            List<string> v3 = ProcessString(index, startPt, ProcessState.UpLeft, range);
+                            //将前面的部分补齐
+                            if (v3 != null)
+                                v3.InsertRange(0, vs1.GetRange(0, i + 1));
+                            //4.从起点开始搜上右
+                            List<string> v4 = ProcessString(index, startPt, ProcessState.UpRight, range);
+                            if (v4 != null)
+                                v4.InsertRange(0, vs1.GetRange(0, i + 1));
+                            /*--------整理搜索结果--------*/
+                            if (v1 != null && ListEquls(vs1, v1) == false)
+                            {
+                                vs2 = v1;
+                                if (v2 != null && ListEquls(vs1, v2) == false && ListEquls(vs2, v2) == false)
+                                    vs3 = v2;
+                                else
+                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                    vs3 = v3;
+                                else
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
                             }
                             else
+                            if (v2 != null && ListEquls(vs1, v2) == false)
                             {
-                                //将前面的部分补齐
-                                vs2.InsertRange(0, vs1.GetRange(0, i + 1));
-                                vs2.RemoveAt(i);
+                                vs2 = v2;
+                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                    vs3 = v3;
+                                else
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
                             }
-                            if (vs2 != null && vs2.Last() != vs1.Last())
+                            else
+                            if (v3 != null && ListEquls(vs1, v3) == false)
+                            {
+                                vs2 = v3;
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
+                            }
+                            else
+                            if (v4 != null && ListEquls(vs1, v4) == false)
+                                vs2 = v4;
+                            //有一个分叉就不再继续搜了
+                            if (vs2 != null && ListEquls(vs1, vs2) == false)
                                 return;
                             else
                                 break;
                         }
                     case "右下":
                         {
-                            //1.避开这个右下继续搜右下
+                            /*--------按照当前方向搜索--------*/
+                            //1.避开这个继续搜右下
                             pt = new Point(startPt.X, endPt.Y);
-                            vs2 = ProcessString(index, pt, ProcessState.RightDown, range);
-                            //2.从起点开始搜下右
-                            if (vs2 == null)
+                            List<string> v1 = ProcessString(index, pt, ProcessState.RightDown, range);
+                            //将前面的部分补齐
+                            if (v1 != null)
                             {
-                                //向下找标签
-                                int id = Base.FindRFID.Down(index, startPt, new Base.Range());
-                                if (id != -1)
-                                {
-                                    range = new Base.Range();
-                                    range.MaxY = MapElement.MapObject.RFIDS[id].UpPoint.Y;
-                                }
-                                vs2 = ProcessString(index, startPt, ProcessState.DownLeft, range);
-                                //将前面的部分补齐
-                                if (vs2 != null)
-                                {
-                                    vs2.InsertRange(0, vs1.GetRange(0, i + 1));
-                                    vs3 = ProcessString(index, startPt, ProcessState.DownRight, range);
-                                    if (vs3 != null)
-                                    {
-                                        vs3.InsertRange(0, vs1.GetRange(0, i + 1));
-                                        if (vs3.Equals(vs2))
-                                            vs3 = null;
-                                    }
-                                }
+                                v1.InsertRange(0, vs1.GetRange(0, i + 1));
+                                v1.RemoveAt(i);
+                            }
+                            /*--------改变方向搜索--------*/
+                            //3. 向下找标签
+                            int id = Base.FindRFID.Down(index, startPt, new Base.Range());
+                            //更新搜索范围
+                            range = new Base.Range();
+                            if (id != -1)
+                                range.MaxY = MapElement.MapObject.RFIDS[id].UpPoint.Y;
+                            //从起点开始搜下左
+                            List<string> v3 = ProcessString(index, startPt, ProcessState.DownLeft, range);
+                            //将前面的部分补齐
+                            if (v3 != null)
+                                v3.InsertRange(0, vs1.GetRange(0, i + 1));
+                            //4.从起点开始搜下右
+                            List<string> v4 = ProcessString(index, startPt, ProcessState.DownRight, range);
+                            if (v4 != null)
+                                v4.InsertRange(0, vs1.GetRange(0, i + 1));
+                            /*--------整理搜索结果--------*/
+                            if (v1 != null && ListEquls(vs1, v1) == false)
+                            {
+                                vs2 = v1;
+                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                    vs3 = v3;
+                                else
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
                             }
                             else
+                            if (v3 != null && ListEquls(vs1, v3) == false)
                             {
-                                //将前面的部分补齐
-                                vs2.InsertRange(0, vs1.GetRange(0, i + 1));
-                                vs2.RemoveAt(i);
+                                vs2 = v3;
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
                             }
-                            if (vs2 != null && vs2.Last() != vs1.Last())
+                            else
+                            if (v4 != null && ListEquls(vs1, v4) == false)
+                                vs2 = v4;
+                            //有一个分叉就不再继续搜了
+                            if (vs2 != null && ListEquls(vs1, vs2) == false)
                                 return;
                             else
                                 break;
                         }
                     case "上左":
                         {
+                            /*--------按照当前方向搜索--------*/
                             //1.避开这个上左继续搜上左
                             pt = new Point(startPt.X, endPt.Y);
-                            vs2 = ProcessString(index, pt, ProcessState.UpLeft, range);
-                            //2.从起点开始搜上右
-                            if (vs2 == null)
+                            List<string> v1 = ProcessString(index, pt, ProcessState.UpLeft, range);
+                            //将前面的部分补齐
+                            if (v1 != null)
                             {
-                                vs2 = ProcessString(index, startPt, ProcessState.UpRight, range);
-                                //3.从终点开始搜左下
-                                if (vs2 == null)
-                                {
-                                    //向左找标签
-                                    int id = Base.FindRFID.Left(index, endPt, new Base.Range());
-                                    if (id != -1)
-                                    {
-                                        range = new Base.Range();
-                                        range.MinX = MapElement.MapObject.RFIDS[id].RightPoint.X;
-                                    }
-                                    vs2 = ProcessString(index, endPt, ProcessState.LeftUp, range);
-                                    //将前面的部分补齐
-                                    if (vs2 != null)
-                                    {
-                                        vs2.InsertRange(0, vs1.GetRange(0, i + 1));
-                                        vs3 = ProcessString(index, endPt, ProcessState.LeftDown, range);
-                                        if (vs3 != null)
-                                        {
-                                            vs3.InsertRange(0, vs1.GetRange(0, i + 1));
-                                            if (vs3.Equals(vs2))
-                                                vs3 = null;
-                                        }
-                                    }
-                                }
+                                v1.InsertRange(0, vs1.GetRange(0, i + 1));
+                                v1.RemoveAt(i);
+                            }
+                            //2.从起点开始搜上右
+                            List<string> v2 = ProcessString(index, startPt, ProcessState.UpRight, range);
+                            if (v2 != null)
+                            {
+                                v2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                v2.RemoveAt(i);
+                            }
+                            /*--------改变方向搜索--------*/
+                            //3.向左找标签，从终点开始搜左上
+                            int id = Base.FindRFID.Left(index, endPt, new Base.Range());
+                            //更新搜索范围
+                            range = new Base.Range();
+                            if (id != -1)
+                                range.MinX = MapElement.MapObject.RFIDS[id].RightPoint.X;
+                            List<string> v3 = ProcessString(index, endPt, ProcessState.LeftUp, range);
+                            //将前面的部分补齐
+                            if (v3 != null)
+                                v3.InsertRange(0, vs1.GetRange(0, i + 1));
+                            //4.从终点开始搜左下
+                            List<string> v4 = ProcessString(index, endPt, ProcessState.LeftDown, range);
+                            if (v4 != null)
+                                v4.InsertRange(0, vs1.GetRange(0, i + 1));
+                            /*--------改变方向搜索--------*/
+                            //整理搜索结果
+                            if (v1 != null && ListEquls(vs1, v1) == false)
+                            {
+                                vs2 = v1;
+                                if (v2 != null && ListEquls(vs1, v2) == false && ListEquls(vs2, v2) == false)
+                                    vs3 = v2;
+                                else
+                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                    vs3 = v3;
+                                else
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
                             }
                             else
+                            if (v2 != null && ListEquls(vs1, v2) == false)
                             {
-                                //将前面的部分补齐
-                                vs2.InsertRange(0, vs1.GetRange(0, i + 1));
-                                vs2.RemoveAt(i);
+                                vs2 = v2;
+                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                    vs3 = v3;
+                                else
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
                             }
-                            if (vs2 != null && vs2.Last() != vs1.Last())
+                            else
+                            if (v3 != null && ListEquls(vs1, v3) == false)
+                            {
+                                vs2 = v3;
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
+                            }
+                            else
+                            if (v4 != null && ListEquls(vs1, v4) == false)
+                                vs2 = v4;
+                            //有一个分叉就不再继续搜了
+                            if (vs2 != null && ListEquls(vs1, vs2) == false)
                                 return;
                             else
                                 break;
                         }
                     case "下左":
                         {
-                            //1.避开这个下左继续搜下左
+                            /*--------按照当前方向搜索--------*/
+                            //1.避开这个上左继续搜下左
                             pt = new Point(startPt.X, endPt.Y);
-                            vs2 = ProcessString(index, pt, ProcessState.DownLeft, range);
-                            //2.从起点开始搜下右
-                            if (vs2 == null)
+                            List<string> v1 = ProcessString(index, pt, ProcessState.DownLeft, range);
+                            //将前面的部分补齐
+                            if (v1 != null)
                             {
-                                vs2 = ProcessString(index, startPt, ProcessState.DownRight, range);
-                                //3.从终点开始搜左下
-                                if (vs2 == null)
-                                {
-                                    //向左找标签
-                                    int id = Base.FindRFID.Left(index, endPt, new Base.Range());
-                                    if (id != -1)
-                                    {
-                                        range = new Base.Range();
-                                        range.MinX = MapElement.MapObject.RFIDS[id].RightPoint.X;
-                                    }
-                                    vs2 = ProcessString(index, endPt, ProcessState.LeftUp, range);
-                                    //将前面的部分补齐
-                                    if (vs2 != null)
-                                    {
-                                        vs2.InsertRange(0, vs1.GetRange(0, i + 1));
-                                        vs3 = ProcessString(index, endPt, ProcessState.LeftDown, range);
-                                        if (vs3 != null)
-                                        {
-                                            vs3.InsertRange(0, vs1.GetRange(0, i + 1));
-                                            if (vs3.Equals(vs2))
-                                                vs3 = null;
-                                        }
-                                    }
-                                }
+                                v1.InsertRange(0, vs1.GetRange(0, i + 1));
+                                v1.RemoveAt(i);
+                            }
+                            //2.从起点开始搜下右
+                            List<string> v2 = ProcessString(index, startPt, ProcessState.DownRight, range);
+                            if (v2 != null)
+                            {
+                                v2.InsertRange(0, vs1.GetRange(0, i + 1));
+                                v2.RemoveAt(i);
+                            }
+                            /*--------改变方向搜索--------*/
+                            //3.向左找标签，从终点开始搜左上
+                            int id = Base.FindRFID.Left(index, endPt, new Base.Range());
+                            //更新搜索范围
+                            range = new Base.Range();
+                            if (id != -1)
+                                range.MinX = MapElement.MapObject.RFIDS[id].RightPoint.X;
+                            List<string> v3 = ProcessString(index, endPt, ProcessState.LeftUp, range);
+                            //将前面的部分补齐
+                            if (v3 != null)
+                                v3.InsertRange(0, vs1.GetRange(0, i + 1));
+                            //4.从终点开始搜左下
+                            List<string> v4 = ProcessString(index, endPt, ProcessState.LeftDown, range);
+                            if (v4 != null)
+                                v4.InsertRange(0, vs1.GetRange(0, i + 1));
+                            /*--------改变方向搜索--------*/
+                            //整理搜索结果
+                            if (v1 != null && ListEquls(vs1, v1) == false)
+                            {
+                                vs2 = v1;
+                                if (v2 != null && ListEquls(vs1, v2) == false && ListEquls(vs2, v2) == false)
+                                    vs3 = v2;
+                                else
+                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                    vs3 = v3;
+                                else
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
                             }
                             else
+                            if (v2 != null && ListEquls(vs1, v2) == false)
                             {
-                                //将前面的部分补齐
-                                vs2.InsertRange(0, vs1.GetRange(0, i + 1));
-                                vs2.RemoveAt(i);
+                                vs2 = v2;
+                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                    vs3 = v3;
+                                else
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
                             }
-                            if (vs2 != null && vs2.Last() != vs1.Last())
+                            else
+                            if (v3 != null && ListEquls(vs1, v3) == false)
+                            {
+                                vs2 = v3;
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
+                            }
+                            else
+                            if (v4 != null && ListEquls(vs1, v4) == false)
+                                vs2 = v4;
+                            //有一个分叉就不再继续搜了
+                            if (vs2 != null && ListEquls(vs1, vs2) == false)
                                 return;
                             else
                                 break;
                         }
                     case "上右":
                         {
-                            //1.避开这个上右继续搜上右
+                            /*--------按照当前方向搜索--------*/
+                            //1.避开这个上左继续搜上右
                             pt = new Point(startPt.X, endPt.Y);
-                            vs2 = ProcessString(index, pt, ProcessState.UpRight, range);
-                            //2.从终点开始搜右下
-                            if (vs2 == null)
+                            List<string> v1 = ProcessString(index, pt, ProcessState.UpRight, range);
+                            //将前面的部分补齐
+                            if (v1 != null)
                             {
-                                //向右找标签
-                                int id = Base.FindRFID.Right(index, endPt, new Base.Range());
-                                if (id != -1)
-                                {
-                                    range = new Base.Range();
-                                    range.MaxX = MapElement.MapObject.RFIDS[id].LeftPoint.X;
-                                }
-                                vs2 = ProcessString(index, endPt, ProcessState.RightUp, range);
-                                //将前面的部分补齐
-                                if (vs2 != null)
-                                {
-                                    vs2.InsertRange(0, vs1.GetRange(0, i + 1));
-                                    vs3 = ProcessString(index, endPt, ProcessState.RightDown, range);
-                                    if (vs3 != null)
-                                    {
-                                        vs3.InsertRange(0, vs1.GetRange(0, i + 1));
-                                        if (vs3.Equals(vs2))
-                                            vs3 = null;
-                                    }
-                                }
+                                v1.InsertRange(0, vs1.GetRange(0, i + 1));
+                                v1.RemoveAt(i);
+                            }
+                            /*--------改变方向搜索--------*/
+                            //3.向右找标签，从终点开始搜右下
+                            int id = Base.FindRFID.Right(index, endPt, new Base.Range());
+                            //更新搜索范围
+                            range = new Base.Range();
+                            if (id != -1)
+                                range.MaxX = MapElement.MapObject.RFIDS[id].LeftPoint.X;
+                            List<string> v3 = ProcessString(index, endPt, ProcessState.RightUp, range);
+                            //将前面的部分补齐
+                            if (v3 != null)
+                                v3.InsertRange(0, vs1.GetRange(0, i + 1));
+                            //4.从终点开始搜左下
+                            List<string> v4 = ProcessString(index, endPt, ProcessState.RightDown, range);
+                            if (v4 != null)
+                                v4.InsertRange(0, vs1.GetRange(0, i + 1));
+                            /*--------改变方向搜索--------*/
+                            //整理搜索结果
+                            if (v1 != null && ListEquls(vs1, v1) == false)
+                            {
+                                vs2 = v1;
+                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                    vs3 = v3;
+                                else
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
                             }
                             else
+                            if (v3 != null && ListEquls(vs1, v3) == false)
                             {
-                                //将前面的部分补齐
-                                vs2.InsertRange(0, vs1.GetRange(0, i + 1));
-                                vs2.RemoveAt(i);
+                                vs2 = v3;
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
                             }
-                            if (vs2 != null && vs2.Last() != vs1.Last())
+                            else
+                            if (v4 != null && ListEquls(vs1, v4) == false)
+                                vs2 = v4;
+                            //有一个分叉就不再继续搜了
+                            if (vs2 != null && ListEquls(vs1, vs2) == false)
                                 return;
                             else
                                 break;
                         }
                     case "下右":
                         {
-                            //1.避开这个下右继续搜下右
+                            /*--------按照当前方向搜索--------*/
+                            //1.避开这个上左继续搜下右
                             pt = new Point(startPt.X, endPt.Y);
-                            vs2 = ProcessString(index, pt, ProcessState.DownRight, range);
-                            //2.从终点开始搜右下
-                            if (vs2 == null)
+                            List<string> v1 = ProcessString(index, pt, ProcessState.DownRight, range);
+                            //将前面的部分补齐
+                            if (v1 != null)
                             {
-                                //向右找标签
-                                int id = Base.FindRFID.Right(index, endPt, new Base.Range());
-                                if (id != -1)
-                                {
-                                    range = new Base.Range();
-                                    range.MaxX = MapElement.MapObject.RFIDS[id].LeftPoint.X;
-                                }
-                                vs2 = ProcessString(index, endPt, ProcessState.RightUp, range);
-                                //将前面的部分补齐
-                                if (vs2 != null)
-                                {
-                                    vs2.InsertRange(0, vs1.GetRange(0, i + 1));
-                                    vs3 = ProcessString(index, endPt, ProcessState.RightDown, range);
-                                    if (vs3 != null)
-                                    {
-                                        vs3.InsertRange(0, vs1.GetRange(0, i + 1));
-                                        if (vs3.Equals(vs2))
-                                            vs3 = null;
-                                    }
-                                }
+                                v1.InsertRange(0, vs1.GetRange(0, i + 1));
+                                v1.RemoveAt(i);
+                            }
+                            /*--------改变方向搜索--------*/
+                            //3.向右找标签，从终点开始搜右下
+                            int id = Base.FindRFID.Right(index, endPt, new Base.Range());
+                            //更新搜索范围
+                            range = new Base.Range();
+                            if (id != -1)
+                                range.MaxX = MapElement.MapObject.RFIDS[id].LeftPoint.X;
+                            List<string> v3 = ProcessString(index, endPt, ProcessState.RightUp, range);
+                            //将前面的部分补齐
+                            if (v3 != null)
+                                v3.InsertRange(0, vs1.GetRange(0, i + 1));
+                            //4.从终点开始搜左下
+                            List<string> v4 = ProcessString(index, endPt, ProcessState.RightDown, range);
+                            if (v4 != null)
+                                v4.InsertRange(0, vs1.GetRange(0, i + 1));
+                            /*--------改变方向搜索--------*/
+                            //整理搜索结果
+                            if (v1 != null && ListEquls(vs1, v1) == false)
+                            {
+                                vs2 = v1;
+                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                    vs3 = v3;
+                                else
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
                             }
                             else
+                            if (v3 != null && ListEquls(vs1, v3) == false)
                             {
-                                //将前面的部分补齐
-                                vs2.InsertRange(0, vs1.GetRange(0, i + 1));
-                                vs2.RemoveAt(i);
+                                vs2 = v3;
+                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                    vs3 = v4;
                             }
-                            if (vs2 != null && vs2.Last() != vs1.Last())
+                            else
+                            if (v4 != null && ListEquls(vs1, v4) == false)
+                                vs2 = v4;
+                            //有一个分叉就不再继续搜了
+                            if (vs2 != null && ListEquls(vs1, vs2) == false)
+                                return;
+                            else
+                                break;
+                        }
+                    default:
+                        break;
+                }
+            }
+        }
+        /// <summary>
+        /// 二次搜索
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="vs1"></param>
+        public static void FindThird(int index, List<string> vs1, List<string> vs2, ref List<string> vs3)
+        {
+            vs3 = null;
+            Point pt = new Point();
+            Base.Range range = new Base.Range();
+            for (int i = 0; i < vs2.Count - 1; i++)
+            {
+                //获取分叉的起点和终点坐标
+                int ids = int.Parse(vs2[i].Substring(2, vs2[i].Length - 2));
+                Point startPt = MapElement.MapObject.ForkLines[ids].StartPoint;
+                Point endPt = MapElement.MapObject.ForkLines[ids].EndPoint;
+                switch (vs2[i].Substring(0, 2))
+                {
+                    case "左上":
+                        {
+                            /*--------按照当前方向搜索--------*/
+                            //1.避开这个继续搜左上
+                            pt = new Point(startPt.X, endPt.Y);
+                            List<string> v1 = ProcessString(index, pt, ProcessState.LeftUp, range);
+                            //将前面的部分补齐
+                            if (v1 != null)
+                            {
+                                v1.InsertRange(0, vs2.GetRange(0, i + 1));
+                                v1.RemoveAt(i);
+                            }
+                            //2.从终点开始搜左下
+                            List<string> v2 = ProcessString(index, endPt, ProcessState.LeftDown, range);
+                            if (v2 != null)
+                            {
+                                v2.InsertRange(0, vs2.GetRange(0, i + 1));
+                                v2.RemoveAt(i);
+                            }
+                            /*--------改变方向搜索--------*/
+                            //3.向上找标签
+                            int id = Base.FindRFID.Up(index, startPt, new Base.Range());
+                            //更新搜索范围
+                            range = new Base.Range();
+                            if (id != -1)
+                                range.MinY = MapElement.MapObject.RFIDS[id].DownPoint.Y;
+                            //从起点开始搜上左
+                            List<string> v3 = ProcessString(index, startPt, ProcessState.UpLeft, range);
+                            //将前面的部分补齐
+                            if (v3 != null)
+                                v3.InsertRange(0, vs2.GetRange(0, i + 1));
+                            //4.从起点开始搜上右
+                            List<string> v4 = ProcessString(index, startPt, ProcessState.UpRight, range);
+                            if (v4 != null)
+                                v4.InsertRange(0, vs2.GetRange(0, i + 1));
+                            /*--------整理搜索结果--------*/
+                            if (v1 != null && ListEquls(vs1, v1) == false && ListEquls(vs2, v1) == false)
+                                vs3 = v1;
+                            else
+                            if (v2 != null && ListEquls(vs1, v2) == false && ListEquls(vs2, v2) == false)
+                                vs3 = v2;
+                            else
+                            if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                vs3 = v3;
+                            else
+                            if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                vs3 = v4;
+
+                            if (vs3 != null)
+                                return;
+                            else
+                                break;
+                        }
+                    case "左下":
+                        {
+                            /*--------按照当前方向搜索--------*/
+                            //1.避开这个继续搜左下
+                            pt = new Point(startPt.X, endPt.Y);
+                            List<string> v1 = ProcessString(index, pt, ProcessState.LeftDown, range);
+                            //将前面的部分补齐
+                            if (v1 != null)
+                            {
+                                v1.InsertRange(0, vs2.GetRange(0, i + 1));
+                                v1.RemoveAt(i);
+                            }
+                            /*--------改变方向搜索--------*/
+                            //3. 向下找标签
+                            int id = Base.FindRFID.Down(index, startPt, new Base.Range());
+                            //更新搜索范围
+                            range = new Base.Range();
+                            if (id != -1)
+                                range.MaxY = MapElement.MapObject.RFIDS[id].UpPoint.Y;
+                            //从起点开始搜下左
+                            List<string> v3 = ProcessString(index, startPt, ProcessState.DownLeft, range);
+                            //将前面的部分补齐
+                            if (v3 != null)
+                                v3.InsertRange(0, vs2.GetRange(0, i + 1));
+                            //4.从起点开始搜下右
+                            List<string> v4 = ProcessString(index, startPt, ProcessState.DownRight, range);
+                            if (v4 != null)
+                                v4.InsertRange(0, vs2.GetRange(0, i + 1));
+                            /*--------整理搜索结果--------*/
+                            if (v1 != null && ListEquls(vs1, v1) == false && ListEquls(vs2, v1) == false)
+                                vs3 = v1;
+                            else
+                            if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                vs3 = v3;
+                            else
+                            if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                vs3 = v4;
+
+                            if (vs3 != null)
+                                return;
+                            else
+                                break;
+                        }
+                    case "右上":
+                        {
+                            /*--------按照当前方向搜索--------*/
+                            //1.避开这个继续搜右上
+                            pt = new Point(startPt.X, endPt.Y);
+                            List<string> v1 = ProcessString(index, pt, ProcessState.RightUp, range);
+                            //将前面的部分补齐
+                            if (v1 != null)
+                            {
+                                v1.InsertRange(0, vs2.GetRange(0, i + 1));
+                                v1.RemoveAt(i);
+                            }
+                            //2.从终点开始搜右下
+                            List<string> v2 = ProcessString(index, endPt, ProcessState.RightDown, range);
+                            if (v2 != null)
+                            {
+                                v2.InsertRange(0, vs2.GetRange(0, i + 1));
+                                v2.RemoveAt(i);
+                            }
+                            /*--------改变方向搜索--------*/
+                            //3.向上找标签
+                            int id = Base.FindRFID.Up(index, startPt, new Base.Range());
+                            //更新搜索范围
+                            range = new Base.Range();
+                            if (id != -1)
+                                range.MinY = MapElement.MapObject.RFIDS[id].DownPoint.Y;
+                            //从起点开始搜上左
+                            List<string> v3 = ProcessString(index, startPt, ProcessState.UpLeft, range);
+                            //将前面的部分补齐
+                            if (v3 != null)
+                                v3.InsertRange(0, vs2.GetRange(0, i + 1));
+                            //4.从起点开始搜上右
+                            List<string> v4 = ProcessString(index, startPt, ProcessState.UpRight, range);
+                            if (v4 != null)
+                                v4.InsertRange(0, vs2.GetRange(0, i + 1));
+                            /*--------整理搜索结果--------*/
+                            if (v1 != null && ListEquls(vs1, v1) == false && ListEquls(vs2, v1) == false)
+                                vs3 = v1;
+                            else
+                            if (v2 != null && ListEquls(vs1, v2) == false && ListEquls(vs2, v2) == false)
+                                vs3 = v2;
+                            else
+                            if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                vs3 = v3;
+                            else
+                            if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                vs3 = v4;
+
+                            if (vs3 != null)
+                                return;
+                            else
+                                break;
+                        }
+                    case "右下":
+                        {
+                            /*--------按照当前方向搜索--------*/
+                            //1.避开这个继续搜右下
+                            pt = new Point(startPt.X, endPt.Y);
+                            List<string> v1 = ProcessString(index, pt, ProcessState.RightDown, range);
+                            //将前面的部分补齐
+                            if (v1 != null)
+                            {
+                                v1.InsertRange(0, vs2.GetRange(0, i + 1));
+                                v1.RemoveAt(i);
+                            }
+                            /*--------改变方向搜索--------*/
+                            //3. 向下找标签
+                            int id = Base.FindRFID.Down(index, startPt, new Base.Range());
+                            //更新搜索范围
+                            range = new Base.Range();
+                            if (id != -1)
+                                range.MaxY = MapElement.MapObject.RFIDS[id].UpPoint.Y;
+                            //从起点开始搜下左
+                            List<string> v3 = ProcessString(index, startPt, ProcessState.DownLeft, range);
+                            //将前面的部分补齐
+                            if (v3 != null)
+                                v3.InsertRange(0, vs2.GetRange(0, i + 1));
+                            //4.从起点开始搜下右
+                            List<string> v4 = ProcessString(index, startPt, ProcessState.DownRight, range);
+                            if (v4 != null)
+                                v4.InsertRange(0, vs2.GetRange(0, i + 1));
+                            /*--------整理搜索结果--------*/
+                            if (v1 != null && ListEquls(vs1, v1) == false && ListEquls(vs2, v1) == false)
+                                vs3 = v1;
+                            else
+                            if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                vs3 = v3;
+                            else
+                            if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                vs3 = v4;
+
+                            if (vs3 != null)
+                                return;
+                            else
+                                break;
+                        }
+                    case "上左":
+                        {
+                            /*--------按照当前方向搜索--------*/
+                            //1.避开这个上左继续搜上左
+                            pt = new Point(startPt.X, endPt.Y);
+                            List<string> v1 = ProcessString(index, pt, ProcessState.UpLeft, range);
+                            //将前面的部分补齐
+                            if (v1 != null)
+                            {
+                                v1.InsertRange(0, vs2.GetRange(0, i + 1));
+                                v1.RemoveAt(i);
+                            }
+                            //2.从起点开始搜上右
+                            List<string> v2 = ProcessString(index, startPt, ProcessState.UpRight, range);
+                            if (v2 != null)
+                            {
+                                v2.InsertRange(0, vs2.GetRange(0, i + 1));
+                                v2.RemoveAt(i);
+                            }
+                            /*--------改变方向搜索--------*/
+                            //3.向左找标签，从终点开始搜左上
+                            int id = Base.FindRFID.Left(index, endPt, new Base.Range());
+                            //更新搜索范围
+                            range = new Base.Range();
+                            if (id != -1)
+                                range.MinX = MapElement.MapObject.RFIDS[id].RightPoint.X;
+                            List<string> v3 = ProcessString(index, endPt, ProcessState.LeftUp, range);
+                            //将前面的部分补齐
+                            if (v3 != null)
+                                v3.InsertRange(0, vs2.GetRange(0, i + 1));
+                            //4.从终点开始搜左下
+                            List<string> v4 = ProcessString(index, endPt, ProcessState.LeftDown, range);
+                            if (v4 != null)
+                                v4.InsertRange(0, vs2.GetRange(0, i + 1));
+                            /*--------整理搜索结果--------*/
+                            if (v1 != null && ListEquls(vs1, v1) == false && ListEquls(vs2, v1) == false)
+                                vs3 = v1;
+                            else
+                            if (v2 != null && ListEquls(vs1, v2) == false && ListEquls(vs2, v2) == false)
+                                vs3 = v2;
+                            else
+                            if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                vs3 = v3;
+                            else
+                            if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                vs3 = v4;
+
+                            if (vs3 != null)
+                                return;
+                            else
+                                break;
+                        }
+                    case "下左":
+                        {
+                            /*--------按照当前方向搜索--------*/
+                            //1.避开这个上左继续搜下左
+                            pt = new Point(startPt.X, endPt.Y);
+                            List<string> v1 = ProcessString(index, pt, ProcessState.DownLeft, range);
+                            //将前面的部分补齐
+                            if (v1 != null)
+                            {
+                                v1.InsertRange(0, vs2.GetRange(0, i + 1));
+                                v1.RemoveAt(i);
+                            }
+                            //2.从起点开始搜下右
+                            List<string> v2 = ProcessString(index, startPt, ProcessState.DownRight, range);
+                            if (v2 != null)
+                            {
+                                v2.InsertRange(0, vs2.GetRange(0, i + 1));
+                                v2.RemoveAt(i);
+                            }
+                            /*--------改变方向搜索--------*/
+                            //3.向左找标签，从终点开始搜左上
+                            int id = Base.FindRFID.Left(index, endPt, new Base.Range());
+                            //更新搜索范围
+                            range = new Base.Range();
+                            if (id != -1)
+                                range.MinX = MapElement.MapObject.RFIDS[id].RightPoint.X;
+                            List<string> v3 = ProcessString(index, endPt, ProcessState.LeftUp, range);
+                            //将前面的部分补齐
+                            if (v3 != null)
+                                v3.InsertRange(0, vs2.GetRange(0, i + 1));
+                            //4.从终点开始搜左下
+                            List<string> v4 = ProcessString(index, endPt, ProcessState.LeftDown, range);
+                            if (v4 != null)
+                                v4.InsertRange(0, vs2.GetRange(0, i + 1));
+                            /*--------整理搜索结果--------*/
+                            if (v1 != null && ListEquls(vs1, v1) == false && ListEquls(vs2, v1) == false)
+                                vs3 = v1;
+                            else
+                            if (v2 != null && ListEquls(vs1, v2) == false && ListEquls(vs2, v2) == false)
+                                vs3 = v2;
+                            else
+                            if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                vs3 = v3;
+                            else
+                            if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                vs3 = v4;
+
+                            if (vs3 != null)
+                                return;
+                            else
+                                break;
+                        }
+                    case "上右":
+                        {
+                            /*--------按照当前方向搜索--------*/
+                            //1.避开这个上左继续搜上右
+                            pt = new Point(startPt.X, endPt.Y);
+                            List<string> v1 = ProcessString(index, pt, ProcessState.UpRight, range);
+                            //将前面的部分补齐
+                            if (v1 != null)
+                            {
+                                v1.InsertRange(0, vs2.GetRange(0, i + 1));
+                                v1.RemoveAt(i);
+                            }
+                            /*--------改变方向搜索--------*/
+                            //3.向右找标签，从终点开始搜右下
+                            int id = Base.FindRFID.Right(index, endPt, new Base.Range());
+                            //更新搜索范围
+                            range = new Base.Range();
+                            if (id != -1)
+                                range.MaxX = MapElement.MapObject.RFIDS[id].LeftPoint.X;
+                            List<string> v3 = ProcessString(index, endPt, ProcessState.RightUp, range);
+                            //将前面的部分补齐
+                            if (v3 != null)
+                                v3.InsertRange(0, vs2.GetRange(0, i + 1));
+                            //4.从终点开始搜左下
+                            List<string> v4 = ProcessString(index, endPt, ProcessState.RightDown, range);
+                            if (v4 != null)
+                                v4.InsertRange(0, vs2.GetRange(0, i + 1));
+                            /*--------整理搜索结果--------*/
+                            if (v1 != null && ListEquls(vs1, v1) == false && ListEquls(vs2, v1) == false)
+                                vs3 = v1;
+                            else
+                            if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                vs3 = v3;
+                            else
+                            if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                vs3 = v4;
+
+                            if (vs3 != null)
+                                return;
+                            else
+                                break;
+                        }
+                    case "下右":
+                        {
+                            /*--------按照当前方向搜索--------*/
+                            //1.避开这个上左继续搜下右
+                            pt = new Point(startPt.X, endPt.Y);
+                            List<string> v1 = ProcessString(index, pt, ProcessState.DownRight, range);
+                            //将前面的部分补齐
+                            if (v1 != null)
+                            {
+                                v1.InsertRange(0, vs2.GetRange(0, i + 1));
+                                v1.RemoveAt(i);
+                            }
+                            /*--------改变方向搜索--------*/
+                            //3.向右找标签，从终点开始搜右下
+                            int id = Base.FindRFID.Right(index, endPt, new Base.Range());
+                            //更新搜索范围
+                            range = new Base.Range();
+                            if (id != -1)
+                                range.MaxX = MapElement.MapObject.RFIDS[id].LeftPoint.X;
+                            List<string> v3 = ProcessString(index, endPt, ProcessState.RightUp, range);
+                            //将前面的部分补齐
+                            if (v3 != null)
+                                v3.InsertRange(0, vs2.GetRange(0, i + 1));
+                            //4.从终点开始搜左下
+                            List<string> v4 = ProcessString(index, endPt, ProcessState.RightDown, range);
+                            if (v4 != null)
+                                v4.InsertRange(0, vs2.GetRange(0, i + 1));
+                            /*--------整理搜索结果--------*/
+                            if (v1 != null && ListEquls(vs1, v1) == false && ListEquls(vs2, v1) == false)
+                                vs3 = v1;
+                            else
+                            if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                vs3 = v3;
+                            else
+                            if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                vs3 = v4;
+
+                            if (vs3 != null)
                                 return;
                             else
                                 break;
@@ -1587,9 +2162,10 @@ namespace WpfMap.Route
                 List<string> vs2 = null;
                 List<string> vs3 = null;
                 List<string> vs4 = null;
-                ////【系统采用先左后右，先上后下的原则，所有拐弯过多会出现搜索不到】
+                //第二次搜索
                 if (vs1.Count > 1)
                     FindSecond(index, vs1, ref vs2, ref vs3, range);
+                //第三次搜索
                 if (vs2 != null && vs3 == null)
                 {
                     List<string> vs = new List<string>();
@@ -1597,8 +2173,7 @@ namespace WpfMap.Route
                     int num = 0;
                     for (int i = 0; i < vs2.Count; i++)
                     {
-                        if (p)
-                            vs.Add(vs2[i]);
+
                         if (p == false)
                         {
                             if (vs2[i] == vs1[i])
@@ -1606,18 +2181,15 @@ namespace WpfMap.Route
                             else
                             { p = true; num = i; }
                         }
+                        if (p)
+                            vs.Add(vs2[i]);
                     }
-                    FindSecond(index, vs, ref vs3, ref vs4, new Base.Range());
+                    FindThird(index, vs1, vs, ref vs3);
                     //补齐前段
                     if (vs3 != null)
-                        vs3.InsertRange(0, vs2.GetRange(0, num + 1));
+                        vs3.InsertRange(0, vs2.GetRange(0, num));
                 }
-                if (ListEquls(vs1, vs2))
-                    vs2 = null;
-                if (ListEquls(vs1, vs3))
-                    vs3 = null;
-                if (ListEquls(vs2, vs3))
-                    vs3 = null;
+
                 //打印结果
                 if (vs1 != null)
                     MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()));
@@ -1650,9 +2222,10 @@ namespace WpfMap.Route
                 List<string> vs2 = null;
                 List<string> vs3 = null;
                 List<string> vs4 = null;
-                ////【系统采用先左后右，先上后下的原则，所有拐弯过多会出现搜索不到】
+                //第二次搜索
                 if (vs1.Count > 1)
                     FindSecond(index, vs1, ref vs2, ref vs3, range);
+                //第三次搜索
                 if (vs2 != null && vs3 == null)
                 {
                     List<string> vs = new List<string>();
@@ -1660,8 +2233,7 @@ namespace WpfMap.Route
                     int num = 0;
                     for (int i = 0; i < vs2.Count; i++)
                     {
-                        if (p)
-                            vs.Add(vs2[i]);
+
                         if (p == false)
                         {
                             if (vs2[i] == vs1[i])
@@ -1669,18 +2241,15 @@ namespace WpfMap.Route
                             else
                             { p = true; num = i; }
                         }
+                        if (p)
+                            vs.Add(vs2[i]);
                     }
-                    FindSecond(index, vs, ref vs3, ref vs4, new Base.Range());
+                    FindThird(index, vs1, vs, ref vs3);
                     //补齐前段
                     if (vs3 != null)
-                        vs3.InsertRange(0, vs2.GetRange(0, num + 1));
+                        vs3.InsertRange(0, vs2.GetRange(0, num));
                 }
-                if (ListEquls(vs1, vs2))
-                    vs2 = null;
-                if (ListEquls(vs1, vs3))
-                    vs3 = null;
-                if (ListEquls(vs2, vs3))
-                    vs3 = null;
+
                 //打印结果
                 if (vs1 != null)
                     MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()));
@@ -1712,9 +2281,10 @@ namespace WpfMap.Route
                 List<string> vs2 = null;
                 List<string> vs3 = null;
                 List<string> vs4 = null;
-                ////【系统采用先左后右，先上后下的原则，所有拐弯过多会出现搜索不到】
+                //第二次搜索
                 if (vs1.Count > 1)
                     FindSecond(index, vs1, ref vs2, ref vs3, range);
+                //第三次搜索
                 if (vs2 != null && vs3 == null)
                 {
                     List<string> vs = new List<string>();
@@ -1722,8 +2292,7 @@ namespace WpfMap.Route
                     int num = 0;
                     for (int i = 0; i < vs2.Count; i++)
                     {
-                        if (p)
-                            vs.Add(vs2[i]);
+
                         if (p == false)
                         {
                             if (vs2[i] == vs1[i])
@@ -1731,18 +2300,15 @@ namespace WpfMap.Route
                             else
                             { p = true; num = i; }
                         }
+                        if (p)
+                            vs.Add(vs2[i]);
                     }
-                    FindSecond(index, vs, ref vs3, ref vs4, new Base.Range());
+                    FindThird(index, vs1, vs, ref vs3);
                     //补齐前段
                     if (vs3 != null)
-                        vs3.InsertRange(0, vs2.GetRange(0, num + 1));
+                        vs3.InsertRange(0, vs2.GetRange(0, num));
                 }
-                if (ListEquls(vs1, vs2))
-                    vs2 = null;
-                if (ListEquls(vs1, vs3))
-                    vs3 = null;
-                if (ListEquls(vs2, vs3))
-                    vs3 = null;
+
                 //打印结果
                 if (vs1 != null)
                     MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()));
@@ -1774,9 +2340,10 @@ namespace WpfMap.Route
                 List<string> vs2 = null;
                 List<string> vs3 = null;
                 List<string> vs4 = null;
-                ////【系统采用先左后右，先上后下的原则，所有拐弯过多会出现搜索不到】
+                //第二次搜索
                 if (vs1.Count > 1)
                     FindSecond(index, vs1, ref vs2, ref vs3, range);
+                //第三次搜索
                 if (vs2 != null && vs3 == null)
                 {
                     List<string> vs = new List<string>();
@@ -1784,8 +2351,7 @@ namespace WpfMap.Route
                     int num = 0;
                     for (int i = 0; i < vs2.Count; i++)
                     {
-                        if (p)
-                            vs.Add(vs2[i]);
+
                         if (p == false)
                         {
                             if (vs2[i] == vs1[i])
@@ -1793,18 +2359,15 @@ namespace WpfMap.Route
                             else
                             { p = true; num = i; }
                         }
+                        if (p)
+                            vs.Add(vs2[i]);
                     }
-                    FindSecond(index, vs, ref vs3, ref vs4, new Base.Range());
+                    FindThird(index, vs1, vs, ref vs3);
                     //补齐前段
                     if (vs3 != null)
-                        vs3.InsertRange(0, vs2.GetRange(0, num + 1));
+                        vs3.InsertRange(0, vs2.GetRange(0, num));
                 }
-                if (ListEquls(vs1, vs2))
-                    vs2 = null;
-                if (ListEquls(vs1, vs3))
-                    vs3 = null;
-                if (ListEquls(vs2, vs3))
-                    vs3 = null;
+
                 //打印结果
                 if (vs1 != null)
                     MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()));
