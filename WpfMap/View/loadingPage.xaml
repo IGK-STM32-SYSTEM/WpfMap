@@ -1,0 +1,16 @@
+﻿<Window x:Class="WpfMap.View.loadingPage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfMap.View"
+        xmlns:igkContrl="clr-namespace:WpfMap.IgkUserControl"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None"
+        Background="Transparent"
+        Title="loadingPage" Height="450" Width="800">
+    <Grid>
+        <igkContrl:Loading Grid.Row="0" x:Name="loading" Visibility="Visible"></igkContrl:Loading>
+    </Grid>
+</Window>

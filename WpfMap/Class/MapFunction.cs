@@ -174,6 +174,8 @@ namespace WpfMap
         {
             if (MapElement.MapObject.Lines.Count == 0)
                 return false;
+            if (index == -1)
+                return false;
             //拿到直线
             Line line = MapElement.MapObject.Lines[index].line;
             Point pt = point;
@@ -464,7 +466,8 @@ namespace WpfMap
         {
             if (MapElement.MapObject.ForkLines.Count == 0)
                 return false;
-
+            if (index == -1)
+                return false;
             //取当前坐标【需要margin对齐】
             Point nowPoint = point;
             nowPoint.X -= MapElement.MapObject.ForkLines[index].Path.Margin.Left;

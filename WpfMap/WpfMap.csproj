@@ -42,6 +42,10 @@
     <ApplicationIcon>App.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MyLoadingLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\MyLoadingLib.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\Newtonsoft.Json.dll</HintPath>
@@ -86,10 +90,20 @@
     </ApplicationDefinition>
     <Compile Include="Class\MapCommon.cs" />
     <Compile Include="Class\MapProperty.cs" />
+    <Compile Include="IgkUserControl\Loading.xaml.cs">
+      <DependentUpon>Loading.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Route\Helper.cs" />
     <Compile Include="SaveMap\Convert.cs" />
     <Compile Include="SaveMap\Helper.cs" />
     <Compile Include="SaveMap\ShapesBase.cs" />
+    <Compile Include="View\loadingPage.xaml.cs">
+      <DependentUpon>loadingPage.xaml</DependentUpon>
+    </Compile>
+    <Page Include="IgkUserControl\Loading.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -119,6 +133,10 @@
     <Page Include="Resources\TextBlockStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\loadingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -162,5 +180,9 @@
   <ItemGroup>
     <Resource Include="App.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="bin\Debug\MyLoadingLib.dll" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

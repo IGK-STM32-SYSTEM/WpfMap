@@ -8,12 +8,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using Xceed.Wpf.AvalonDock.Layout.Serialization;
 
 namespace WpfMap
@@ -52,7 +55,7 @@ namespace WpfMap
                 //记录当前状态
                 MapOperate.History.AddRecord("加载地图");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message.ToString());
             }

@@ -1225,40 +1225,40 @@ namespace WpfMap.Route
                             if (v4 != null)
                                 v4.InsertRange(0, vs1.GetRange(0, i + 1));
                             /*--------整理搜索结果--------*/
-                            if (v1 != null && ListEquls(vs1, v1) == false)
+                            if (v1 != null && ListLastEquls(vs1, v1) == false)
                             {
                                 vs2 = v1;
-                                if (v2 != null && ListEquls(vs1, v2) == false && ListEquls(vs2, v2) == false)
+                                if (v2 != null && ListLastEquls(vs1, v2) == false && ListLastEquls(vs2, v2) == false)
                                     vs3 = v2;
                                 else
-                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                     vs3 = v3;
                                 else
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v2 != null && ListEquls(vs1, v2) == false)
+                            if (v2 != null && ListLastEquls(vs1, v2) == false)
                             {
                                 vs2 = v2;
-                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                     vs3 = v3;
                                 else
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v3 != null && ListEquls(vs1, v3) == false)
+                            if (v3 != null && ListLastEquls(vs1, v3) == false)
                             {
                                 vs2 = v3;
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v4 != null && ListEquls(vs1, v4) == false)
+                            if (v4 != null && ListLastEquls(vs1, v4) == false)
                                 vs2 = v4;
                             //有一个分叉就不再继续搜了
-                            if (vs2 != null && ListEquls(vs1, vs2) == false)
+                            if (vs2 != null && ListLastEquls(vs1, vs2) == false)
                                 return;
                             else
                                 break;
@@ -1292,27 +1292,27 @@ namespace WpfMap.Route
                             if (v4 != null)
                                 v4.InsertRange(0, vs1.GetRange(0, i + 1));
                             /*--------整理搜索结果--------*/
-                            if (v1 != null && ListEquls(vs1, v1) == false)
+                            if (v1 != null && ListLastEquls(vs1, v1) == false)
                             {
                                 vs2 = v1;
-                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                     vs3 = v3;
                                 else
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v3 != null && ListEquls(vs1, v3) == false)
+                            if (v3 != null && ListLastEquls(vs1, v3) == false)
                             {
                                 vs2 = v3;
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v4 != null && ListEquls(vs1, v4) == false)
+                            if (v4 != null && ListLastEquls(vs1, v4) == false)
                                 vs2 = v4;
                             //有一个分叉就不再继续搜了
-                            if (vs2 != null && ListEquls(vs1, vs2) == false)
+                            if (vs2 != null && ListLastEquls(vs1, vs2) == false)
                                 return;
                             else
                                 break;
@@ -1353,40 +1353,40 @@ namespace WpfMap.Route
                             if (v4 != null)
                                 v4.InsertRange(0, vs1.GetRange(0, i + 1));
                             /*--------整理搜索结果--------*/
-                            if (v1 != null && ListEquls(vs1, v1) == false)
+                            if (v1 != null && ListLastEquls(vs1, v1) == false)
                             {
                                 vs2 = v1;
-                                if (v2 != null && ListEquls(vs1, v2) == false && ListEquls(vs2, v2) == false)
+                                if (v2 != null && ListLastEquls(vs1, v2) == false && ListLastEquls(vs2, v2) == false)
                                     vs3 = v2;
                                 else
-                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                     vs3 = v3;
                                 else
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v2 != null && ListEquls(vs1, v2) == false)
+                            if (v2 != null && ListLastEquls(vs1, v2) == false)
                             {
                                 vs2 = v2;
-                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                     vs3 = v3;
                                 else
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v3 != null && ListEquls(vs1, v3) == false)
+                            if (v3 != null && ListLastEquls(vs1, v3) == false)
                             {
                                 vs2 = v3;
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v4 != null && ListEquls(vs1, v4) == false)
+                            if (v4 != null && ListLastEquls(vs1, v4) == false)
                                 vs2 = v4;
                             //有一个分叉就不再继续搜了
-                            if (vs2 != null && ListEquls(vs1, vs2) == false)
+                            if (vs2 != null && ListLastEquls(vs1, vs2) == false)
                                 return;
                             else
                                 break;
@@ -1420,27 +1420,27 @@ namespace WpfMap.Route
                             if (v4 != null)
                                 v4.InsertRange(0, vs1.GetRange(0, i + 1));
                             /*--------整理搜索结果--------*/
-                            if (v1 != null && ListEquls(vs1, v1) == false)
+                            if (v1 != null && ListLastEquls(vs1, v1) == false)
                             {
                                 vs2 = v1;
-                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                     vs3 = v3;
                                 else
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v3 != null && ListEquls(vs1, v3) == false)
+                            if (v3 != null && ListLastEquls(vs1, v3) == false)
                             {
                                 vs2 = v3;
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v4 != null && ListEquls(vs1, v4) == false)
+                            if (v4 != null && ListLastEquls(vs1, v4) == false)
                                 vs2 = v4;
                             //有一个分叉就不再继续搜了
-                            if (vs2 != null && ListEquls(vs1, vs2) == false)
+                            if (vs2 != null && ListLastEquls(vs1, vs2) == false)
                                 return;
                             else
                                 break;
@@ -1481,40 +1481,40 @@ namespace WpfMap.Route
                                 v4.InsertRange(0, vs1.GetRange(0, i + 1));
                             /*--------改变方向搜索--------*/
                             //整理搜索结果
-                            if (v1 != null && ListEquls(vs1, v1) == false)
+                            if (v1 != null && ListLastEquls(vs1, v1) == false)
                             {
                                 vs2 = v1;
-                                if (v2 != null && ListEquls(vs1, v2) == false && ListEquls(vs2, v2) == false)
+                                if (v2 != null && ListLastEquls(vs1, v2) == false && ListLastEquls(vs2, v2) == false)
                                     vs3 = v2;
                                 else
-                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                     vs3 = v3;
                                 else
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v2 != null && ListEquls(vs1, v2) == false)
+                            if (v2 != null && ListLastEquls(vs1, v2) == false)
                             {
                                 vs2 = v2;
-                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                     vs3 = v3;
                                 else
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v3 != null && ListEquls(vs1, v3) == false)
+                            if (v3 != null && ListLastEquls(vs1, v3) == false)
                             {
                                 vs2 = v3;
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v4 != null && ListEquls(vs1, v4) == false)
+                            if (v4 != null && ListLastEquls(vs1, v4) == false)
                                 vs2 = v4;
                             //有一个分叉就不再继续搜了
-                            if (vs2 != null && ListEquls(vs1, vs2) == false)
+                            if (vs2 != null && ListLastEquls(vs1, vs2) == false)
                                 return;
                             else
                                 break;
@@ -1555,40 +1555,40 @@ namespace WpfMap.Route
                                 v4.InsertRange(0, vs1.GetRange(0, i + 1));
                             /*--------改变方向搜索--------*/
                             //整理搜索结果
-                            if (v1 != null && ListEquls(vs1, v1) == false)
+                            if (v1 != null && ListLastEquls(vs1, v1) == false)
                             {
                                 vs2 = v1;
-                                if (v2 != null && ListEquls(vs1, v2) == false && ListEquls(vs2, v2) == false)
+                                if (v2 != null && ListLastEquls(vs1, v2) == false && ListLastEquls(vs2, v2) == false)
                                     vs3 = v2;
                                 else
-                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                     vs3 = v3;
                                 else
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v2 != null && ListEquls(vs1, v2) == false)
+                            if (v2 != null && ListLastEquls(vs1, v2) == false)
                             {
                                 vs2 = v2;
-                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                     vs3 = v3;
                                 else
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v3 != null && ListEquls(vs1, v3) == false)
+                            if (v3 != null && ListLastEquls(vs1, v3) == false)
                             {
                                 vs2 = v3;
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v4 != null && ListEquls(vs1, v4) == false)
+                            if (v4 != null && ListLastEquls(vs1, v4) == false)
                                 vs2 = v4;
                             //有一个分叉就不再继续搜了
-                            if (vs2 != null && ListEquls(vs1, vs2) == false)
+                            if (vs2 != null && ListLastEquls(vs1, vs2) == false)
                                 return;
                             else
                                 break;
@@ -1622,27 +1622,27 @@ namespace WpfMap.Route
                                 v4.InsertRange(0, vs1.GetRange(0, i + 1));
                             /*--------改变方向搜索--------*/
                             //整理搜索结果
-                            if (v1 != null && ListEquls(vs1, v1) == false)
+                            if (v1 != null && ListLastEquls(vs1, v1) == false)
                             {
                                 vs2 = v1;
-                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                     vs3 = v3;
                                 else
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v3 != null && ListEquls(vs1, v3) == false)
+                            if (v3 != null && ListLastEquls(vs1, v3) == false)
                             {
                                 vs2 = v3;
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v4 != null && ListEquls(vs1, v4) == false)
+                            if (v4 != null && ListLastEquls(vs1, v4) == false)
                                 vs2 = v4;
                             //有一个分叉就不再继续搜了
-                            if (vs2 != null && ListEquls(vs1, vs2) == false)
+                            if (vs2 != null && ListLastEquls(vs1, vs2) == false)
                                 return;
                             else
                                 break;
@@ -1676,27 +1676,27 @@ namespace WpfMap.Route
                                 v4.InsertRange(0, vs1.GetRange(0, i + 1));
                             /*--------改变方向搜索--------*/
                             //整理搜索结果
-                            if (v1 != null && ListEquls(vs1, v1) == false)
+                            if (v1 != null && ListLastEquls(vs1, v1) == false)
                             {
                                 vs2 = v1;
-                                if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                                if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                     vs3 = v3;
                                 else
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v3 != null && ListEquls(vs1, v3) == false)
+                            if (v3 != null && ListLastEquls(vs1, v3) == false)
                             {
                                 vs2 = v3;
-                                if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                                if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                     vs3 = v4;
                             }
                             else
-                            if (v4 != null && ListEquls(vs1, v4) == false)
+                            if (v4 != null && ListLastEquls(vs1, v4) == false)
                                 vs2 = v4;
                             //有一个分叉就不再继续搜了
-                            if (vs2 != null && ListEquls(vs1, vs2) == false)
+                            if (vs2 != null && ListLastEquls(vs1, vs2) == false)
                                 return;
                             else
                                 break;
@@ -1760,16 +1760,16 @@ namespace WpfMap.Route
                             if (v4 != null)
                                 v4.InsertRange(0, vs2.GetRange(0, i + 1));
                             /*--------整理搜索结果--------*/
-                            if (v1 != null && ListEquls(vs1, v1) == false && ListEquls(vs2, v1) == false)
+                            if (v1 != null && ListLastEquls(vs1, v1) == false && ListLastEquls(vs2, v1) == false)
                                 vs3 = v1;
                             else
-                            if (v2 != null && ListEquls(vs1, v2) == false && ListEquls(vs2, v2) == false)
+                            if (v2 != null && ListLastEquls(vs1, v2) == false && ListLastEquls(vs2, v2) == false)
                                 vs3 = v2;
                             else
-                            if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                            if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                 vs3 = v3;
                             else
-                            if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                            if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                 vs3 = v4;
 
                             if (vs3 != null)
@@ -1806,13 +1806,13 @@ namespace WpfMap.Route
                             if (v4 != null)
                                 v4.InsertRange(0, vs2.GetRange(0, i + 1));
                             /*--------整理搜索结果--------*/
-                            if (v1 != null && ListEquls(vs1, v1) == false && ListEquls(vs2, v1) == false)
+                            if (v1 != null && ListLastEquls(vs1, v1) == false && ListLastEquls(vs2, v1) == false)
                                 vs3 = v1;
                             else
-                            if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                            if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                 vs3 = v3;
                             else
-                            if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                            if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                 vs3 = v4;
 
                             if (vs3 != null)
@@ -1856,16 +1856,16 @@ namespace WpfMap.Route
                             if (v4 != null)
                                 v4.InsertRange(0, vs2.GetRange(0, i + 1));
                             /*--------整理搜索结果--------*/
-                            if (v1 != null && ListEquls(vs1, v1) == false && ListEquls(vs2, v1) == false)
+                            if (v1 != null && ListLastEquls(vs1, v1) == false && ListLastEquls(vs2, v1) == false)
                                 vs3 = v1;
                             else
-                            if (v2 != null && ListEquls(vs1, v2) == false && ListEquls(vs2, v2) == false)
+                            if (v2 != null && ListLastEquls(vs1, v2) == false && ListLastEquls(vs2, v2) == false)
                                 vs3 = v2;
                             else
-                            if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                            if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                 vs3 = v3;
                             else
-                            if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                            if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                 vs3 = v4;
 
                             if (vs3 != null)
@@ -1902,13 +1902,13 @@ namespace WpfMap.Route
                             if (v4 != null)
                                 v4.InsertRange(0, vs2.GetRange(0, i + 1));
                             /*--------整理搜索结果--------*/
-                            if (v1 != null && ListEquls(vs1, v1) == false && ListEquls(vs2, v1) == false)
+                            if (v1 != null && ListLastEquls(vs1, v1) == false && ListLastEquls(vs2, v1) == false)
                                 vs3 = v1;
                             else
-                            if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                            if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                 vs3 = v3;
                             else
-                            if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                            if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                 vs3 = v4;
 
                             if (vs3 != null)
@@ -1951,16 +1951,16 @@ namespace WpfMap.Route
                             if (v4 != null)
                                 v4.InsertRange(0, vs2.GetRange(0, i + 1));
                             /*--------整理搜索结果--------*/
-                            if (v1 != null && ListEquls(vs1, v1) == false && ListEquls(vs2, v1) == false)
+                            if (v1 != null && ListLastEquls(vs1, v1) == false && ListLastEquls(vs2, v1) == false)
                                 vs3 = v1;
                             else
-                            if (v2 != null && ListEquls(vs1, v2) == false && ListEquls(vs2, v2) == false)
+                            if (v2 != null && ListLastEquls(vs1, v2) == false && ListLastEquls(vs2, v2) == false)
                                 vs3 = v2;
                             else
-                            if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                            if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                 vs3 = v3;
                             else
-                            if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                            if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                 vs3 = v4;
 
                             if (vs3 != null)
@@ -2003,16 +2003,16 @@ namespace WpfMap.Route
                             if (v4 != null)
                                 v4.InsertRange(0, vs2.GetRange(0, i + 1));
                             /*--------整理搜索结果--------*/
-                            if (v1 != null && ListEquls(vs1, v1) == false && ListEquls(vs2, v1) == false)
+                            if (v1 != null && ListLastEquls(vs1, v1) == false && ListLastEquls(vs2, v1) == false)
                                 vs3 = v1;
                             else
-                            if (v2 != null && ListEquls(vs1, v2) == false && ListEquls(vs2, v2) == false)
+                            if (v2 != null && ListLastEquls(vs1, v2) == false && ListLastEquls(vs2, v2) == false)
                                 vs3 = v2;
                             else
-                            if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                            if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                 vs3 = v3;
                             else
-                            if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                            if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                 vs3 = v4;
 
                             if (vs3 != null)
@@ -2048,13 +2048,13 @@ namespace WpfMap.Route
                             if (v4 != null)
                                 v4.InsertRange(0, vs2.GetRange(0, i + 1));
                             /*--------整理搜索结果--------*/
-                            if (v1 != null && ListEquls(vs1, v1) == false && ListEquls(vs2, v1) == false)
+                            if (v1 != null && ListLastEquls(vs1, v1) == false && ListLastEquls(vs2, v1) == false)
                                 vs3 = v1;
                             else
-                            if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                            if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                 vs3 = v3;
                             else
-                            if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                            if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                 vs3 = v4;
 
                             if (vs3 != null)
@@ -2090,13 +2090,13 @@ namespace WpfMap.Route
                             if (v4 != null)
                                 v4.InsertRange(0, vs2.GetRange(0, i + 1));
                             /*--------整理搜索结果--------*/
-                            if (v1 != null && ListEquls(vs1, v1) == false && ListEquls(vs2, v1) == false)
+                            if (v1 != null && ListLastEquls(vs1, v1) == false && ListLastEquls(vs2, v1) == false)
                                 vs3 = v1;
                             else
-                            if (v3 != null && ListEquls(vs1, v3) == false && ListEquls(vs2, v3) == false)
+                            if (v3 != null && ListLastEquls(vs1, v3) == false && ListLastEquls(vs2, v3) == false)
                                 vs3 = v3;
                             else
-                            if (v4 != null && ListEquls(vs1, v4) == false && ListEquls(vs2, v4) == false)
+                            if (v4 != null && ListLastEquls(vs1, v4) == false && ListLastEquls(vs2, v4) == false)
                                 vs3 = v4;
 
                             if (vs3 != null)
@@ -2109,20 +2109,37 @@ namespace WpfMap.Route
                 }
             }
         }
-
-        public static bool ListEquls(List<string> vs1, List<string> vs2)
+        /// <summary>
+        /// 判断列表的最后一项是否相等
+        /// </summary>
+        /// <param name="vs1"></param>
+        /// <param name="vs2"></param>
+        /// <returns></returns>
+        public static bool ListLastEquls(List<string> vs1, List<string> vs2)
         {
             if (vs1 == null && vs2 == null)
                 return true;
             if (vs1 == null || vs2 == null)
                 return false;
-
-            string str1 = String.Join("-", vs1.ToArray());
-            string str2 = String.Join("-", vs2.ToArray());
-            if (str1 == str2)
+            if (vs1.Last() == vs2.Last())
                 return true;
             else
                 return false;
+        }
+
+
+        /// <summary>
+        /// 根据搜索结果解析成AGV可以识别的形式
+        /// </summary>
+        /// <param name="id">直行可以到达的标签索引</param>
+        /// <param name="vs1">第一组搜索结果</param>
+        /// <param name="vs2">第二组搜索结果</param>
+        /// <param name="vs3">第三组搜索结果</param>
+        /// <returns></returns>
+        public static List<string> AnalyResault(int id, List<string> vs1, List<string> vs2, List<string> vs3)
+        {
+            List<string> rs = new List<string>();
+            return rs;
         }
 
         /// <summary>
@@ -2150,7 +2167,7 @@ namespace WpfMap.Route
             {
                 //设置选中
                 MapFunction.SetRFIDIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向左直行->到达【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
+                MapOperate.SystemMsg.WriteLine("左直-{0}标签!", MapElement.MapObject.RFIDS[id].Num);
                 //设置搜索的x终点坐标【X的最小值为找的的标签的右侧中心坐标】
                 range.MinX = MapElement.MapObject.RFIDS[id].RightPoint.X;
             }
@@ -2190,6 +2207,31 @@ namespace WpfMap.Route
                         //补齐前段
                         if (vs3 != null)
                             vs3.InsertRange(0, vs2.GetRange(0, num));
+                        else
+                        //如果第三次还是没有找到，用vs1的公共部分后半段再搜一次
+                        if (vs3 == null)
+                        {
+                            vs = new List<string>();
+                            p = false;
+                            num = 0;
+                            for (int i = 0; i < vs1.Count; i++)
+                            {
+
+                                if (p == false)
+                                {
+                                    if (vs1[i] == vs2[i])
+                                        continue;
+                                    else
+                                    { p = true; num = i; }
+                                }
+                                if (p)
+                                    vs.Add(vs1[i]);
+                            }
+                            FindThird(index, vs2, vs, ref vs3);
+                            //补齐前段
+                            if (vs3 != null)
+                                vs3.InsertRange(0, vs1.GetRange(0, num));
+                        }
                     }
                 }
                 //打印结果
@@ -2212,7 +2254,7 @@ namespace WpfMap.Route
             {
                 //设置选中
                 MapFunction.SetRFIDIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向右找到【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
+                MapOperate.SystemMsg.WriteLine("右直-{0}标签!", MapElement.MapObject.RFIDS[id].Num);
                 //设置搜索的x终点坐标【X的最大值为找的的标签的左侧中心坐标】
                 range.MaxX = MapElement.MapObject.RFIDS[id].LeftPoint.X;
             }
@@ -2252,6 +2294,31 @@ namespace WpfMap.Route
                         //补齐前段
                         if (vs3 != null)
                             vs3.InsertRange(0, vs2.GetRange(0, num));
+                        else
+                        //如果第三次还是没有找到，用vs1的公共部分后半段再搜一次
+                        if (vs3 == null)
+                        {
+                            vs = new List<string>();
+                            p = false;
+                            num = 0;
+                            for (int i = 0; i < vs1.Count; i++)
+                            {
+
+                                if (p == false)
+                                {
+                                    if (vs1[i] == vs2[i])
+                                        continue;
+                                    else
+                                    { p = true; num = i; }
+                                }
+                                if (p)
+                                    vs.Add(vs1[i]);
+                            }
+                            FindThird(index, vs2, vs, ref vs3);
+                            //补齐前段
+                            if (vs3 != null)
+                                vs3.InsertRange(0, vs1.GetRange(0, num));
+                        }
                     }
                 }
                 //打印结果
@@ -2273,7 +2340,7 @@ namespace WpfMap.Route
             {
                 //设置选中
                 MapFunction.SetRFIDIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向上找到【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
+                MapOperate.SystemMsg.WriteLine("上直-{0}标签!", MapElement.MapObject.RFIDS[id].Num);
                 //设置搜索的y终点坐标【Y的最小值为找的的标签的下侧中心坐标】
                 range.MinY = MapElement.MapObject.RFIDS[id].DownPoint.Y;
             }
@@ -2313,6 +2380,31 @@ namespace WpfMap.Route
                         //补齐前段
                         if (vs3 != null)
                             vs3.InsertRange(0, vs2.GetRange(0, num));
+                        else
+                        //如果第三次还是没有找到，用vs1的公共部分后半段再搜一次
+                        if (vs3 == null)
+                        {
+                            vs = new List<string>();
+                            p = false;
+                            num = 0;
+                            for (int i = 0; i < vs1.Count; i++)
+                            {
+
+                                if (p == false)
+                                {
+                                    if (vs1[i] == vs2[i])
+                                        continue;
+                                    else
+                                    { p = true; num = i; }
+                                }
+                                if (p)
+                                    vs.Add(vs1[i]);
+                            }
+                            FindThird(index, vs2, vs, ref vs3);
+                            //补齐前段
+                            if (vs3 != null)
+                                vs3.InsertRange(0, vs1.GetRange(0, num));
+                        }
                     }
                 }
                 //打印结果
@@ -2334,7 +2426,7 @@ namespace WpfMap.Route
             {
                 //设置选中
                 MapFunction.SetRFIDIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向下找到【{0}】号标签!", MapElement.MapObject.RFIDS[id].Num);
+                MapOperate.SystemMsg.WriteLine("下直-{0}标签!", MapElement.MapObject.RFIDS[id].Num);
                 //设置搜索的y终点坐标【Y的最大值为找的的标签的上侧中心坐标】
                 range.MaxY = MapElement.MapObject.RFIDS[id].UpPoint.Y;
             }
@@ -2374,18 +2466,44 @@ namespace WpfMap.Route
                         //补齐前段
                         if (vs3 != null)
                             vs3.InsertRange(0, vs2.GetRange(0, num));
+                        else
+                        //如果第三次还是没有找到，用vs1的公共部分后半段再搜一次
+                        if (vs3 == null)
+                        {
+                            vs = new List<string>();
+                            p = false;
+                            num = 0;
+                            for (int i = 0; i < vs1.Count; i++)
+                            {
+
+                                if (p == false)
+                                {
+                                    if (vs1[i] == vs2[i])
+                                        continue;
+                                    else
+                                    { p = true; num = i; }
+                                }
+                                if (p)
+                                    vs.Add(vs1[i]);
+                            }
+                            FindThird(index, vs2, vs, ref vs3);
+                            //补齐前段
+                            if (vs3 != null)
+                                vs3.InsertRange(0, vs1.GetRange(0, num));
+                        }
                     }
                 }
 
                 //打印结果
                 if (vs1 != null)
-                    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()) +"标签："+ MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num.ToString());
+                    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num.ToString());
                 if (vs2 != null)
                     MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num.ToString());
                 if (vs3 != null)
                     MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num.ToString());
             }
             #endregion
+
             MapOperate.SystemMsg.WriteLine("-----------END-------------");
         }
 
