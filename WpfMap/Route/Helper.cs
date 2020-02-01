@@ -2193,9 +2193,9 @@ namespace WpfMap.Route
                 if (vs1 != null)
                 {
                     if (vs1.First().StartsWith("左上"))
-                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                    else
                         TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                    else
+                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
                 }
             }
             else
@@ -2793,11 +2793,11 @@ namespace WpfMap.Route
                             }
                             v1.RemoveRange(0, i);
                             v2.RemoveRange(0, i);
+                            //获取分叉索引
+                            int ids1 = int.Parse(v1.First().Substring(2, v1.First().Length - 2));
+                            int ids2 = int.Parse(v2.First().Substring(2, v2.First().Length - 2));
                             if (v1.First().StartsWith("左") && v2.First().StartsWith("左"))
                             {
-                                //获取分叉的坐标
-                                int ids1 = int.Parse(v1[i].Substring(2, v1[i].Length - 2));
-                                int ids2 = int.Parse(v2[i].Substring(2, v2[i].Length - 2));
                                 Point pt1 = MapElement.MapObject.ForkLines[ids1].EndPoint;
                                 Point pt2 = MapElement.MapObject.ForkLines[ids2].EndPoint;
                                 //靠左的是直行
@@ -2822,8 +2822,6 @@ namespace WpfMap.Route
                             if (v1.First().StartsWith("右") && v2.First().StartsWith("右"))
                             {
                                 //获取分叉的坐标
-                                int ids1 = int.Parse(v1[i].Substring(2, v1[i].Length - 2));
-                                int ids2 = int.Parse(v2[i].Substring(2, v2[i].Length - 2));
                                 Point pt1 = MapElement.MapObject.ForkLines[ids1].EndPoint;
                                 Point pt2 = MapElement.MapObject.ForkLines[ids2].EndPoint;
                                 //靠右的是直行
@@ -2848,8 +2846,6 @@ namespace WpfMap.Route
                             if (v1.First().StartsWith("上") && v2.First().StartsWith("上"))
                             {
                                 //获取分叉的坐标
-                                int ids1 = int.Parse(v1[i].Substring(2, v1[i].Length - 2));
-                                int ids2 = int.Parse(v2[i].Substring(2, v2[i].Length - 2));
                                 Point pt1 = MapElement.MapObject.ForkLines[ids1].StartPoint;
                                 Point pt2 = MapElement.MapObject.ForkLines[ids2].StartPoint;
                                 //靠上的是直行
@@ -2873,9 +2869,6 @@ namespace WpfMap.Route
                             else
                             if (v1.First().StartsWith("下") && v2.First().StartsWith("下"))
                             {
-                                //获取分叉的坐标
-                                int ids1 = int.Parse(v1[i].Substring(2, v1[i].Length - 2));
-                                int ids2 = int.Parse(v2[i].Substring(2, v2[i].Length - 2));
                                 Point pt1 = MapElement.MapObject.ForkLines[ids1].StartPoint;
                                 Point pt2 = MapElement.MapObject.ForkLines[ids2].StartPoint;
                                 //靠下的是直行
