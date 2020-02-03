@@ -62,3 +62,8 @@ C:\Users\Administrator\Desktop\路径规划算法\WpfMap\WpfMap\obj\Debug\WpfMap
 C:\Users\Administrator\Desktop\路径规划算法\WpfMap\WpfMap\obj\Debug\WpfMap.exe
 C:\Users\Administrator\Desktop\路径规划算法\WpfMap\WpfMap\obj\Debug\WpfMap.pdb
 C:\Users\Administrator\Desktop\路径规划算法\WpfMap\WpfMap\obj\Debug\WpfMap.csprojAssemblyReference.cache
+C:\Users\Administrator\Desktop\路径规划算法\WpfMap\WpfMap\obj\Debug\IgkUserControl\Loading.g.cs
+C:\Users\Administrator\Desktop\路径规划算法\WpfMap\WpfMap\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Administrator\Desktop\路径规划算法\WpfMap\WpfMap\obj\Debug\IgkUserControl\Loading.baml
+C:\Users\Administrator\Desktop\路径规划算法\WpfMap\WpfMap\obj\Debug\View\loadingPage.g.cs
+C:\Users\Administrator\Desktop\路径规划算法\WpfMap\WpfMap\obj\Debug\View\loadingPage.baml

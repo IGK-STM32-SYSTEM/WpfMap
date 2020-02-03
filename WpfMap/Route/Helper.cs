@@ -2856,17 +2856,47 @@ namespace WpfMap.Route
                                 if (pt1.X > pt2.X)
                                 {
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                    if (TurnUp != -1)
-                                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    //右下对应左上
+                                    if (v2.First().StartsWith("右下") && TurnUp != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个左上！");
+                                        return null;
+                                    }
                                     else
-                                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("右上") && TurnDown != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个左下！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnUp != -1)
+                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                        else
+                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    }
                                 }
                                 else
                                 {
-                                    if (TurnUp != -1)
-                                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    //右下对应左上
+                                    if (v1.First().StartsWith("右下") && TurnUp != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个左上！");
+                                        return null;
+                                    }
                                     else
-                                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("右上") && TurnDown != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个左下！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnUp != -1)
+                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                        else
+                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    }
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
                                 }
                             }
@@ -2880,17 +2910,47 @@ namespace WpfMap.Route
                                 if (pt1.Y < pt2.Y)
                                 {
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                    if (TurnUp != -1)
-                                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    //上左对应左下
+                                    if (v2.First().StartsWith("上左") && TurnDown != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个左下！");
+                                        return null;
+                                    }
                                     else
-                                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("上右") && TurnUp != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个左上！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnUp != -1)
+                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                        else
+                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    }
                                 }
                                 else
                                 {
-                                    if (TurnUp != -1)
-                                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    //上左对应左下
+                                    if (v1.First().StartsWith("上左") && TurnDown != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个左下！");
+                                        return null;
+                                    }
                                     else
-                                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("上右") && TurnUp != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个左上！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnUp != -1)
+                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                        else
+                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    }
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
                                 }
                             }
@@ -2903,17 +2963,47 @@ namespace WpfMap.Route
                                 if (pt1.Y > pt2.Y)
                                 {
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                    if (TurnUp != -1)
-                                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    //下左对应左上
+                                    if (v2.First().StartsWith("下左") && TurnUp != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个左上！");
+                                        return null;
+                                    }
                                     else
-                                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("下右") && TurnDown != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个左下！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnUp != -1)
+                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                        else
+                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    }
                                 }
                                 else
                                 {
-                                    if (TurnUp != -1)
-                                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    //下左对应左上
+                                    if (v1.First().StartsWith("下左") && TurnUp != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个左上！");
+                                        return null;
+                                    }
                                     else
-                                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("下右") && TurnDown != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个左下！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnUp != -1)
+                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                        else
+                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    }
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
                                 }
                             }
@@ -3606,17 +3696,45 @@ namespace WpfMap.Route
                                 if (pt1.X < pt2.X)
                                 {
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                    if (TurnUp != -1)
-                                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("左下") && TurnUp != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个右上！");
+                                        return null;
+                                    }
                                     else
-                                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("左上") && TurnDown != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个右下！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnUp != -1)
+                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                        else
+                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    }
                                 }
                                 else
                                 {
-                                    if (TurnUp != -1)
-                                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("左下") && TurnUp != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个右上！");
+                                        return null;
+                                    }
                                     else
-                                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("左上") && TurnDown != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个右下！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnUp != -1)
+                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                        else
+                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    }
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
                                 }
                             }
@@ -3630,17 +3748,45 @@ namespace WpfMap.Route
                                 if (pt1.X > pt2.X)
                                 {
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                    if (TurnUp != -1)
-                                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("右下") && TurnDown != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个右下！");
+                                        return null;
+                                    }
                                     else
-                                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("右上") && TurnUp != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个右上！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnUp != -1)
+                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                        else
+                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    }
                                 }
                                 else
                                 {
-                                    if (TurnUp != -1)
-                                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("右下") && TurnDown != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个右下！");
+                                        return null;
+                                    }
                                     else
-                                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                     if (v1.First().StartsWith("右上") && TurnUp != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个右上！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnUp != -1)
+                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                        else
+                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    }
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
                                 }
                             }
@@ -3654,17 +3800,45 @@ namespace WpfMap.Route
                                 if (pt1.Y < pt2.Y)
                                 {
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                    if (TurnUp != -1)
-                                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("上左") && TurnUp != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个右上！");
+                                        return null;
+                                    }
                                     else
-                                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("上右") && TurnDown != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个右下！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnUp != -1)
+                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                        else
+                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    }
                                 }
                                 else
                                 {
-                                    if (TurnUp != -1)
-                                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("上左") && TurnUp != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个右上！");
+                                        return null;
+                                    }
                                     else
-                                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("上右") && TurnDown != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个右下！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnUp != -1)
+                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                        else
+                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    }
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
                                 }
                             }
@@ -3677,17 +3851,45 @@ namespace WpfMap.Route
                                 if (pt1.Y > pt2.Y)
                                 {
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                    if (TurnUp != -1)
-                                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("下左") && TurnDown != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个右下！");
+                                        return null;
+                                    }
                                     else
-                                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("下右") && TurnUp != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个右上！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnUp != -1)
+                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                        else
+                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    }
                                 }
                                 else
                                 {
-                                    if (TurnUp != -1)
-                                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("下左") && TurnDown != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个右下！");
+                                        return null;
+                                    }
                                     else
-                                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("下右") && TurnUp != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个右上！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnUp != -1)
+                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                        else
+                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    }
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
                                 }
                             }
@@ -3705,7 +3907,7 @@ namespace WpfMap.Route
             return rs;
         }
         /// <summary>
-        /// 将向右搜索结果解析成AGV可以识别的形式
+        /// 将向上搜索结果解析成AGV可以识别的形式
         /// </summary>
         /// <param name="id">直行可以到达的标签索引</param>
         /// <param name="vs1">第一组搜索结果</param>
@@ -4381,17 +4583,45 @@ namespace WpfMap.Route
                                 if (pt1.X < pt2.X)
                                 {
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                    if (TurnLeft != -1)
-                                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("左下") && TurnLeft != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个上左！");
+                                        return null;
+                                    }
                                     else
-                                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("左上") && TurnRight != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个上右！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnLeft != -1)
+                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                        else
+                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    }
                                 }
                                 else
                                 {
-                                    if (TurnLeft != -1)
-                                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("左下") && TurnLeft != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个上左！");
+                                        return null;
+                                    }
                                     else
-                                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("左上") && TurnRight != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个上右！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnLeft != -1)
+                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                        else
+                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    }
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
                                 }
                             }
@@ -4405,17 +4635,45 @@ namespace WpfMap.Route
                                 if (pt1.X > pt2.X)
                                 {
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                    if (TurnLeft != -1)
-                                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("右下") && TurnRight != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个上右！");
+                                        return null;
+                                    }
                                     else
-                                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("右上") && TurnLeft != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个上左！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnLeft != -1)
+                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                        else
+                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    }
                                 }
                                 else
                                 {
-                                    if (TurnLeft != -1)
-                                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("右下") && TurnRight != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个上右！");
+                                        return null;
+                                    }
                                     else
-                                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("右上") && TurnLeft != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个上左！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnLeft != -1)
+                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                        else
+                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    }
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
                                 }
                             }
@@ -4429,17 +4687,45 @@ namespace WpfMap.Route
                                 if (pt1.Y < pt2.Y)
                                 {
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                    if (TurnLeft != -1)
-                                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("上左") && TurnLeft != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个上左！");
+                                        return null;
+                                    }
                                     else
-                                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("上右") && TurnRight != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个上右！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnLeft != -1)
+                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                        else
+                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    }
                                 }
                                 else
                                 {
-                                    if (TurnLeft != -1)
-                                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("上左") && TurnLeft != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个上左！");
+                                        return null;
+                                    }
                                     else
-                                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("上右") && TurnRight != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个上右！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnLeft != -1)
+                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                        else
+                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    }
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
                                 }
                             }
@@ -4452,17 +4738,45 @@ namespace WpfMap.Route
                                 if (pt1.Y > pt2.Y)
                                 {
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                    if (TurnLeft != -1)
-                                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("下左") && TurnRight != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个上右！");
+                                        return null;
+                                    }
                                     else
-                                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("下右") && TurnLeft != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个上左！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnLeft != -1)
+                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                        else
+                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    }
                                 }
                                 else
                                 {
-                                    if (TurnLeft != -1)
-                                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("下左") && TurnRight != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个上右！");
+                                        return null;
+                                    }
                                     else
-                                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("下右") && TurnLeft != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个上左！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnLeft != -1)
+                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                        else
+                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    }
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
                                 }
                             }
@@ -4480,7 +4794,7 @@ namespace WpfMap.Route
             return rs;
         }
         /// <summary>
-        /// 将向右搜索结果解析成AGV可以识别的形式
+        /// 将向下搜索结果解析成AGV可以识别的形式
         /// </summary>
         /// <param name="id">直行可以到达的标签索引</param>
         /// <param name="vs1">第一组搜索结果</param>
@@ -5155,17 +5469,45 @@ namespace WpfMap.Route
                                 if (pt1.X < pt2.X)
                                 {
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                    if (TurnLeft != -1)
-                                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("左下") && TurnRight != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个下右 ！");
+                                        return null;
+                                    }
                                     else
-                                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("左上") && TurnLeft != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个下左！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnLeft != -1)
+                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                        else
+                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    }
                                 }
                                 else
                                 {
-                                    if (TurnLeft != -1)
-                                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("左下") && TurnRight != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个下右 ！");
+                                        return null;
+                                    }
                                     else
-                                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                      if (v1.First().StartsWith("左上") && TurnLeft != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个下左！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnLeft != -1)
+                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                        else
+                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    }
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
                                 }
                             }
@@ -5179,17 +5521,45 @@ namespace WpfMap.Route
                                 if (pt1.X > pt2.X)
                                 {
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                    if (TurnLeft != -1)
-                                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("右下") && TurnLeft != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个下左 ！");
+                                        return null;
+                                    }
                                     else
-                                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                     if (v2.First().StartsWith("右上") && TurnRight != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个下右！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnLeft != -1)
+                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                        else
+                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    }
                                 }
                                 else
                                 {
-                                    if (TurnLeft != -1)
-                                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("右下") && TurnLeft != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个下左 ！");
+                                        return null;
+                                    }
                                     else
-                                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                      if (v1.First().StartsWith("右上") && TurnRight != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个下右！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnLeft != -1)
+                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                        else
+                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    }
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
                                 }
                             }
@@ -5203,17 +5573,45 @@ namespace WpfMap.Route
                                 if (pt1.Y < pt2.Y)
                                 {
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                    if (TurnLeft != -1)
-                                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("上左") && TurnRight != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个下右！");
+                                        return null;
+                                    }
                                     else
-                                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("上右") && TurnLeft != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个下左 ！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnLeft != -1)
+                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                        else
+                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    }
                                 }
                                 else
                                 {
-                                    if (TurnLeft != -1)
-                                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("上左") && TurnRight != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个下右！");
+                                        return null;
+                                    }
                                     else
-                                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("上右") && TurnLeft != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个下左 ！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnLeft != -1)
+                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                        else
+                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    }
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
                                 }
                             }
@@ -5226,17 +5624,45 @@ namespace WpfMap.Route
                                 if (pt1.Y > pt2.Y)
                                 {
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                    if (TurnLeft != -1)
-                                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("下左") && TurnLeft != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个下左！");
+                                        return null;
+                                    }
                                     else
-                                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    if (v2.First().StartsWith("下右") && TurnRight != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个下右 ！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnLeft != -1)
+                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                        else
+                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    }
                                 }
                                 else
                                 {
-                                    if (TurnLeft != -1)
-                                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("下左") && TurnLeft != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个下左！");
+                                        return null;
+                                    }
                                     else
-                                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    if (v1.First().StartsWith("下右") && TurnRight != -1)
+                                    {
+                                        MapOperate.SystemMsg.WriteLine("错误：出现了两个下右 ！");
+                                        return null;
+                                    }
+                                    else
+                                    {
+                                        if (TurnLeft != -1)
+                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                        else
+                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    }
                                     Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
                                 }
                             }
