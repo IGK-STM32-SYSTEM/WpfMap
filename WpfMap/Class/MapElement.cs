@@ -32,12 +32,16 @@ namespace WpfMap
         //标签类
         public class RFID : SaveMap.ShapesBase
         {
+            [Category("基本")]
+            [Description("标签索引")]
+            [JsonIgnore]
+            public int Index { get { return MapOperate.NowSelectIndex; } }
             /// <summary>
             /// 编号
             /// </summary>
-            [Category("Non-Numeric Editors")]
-            [Description("This property is a complex property and has no default editor.")]
             private int num;
+            [Category("基本")]
+            [Description("标签编号")]
             public int Num
             {
                 get { return num; }
@@ -73,8 +77,8 @@ namespace WpfMap
                     //计算标签上下左右四个点坐标
                     double x = ellipse.Margin.Left;
                     double y = ellipse.Margin.Top;
-                    double h = SelectRectangle.Height;
-                    double w = SelectRectangle.Width;
+                    double h = ellipse.Height;
+                    double w = ellipse.Width;
                     return new Point(x, y + h / 2);
                 }
             }
@@ -91,8 +95,8 @@ namespace WpfMap
                     //计算标签上下左右四个点坐标
                     double x = ellipse.Margin.Left;
                     double y = ellipse.Margin.Top;
-                    double h = SelectRectangle.Height;
-                    double w = SelectRectangle.Width;
+                    double h = ellipse.Height;
+                    double w = ellipse.Width;
                     return new Point(x + w, y + h / 2);
                 }
             }
@@ -109,8 +113,8 @@ namespace WpfMap
                     //计算标签上下左右四个点坐标
                     double x = ellipse.Margin.Left;
                     double y = ellipse.Margin.Top;
-                    double h = SelectRectangle.Height;
-                    double w = SelectRectangle.Width;
+                    double h = ellipse.Height;
+                    double w = ellipse.Width;
                     return new Point(x + w / 2, y);
                 }
             }
@@ -127,8 +131,8 @@ namespace WpfMap
                     //计算标签上下左右四个点坐标
                     double x = ellipse.Margin.Left;
                     double y = ellipse.Margin.Top;
-                    double h = SelectRectangle.Height;
-                    double w = SelectRectangle.Width;
+                    double h = ellipse.Height;
+                    double w = ellipse.Width;
                     return new Point(x + w / 2, y + h);
                 }
             }

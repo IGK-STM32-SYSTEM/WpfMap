@@ -545,264 +545,6 @@ namespace WpfMap.Route
             RightUp,
             RightDown
         }
-        /// <summary>
-        /// 流程状态机
-        /// </summary>
-        /// <param name="index"></param>
-        /// <param name="point"></param>
-        /// <param name="state"></param>
-        /// <param name="range"></param>
-        public static bool ProcessBool(int index, Point point, ProcessState state, Base.Range range)
-        {
-            int id = -1;
-            Point pt = new Point(point.X, point.Y);
-            //跳转到对应状态
-            switch (state)
-            {
-                case ProcessState.UpLeft:
-                    goto UpLeft;
-                case ProcessState.UpRight:
-                    goto UpRight;
-                case ProcessState.DownLeft:
-                    goto DownLeft;
-                case ProcessState.DownRight:
-                    goto DownRight;
-                case ProcessState.LeftUp:
-                    goto LeftUp;
-                case ProcessState.LeftDown:
-                    goto LeftDown;
-                case ProcessState.RightUp:
-                    goto RightUp;
-                case ProcessState.RightDown:
-                    goto RightDown;
-                default:
-                    return false;
-            }
-
-
-            #region 【向上找左分叉】
-            UpLeft:
-            id = Base.FindForkLine.UpLeft(pt, range.MinY);
-            //找到分叉
-            if (id != -1)
-            {
-                //设置选中
-                MapFunction.SetForkLineIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向上找到【{0}】号【左分叉】!", MapElement.MapObject.ForkLines[id].Num);
-                //更新搜索起点
-                pt = new Point(MapElement.MapObject.ForkLines[id].EndPoint.X, MapElement.MapObject.ForkLines[id].EndPoint.Y);
-                //跳转【向左找标签】
-                goto RFID_Left;
-            }
-            else
-            {
-                //【向上找右分叉】
-                goto UpRight;
-            }
-            #endregion
-
-            #region 【向上找右分叉】
-            UpRight:
-            id = Base.FindForkLine.UpRight(pt, range.MinY);
-            //找到分叉
-            if (id != -1)
-            {
-                //设置选中
-                MapFunction.SetForkLineIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向上找到【{0}】号【右分叉】!", MapElement.MapObject.ForkLines[id].Num);
-                //更新搜索起点
-                pt = new Point(MapElement.MapObject.ForkLines[id].EndPoint.X, MapElement.MapObject.ForkLines[id].EndPoint.Y);
-                //跳转【向右找标签】
-                goto RFID_Right;
-            }
-            else
-            {
-                return false;
-            }
-            #endregion
-
-            #region 【向下找左分叉】
-            DownLeft:
-            id = Base.FindForkLine.DownLeft(pt, range.MaxY);
-            //找到分叉
-            if (id != -1)
-            {
-                //设置选中
-                MapFunction.SetForkLineIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向下找到【{0}】号【左分叉】!", MapElement.MapObject.ForkLines[id].Num);
-                //更新搜索起点
-                pt = new Point(MapElement.MapObject.ForkLines[id].EndPoint.X, MapElement.MapObject.ForkLines[id].EndPoint.Y);
-                //跳转【向左找标签】
-                goto RFID_Left;
-            }
-            else
-            {
-                //【向下找右分叉】
-                goto DownRight;
-            }
-            #endregion
-
-            #region 【向下找右分叉】
-            DownRight:
-            id = Base.FindForkLine.DownRight(pt, range.MaxY);
-            //找到分叉
-            if (id != -1)
-            {
-                //设置选中
-                MapFunction.SetForkLineIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向下找到【{0}】号【右分叉】!", MapElement.MapObject.ForkLines[id].Num);
-                //更新搜索起点
-                pt = new Point(MapElement.MapObject.ForkLines[id].EndPoint.X, MapElement.MapObject.ForkLines[id].EndPoint.Y);
-                //跳转【向右找标签】
-                goto RFID_Right;
-            }
-            else
-            {
-                //【完成】
-                return false;
-            }
-            #endregion
-
-            #region 【向左找上分叉】
-            LeftUp:
-            id = Base.FindForkLine.LeftUp(pt, range.MinX);
-            //找到分叉
-            if (id != -1)
-            {
-                //设置选中
-                MapFunction.SetForkLineIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向左找到【{0}】号【上分叉】!", MapElement.MapObject.ForkLines[id].Num);
-                //更新搜索起点坐标
-                pt = new Point(MapElement.MapObject.ForkLines[id].StartPoint.X, MapElement.MapObject.ForkLines[id].StartPoint.Y);
-                //跳转【向上找标签】
-                goto RFID_Up;
-            }
-            else
-                //【向左找下分叉】
-                goto LeftDown;
-            #endregion
-
-            #region 【向左找下分叉】
-            LeftDown:
-            id = Base.FindForkLine.LeftDown(pt, range.MinX);
-            //找到分叉
-            if (id != -1)
-            {
-                //设置选中
-                MapFunction.SetForkLineIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向左找到【{0}】号【下分叉】!", MapElement.MapObject.ForkLines[id].Num);
-                //更新搜索起点坐标
-                pt = new Point(MapElement.MapObject.ForkLines[id].StartPoint.X, MapElement.MapObject.ForkLines[id].StartPoint.Y);
-                //跳转【向下找标签】
-                goto RFID_Down;
-            }
-            else
-                //【完成】
-                return false;
-            #endregion
-
-            #region 【向右找上分叉】
-            RightUp:
-            id = Base.FindForkLine.RightUp(pt, range.MaxX);
-            //找到分叉
-            if (id != -1)
-            {
-                //设置选中
-                MapFunction.SetForkLineIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向右找到【{0}】号【上分叉】!", MapElement.MapObject.ForkLines[id].Num);
-                //更新搜索起点坐标
-                pt = new Point(MapElement.MapObject.ForkLines[id].StartPoint.X, MapElement.MapObject.ForkLines[id].StartPoint.Y);
-                //跳转【向上找标签】
-                goto RFID_Up;
-            }
-            else
-                //跳转【向右找下分叉】
-                goto RightDown;
-            #endregion
-
-            #region 【向右找下分叉】
-            RightDown:
-            id = Base.FindForkLine.RightDown(pt, range.MaxX);
-            //找到分叉
-            if (id != -1)
-            {
-                //设置选中
-                MapFunction.SetForkLineIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向右找到【{0}】号【下分叉】!", MapElement.MapObject.ForkLines[id].Num);
-                //更新搜索起点坐标
-                pt = new Point(MapElement.MapObject.ForkLines[id].StartPoint.X, MapElement.MapObject.ForkLines[id].StartPoint.Y);
-                //跳转【向下找标签】
-                goto RFID_Down;
-            }
-            else
-                //【完成】
-                return false;
-            #endregion
-
-            #region 【向上找标签】
-            RFID_Up:
-            id = Base.FindRFID.Up(index, pt, range);
-            if (id != -1)
-            {
-                //设置选中
-                MapFunction.SetRFIDIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向上找到【{0}】号【标签】!", MapElement.MapObject.RFIDS[id].Num);
-                //【完成】
-                return true;
-            }
-            else
-                //【向上找左分叉】
-                goto UpLeft;
-            #endregion
-
-            #region 【向下找标签】
-            RFID_Down:
-            id = Base.FindRFID.Down(index, pt, range);
-            if (id != -1)
-            {
-                //设置选中
-                MapFunction.SetRFIDIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向下找到【{0}】号【标签】!", MapElement.MapObject.RFIDS[id].Num);
-                //【完成】
-                return true;
-            }
-            else
-                //【向下找左分叉】
-                goto DownLeft;
-            #endregion
-
-            #region 【向左找标签】
-            RFID_Left:
-            id = Base.FindRFID.Left(index, pt, range);
-            if (id != -1)
-            {
-                //设置选中
-                MapFunction.SetRFIDIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向左找到【{0}】号【标签】!", MapElement.MapObject.RFIDS[id].Num);
-                //【完成】
-                return true;
-            }
-            else
-                //【向左找上分叉】
-                goto LeftUp;
-            #endregion
-
-            #region 【向右找标签】
-            RFID_Right:
-            id = Base.FindRFID.Right(index, pt, range);
-            if (id != -1)
-            {
-                //设置选中
-                MapFunction.SetRFIDIsSelected(id);
-                MapOperate.SystemMsg.WriteLine("向右找到【{0}】号【标签】!", MapElement.MapObject.RFIDS[id].Num);
-                //【完成】
-                return true;
-            }
-            else
-                //【向右找上分叉】
-                goto RightUp;
-            #endregion
-        }
         //返回List<String>类型结果
         //左上（分叉）
         //上右（分叉）
@@ -811,6 +553,8 @@ namespace WpfMap.Route
         {
             //是否打印调试信息
             bool debugPrint = false;
+            //是否设置选中
+            bool debugSetSelected = false;
             //第一次搜索标志，第一次搜索可能右范围限制，之后不再对搜索范围进行限制
             bool isFirst = true;
             List<string> vs = new List<string>();
@@ -854,7 +598,8 @@ namespace WpfMap.Route
                 //记录
                 vs.Add(string.Format("上左{0}", id));
                 //设置选中
-                MapFunction.SetForkLineIsSelected(id);
+                if (debugSetSelected)
+                    MapFunction.SetForkLineIsSelected(id);
                 if (debugPrint)
                 {
                     MapOperate.SystemMsg.WriteLine("向上找到【{0}】号【左分叉】!", MapElement.MapObject.ForkLines[id].Num);
@@ -886,7 +631,8 @@ namespace WpfMap.Route
                 //记录
                 vs.Add(string.Format("上右{0}", id));
                 //设置选中
-                MapFunction.SetForkLineIsSelected(id);
+                if (debugSetSelected)
+                    MapFunction.SetForkLineIsSelected(id);
                 if (debugPrint)
                 {
                     MapOperate.SystemMsg.WriteLine("向上找到【{0}】号【右分叉】!", MapElement.MapObject.ForkLines[id].Num);
@@ -917,7 +663,8 @@ namespace WpfMap.Route
                 //记录
                 vs.Add(string.Format("下左{0}", id));
                 //设置选中
-                MapFunction.SetForkLineIsSelected(id);
+                if (debugSetSelected)
+                    MapFunction.SetForkLineIsSelected(id);
                 if (debugPrint)
                 {
                     MapOperate.SystemMsg.WriteLine("向下找到【{0}】号【左分叉】!", MapElement.MapObject.ForkLines[id].Num);
@@ -949,7 +696,8 @@ namespace WpfMap.Route
                 //记录
                 vs.Add(string.Format("下右{0}", id));
                 //设置选中
-                MapFunction.SetForkLineIsSelected(id);
+                if (debugSetSelected)
+                    MapFunction.SetForkLineIsSelected(id);
                 if (debugPrint)
                 {
                     MapOperate.SystemMsg.WriteLine("向下找到【{0}】号【右分叉】!", MapElement.MapObject.ForkLines[id].Num);
@@ -981,7 +729,8 @@ namespace WpfMap.Route
                 //记录
                 vs.Add(string.Format("左上{0}", id));
                 //设置选中
-                MapFunction.SetForkLineIsSelected(id);
+                if (debugSetSelected)
+                    MapFunction.SetForkLineIsSelected(id);
                 if (debugPrint)
                 {
                     MapOperate.SystemMsg.WriteLine("向左找到【{0}】号【上分叉】!", MapElement.MapObject.ForkLines[id].Num);
@@ -1011,7 +760,8 @@ namespace WpfMap.Route
                 //记录
                 vs.Add(string.Format("左下{0}", id));
                 //设置选中
-                MapFunction.SetForkLineIsSelected(id);
+                if (debugSetSelected)
+                    MapFunction.SetForkLineIsSelected(id);
                 if (debugPrint)
                 {
                     MapOperate.SystemMsg.WriteLine("向左找到【{0}】号【下分叉】!", MapElement.MapObject.ForkLines[id].Num);
@@ -1041,7 +791,8 @@ namespace WpfMap.Route
                 //记录
                 vs.Add(string.Format("右上{0}", id));
                 //设置选中
-                MapFunction.SetForkLineIsSelected(id);
+                if (debugSetSelected)
+                    MapFunction.SetForkLineIsSelected(id);
                 if (debugPrint)
                 {
                     MapOperate.SystemMsg.WriteLine("向右找到【{0}】号【上分叉】!", MapElement.MapObject.ForkLines[id].Num);
@@ -1071,7 +822,8 @@ namespace WpfMap.Route
                 //记录
                 vs.Add(string.Format("右下{0}", id));
                 //设置选中
-                MapFunction.SetForkLineIsSelected(id);
+                if (debugSetSelected)
+                    MapFunction.SetForkLineIsSelected(id);
                 if (debugPrint)
                 {
                     MapOperate.SystemMsg.WriteLine("向右找到【{0}】号【下分叉】!", MapElement.MapObject.ForkLines[id].Num);
@@ -1094,7 +846,8 @@ namespace WpfMap.Route
                 //记录
                 vs.Add(string.Format("{0}", id));
                 //设置选中
-                MapFunction.SetRFIDIsSelected(id);
+                if (debugSetSelected)
+                    MapFunction.SetRFIDIsSelected(id);
                 if (debugPrint)
                 {
                     MapOperate.SystemMsg.WriteLine("向上找到【{0}】号【标签】!", MapElement.MapObject.RFIDS[id].Num);
@@ -1115,7 +868,8 @@ namespace WpfMap.Route
                 //记录
                 vs.Add(string.Format("{0}", id));
                 //设置选中
-                MapFunction.SetRFIDIsSelected(id);
+                if (debugSetSelected)
+                    MapFunction.SetRFIDIsSelected(id);
                 if (debugPrint)
                 {
                     MapOperate.SystemMsg.WriteLine("向下找到【{0}】号【标签】!", MapElement.MapObject.RFIDS[id].Num);
@@ -1136,7 +890,8 @@ namespace WpfMap.Route
                 //记录
                 vs.Add(string.Format("{0}", id));
                 //设置选中
-                MapFunction.SetRFIDIsSelected(id);
+                if (debugSetSelected)
+                    MapFunction.SetRFIDIsSelected(id);
                 if (debugPrint)
                 {
                     MapOperate.SystemMsg.WriteLine("向左找到【{0}】号【标签】!", MapElement.MapObject.RFIDS[id].Num);
@@ -1157,7 +912,8 @@ namespace WpfMap.Route
                 //记录
                 vs.Add(string.Format("{0}", id));
                 //设置选中
-                MapFunction.SetRFIDIsSelected(id);
+                if (debugSetSelected)
+                    MapFunction.SetRFIDIsSelected(id);
                 if (debugPrint)
                 {
                     MapOperate.SystemMsg.WriteLine("向右找到【{0}】号【标签】!", MapElement.MapObject.RFIDS[id].Num);
@@ -2127,7 +1883,6 @@ namespace WpfMap.Route
                 return false;
         }
 
-
         /// <summary>
         /// 将向左搜索结果解析成AGV可以识别的形式
         /// </summary>
@@ -2135,10 +1890,9 @@ namespace WpfMap.Route
         /// <param name="vs1">第一组搜索结果</param>
         /// <param name="vs2">第二组搜索结果</param>
         /// <param name="vs3">第三组搜索结果</param>
-        /// <returns></returns>
-        public static List<string> AnalyLeftResault(int id, List<string> vs1, List<string> vs2, List<string> vs3)
+        /// <returns>0:向上分叉可到达的标签索引，1:直行可到达的标签索引，2:向下分叉可到达的标签索引</returns>
+        public static List<int> AnalyLeftResault(int id, List<string> vs1, List<string> vs2, List<string> vs3)
         {
-            List<string> rs = new List<string>();
             //直行
             int Straight = -1;
             //上分叉
@@ -2148,7 +1902,7 @@ namespace WpfMap.Route
             //有直接的直行标签
             if (id != -1)
             {
-                Straight = MapElement.MapObject.RFIDS[id].Num;
+                Straight = id;
                 if (vs1 != null && vs2 != null && vs3 != null)
                 {
                     MapOperate.SystemMsg.WriteLine("错误：单个方向不能出现三个以上标签！");
@@ -2173,14 +1927,14 @@ namespace WpfMap.Route
                     else
                     if (vs1.First().StartsWith("左上") && vs2.First().StartsWith("左下"))
                     {
-                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                        TurnUp = int.Parse(vs1.Last());
+                        TurnDown = int.Parse(vs2.Last());
                     }
                     else
                     if (vs1.First().StartsWith("左下") && vs2.First().StartsWith("左上"))
                     {
-                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                        TurnDown = int.Parse(vs1.Last());
+                        TurnUp = int.Parse(vs2.Last());
                     }
                     else
                     {
@@ -2193,9 +1947,9 @@ namespace WpfMap.Route
                 if (vs1 != null)
                 {
                     if (vs1.First().StartsWith("左上"))
-                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                        TurnUp = int.Parse(vs1.Last());
                     else
-                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                        TurnDown = int.Parse(vs1.Last());
                 }
             }
             else
@@ -2204,7 +1958,7 @@ namespace WpfMap.Route
                 //有一个标签
                 if (vs1 != null && vs2 == null && vs3 == null)
                 {
-                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                    Straight = int.Parse(vs1.Last());
                 }
                 else
                 //有两个标签
@@ -2224,14 +1978,14 @@ namespace WpfMap.Route
                     {
                         if (vs1.First().StartsWith("左上") && vs2.First().StartsWith("左下"))
                         {
-                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnUp = int.Parse(vs1.Last());
+                            TurnDown = int.Parse(vs2.Last());
                         }
                         else
                         if (vs1.First().StartsWith("左下") && vs2.First().StartsWith("左上"))
                         {
-                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnDown = int.Parse(vs1.Last());
+                            TurnUp = int.Parse(vs2.Last());
                         }
                         else
                         {
@@ -2245,13 +1999,13 @@ namespace WpfMap.Route
                                 //靠左的是直行，靠右的上分叉
                                 if (pt1.X < pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnUp = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnUp = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                             else
@@ -2260,13 +2014,13 @@ namespace WpfMap.Route
                                 //靠左的是直行，靠右的下分叉
                                 if (pt1.X < pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnDown = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnDown = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                         }
@@ -2277,14 +2031,14 @@ namespace WpfMap.Route
                     {
                         if (vs1.First().StartsWith("右上") && vs2.First().StartsWith("右下"))
                         {
-                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnDown = int.Parse(vs1.Last());
+                            TurnUp = int.Parse(vs2.Last());
                         }
                         else
                         if (vs1.First().StartsWith("右下") && vs2.First().StartsWith("右上"))
                         {
-                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnUp = int.Parse(vs1.Last());
+                            TurnDown = int.Parse(vs2.Last());
                         }
                         else
                         {
@@ -2298,13 +2052,13 @@ namespace WpfMap.Route
                                 //靠右的是直行，靠左的下分叉
                                 if (pt1.X > pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnDown = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnDown = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                             else
@@ -2313,13 +2067,13 @@ namespace WpfMap.Route
                                 //靠右的是直行，靠左的上分叉
                                 if (pt1.X > pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnUp = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnUp = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                         }
@@ -2330,14 +2084,14 @@ namespace WpfMap.Route
                     {
                         if (vs1.First().StartsWith("上左") && vs2.First().StartsWith("上右"))
                         {
-                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnDown = int.Parse(vs1.Last());
+                            TurnUp = int.Parse(vs2.Last());
                         }
                         else
                         if (vs1.First().StartsWith("上右") && vs2.First().StartsWith("上左"))
                         {
-                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnUp = int.Parse(vs1.Last());
+                            TurnDown = int.Parse(vs2.Last());
                         }
                         else
                         {
@@ -2351,13 +2105,13 @@ namespace WpfMap.Route
                                 //靠上的是直行，靠下的下分叉
                                 if (pt1.Y < pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnDown = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnDown = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                             else
@@ -2366,13 +2120,13 @@ namespace WpfMap.Route
                                 //靠上的是直行，靠下的上分叉
                                 if (pt1.Y < pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnUp = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnUp = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                         }
@@ -2383,14 +2137,14 @@ namespace WpfMap.Route
                     {
                         if (vs1.First().StartsWith("下左") && vs2.First().StartsWith("下右"))
                         {
-                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnUp = int.Parse(vs1.Last());
+                            TurnDown = int.Parse(vs2.Last());
                         }
                         else
                         if (vs1.First().StartsWith("下右") && vs2.First().StartsWith("下左"))
                         {
-                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnDown = int.Parse(vs1.Last());
+                            TurnUp = int.Parse(vs2.Last());
                         }
                         else
                         {
@@ -2404,13 +2158,13 @@ namespace WpfMap.Route
                                 //靠下的是直行，靠上的上分叉
                                 if (pt1.Y > pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnUp = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnUp = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                             else
@@ -2419,13 +2173,13 @@ namespace WpfMap.Route
                                 //靠下的是直行，靠上的下分叉
                                 if (pt1.Y > pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnDown = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnDown = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                         }
@@ -2458,7 +2212,7 @@ namespace WpfMap.Route
                         if (vs1.Count == 1)
                         {
                             //直行到达
-                            Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                            Straight = int.Parse(vs1.Last());
                             v1 = vs2;
                             v2 = vs3;
                         }
@@ -2466,7 +2220,7 @@ namespace WpfMap.Route
                         if (vs2.Count == 1)
                         {
                             //直行到达
-                            Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            Straight = int.Parse(vs2.Last());
                             v1 = vs1;
                             v2 = vs3;
                         }
@@ -2474,7 +2228,7 @@ namespace WpfMap.Route
                         if (vs3.Count == 1)
                         {
                             //直行到达
-                            Straight = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                            Straight = int.Parse(vs3.Last());
                             v1 = vs1;
                             v2 = vs2;
                         }
@@ -2532,14 +2286,14 @@ namespace WpfMap.Route
                         {
                             if (v1.First().StartsWith("左上") && v2.First().StartsWith("左下"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnUp = int.Parse(v1.Last());
+                                TurnDown = int.Parse(v2.Last());
                             }
                             else
                             if (v1.First().StartsWith("左下") && v2.First().StartsWith("左上"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnDown = int.Parse(v1.Last());
+                                TurnUp = int.Parse(v2.Last());
                             }
                         }
                         else
@@ -2547,14 +2301,14 @@ namespace WpfMap.Route
                         {
                             if (v1.First().StartsWith("右上") && v2.First().StartsWith("右下"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnDown = int.Parse(v1.Last());
+                                TurnUp = int.Parse(v2.Last());
                             }
                             else
                             if (v1.First().StartsWith("右下") && v2.First().StartsWith("右上"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnUp = int.Parse(v1.Last());
+                                TurnDown = int.Parse(v2.Last());
                             }
                         }
                         else
@@ -2562,14 +2316,14 @@ namespace WpfMap.Route
                         {
                             if (v1.First().StartsWith("上左") && v2.First().StartsWith("上右"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnDown = int.Parse(v1.Last());
+                                TurnUp = int.Parse(v2.Last());
                             }
                             else
                             if (v1.First().StartsWith("上右") && v2.First().StartsWith("上左"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnUp = int.Parse(v1.Last());
+                                TurnDown = int.Parse(v2.Last());
                             }
                         }
                         else
@@ -2577,14 +2331,14 @@ namespace WpfMap.Route
                         {
                             if (v1.First().StartsWith("下左") && v2.First().StartsWith("下右"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnUp = int.Parse(v1.Last());
+                                TurnDown = int.Parse(v2.Last());
                             }
                             else
                             if (v1.First().StartsWith("下右") && v2.First().StartsWith("下左"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnDown = int.Parse(v1.Last());
+                                TurnUp = int.Parse(v2.Last());
                             }
                         }
                         else
@@ -2604,42 +2358,42 @@ namespace WpfMap.Route
                             //肯定是一个左上，两个左下，单独左下的就是左下，两个左上的需要单独处理
                             if (vs1.First().StartsWith("左上") && vs2.First().StartsWith("左下") && vs3.First().StartsWith("左下"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnUp = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("左下") && vs2.First().StartsWith("左上") && vs3.First().StartsWith("左下"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnUp = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("左下") && vs2.First().StartsWith("左下") && vs3.First().StartsWith("左上"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnUp = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
                             else
                             if (vs1.First().StartsWith("左下") && vs2.First().StartsWith("左上") && vs3.First().StartsWith("左上"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnDown = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("左上") && vs2.First().StartsWith("左下") && vs3.First().StartsWith("左上"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnDown = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("左上") && vs2.First().StartsWith("左上") && vs3.First().StartsWith("左下"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnDown = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
@@ -2650,42 +2404,42 @@ namespace WpfMap.Route
                         {
                             if (vs1.First().StartsWith("右上") && vs2.First().StartsWith("右下") && vs3.First().StartsWith("右下"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnDown = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("右下") && vs2.First().StartsWith("右上") && vs3.First().StartsWith("右下"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnDown = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("右下") && vs2.First().StartsWith("右下") && vs3.First().StartsWith("右上"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnDown = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
                             else
                             if (vs1.First().StartsWith("右下") && vs2.First().StartsWith("右上") && vs3.First().StartsWith("右上"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnUp = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("右上") && vs2.First().StartsWith("右下") && vs3.First().StartsWith("右上"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnUp = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("右上") && vs2.First().StartsWith("右上") && vs3.First().StartsWith("右下"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnUp = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
@@ -2696,42 +2450,42 @@ namespace WpfMap.Route
                         {
                             if (vs1.First().StartsWith("上左") && vs2.First().StartsWith("上右") && vs3.First().StartsWith("上右"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnDown = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("上右") && vs2.First().StartsWith("上左") && vs3.First().StartsWith("上右"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnDown = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("上右") && vs2.First().StartsWith("上右") && vs3.First().StartsWith("上左"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnDown = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
                             else
                             if (vs1.First().StartsWith("上右") && vs2.First().StartsWith("上左") && vs3.First().StartsWith("上左"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnUp = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("上左") && vs2.First().StartsWith("上右") && vs3.First().StartsWith("上左"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnUp = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("上左") && vs2.First().StartsWith("上左") && vs3.First().StartsWith("上右"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnUp = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
@@ -2742,42 +2496,42 @@ namespace WpfMap.Route
                         {
                             if (vs1.First().StartsWith("下左") && vs2.First().StartsWith("下右") && vs3.First().StartsWith("下右"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnUp = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                               if (vs1.First().StartsWith("下右") && vs2.First().StartsWith("下左") && vs3.First().StartsWith("下右"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnUp = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                               if (vs1.First().StartsWith("下右") && vs2.First().StartsWith("下右") && vs3.First().StartsWith("下左"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnUp = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
                             else
                               if (vs1.First().StartsWith("下右") && vs2.First().StartsWith("下左") && vs3.First().StartsWith("下左"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnDown = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                               if (vs1.First().StartsWith("下左") && vs2.First().StartsWith("下右") && vs3.First().StartsWith("下左"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnDown = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                               if (vs1.First().StartsWith("下左") && vs2.First().StartsWith("下左") && vs3.First().StartsWith("下右"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnDown = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
@@ -2803,7 +2557,7 @@ namespace WpfMap.Route
                                 //靠左的是直行
                                 if (pt1.X < pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    Straight = int.Parse(v1.Last());
                                     if (v2.First().StartsWith("左下") && TurnDown != -1)
                                     {
                                         MapOperate.SystemMsg.WriteLine("错误：出现了两个左下！");
@@ -2818,9 +2572,9 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnUp != -1)
-                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnDown = int.Parse(v2.Last());
                                         else
-                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnUp = int.Parse(v2.Last());
                                     }
                                 }
                                 else
@@ -2839,11 +2593,11 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnUp != -1)
-                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnDown = int.Parse(v1.Last());
                                         else
-                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnUp = int.Parse(v1.Last());
                                     }
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    Straight = int.Parse(v2.Last());
                                 }
                             }
                             else
@@ -2855,7 +2609,7 @@ namespace WpfMap.Route
                                 //靠右的是直行
                                 if (pt1.X > pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    Straight = int.Parse(v1.Last());
                                     //右下对应左上
                                     if (v2.First().StartsWith("右下") && TurnUp != -1)
                                     {
@@ -2871,9 +2625,9 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnUp != -1)
-                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnDown = int.Parse(v2.Last());
                                         else
-                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnUp = int.Parse(v2.Last());
                                     }
                                 }
                                 else
@@ -2893,11 +2647,11 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnUp != -1)
-                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnDown = int.Parse(v1.Last());
                                         else
-                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnUp = int.Parse(v1.Last());
                                     }
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    Straight = int.Parse(v2.Last());
                                 }
                             }
                             else
@@ -2909,7 +2663,7 @@ namespace WpfMap.Route
                                 //靠上的是直行
                                 if (pt1.Y < pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    Straight = int.Parse(v1.Last());
                                     //上左对应左下
                                     if (v2.First().StartsWith("上左") && TurnDown != -1)
                                     {
@@ -2925,9 +2679,9 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnUp != -1)
-                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnDown = int.Parse(v2.Last());
                                         else
-                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnUp = int.Parse(v2.Last());
                                     }
                                 }
                                 else
@@ -2947,11 +2701,11 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnUp != -1)
-                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnDown = int.Parse(v1.Last());
                                         else
-                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnUp = int.Parse(v1.Last());
                                     }
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    Straight = int.Parse(v2.Last());
                                 }
                             }
                             else
@@ -2962,7 +2716,7 @@ namespace WpfMap.Route
                                 //靠下的是直行
                                 if (pt1.Y > pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    Straight = int.Parse(v1.Last());
                                     //下左对应左上
                                     if (v2.First().StartsWith("下左") && TurnUp != -1)
                                     {
@@ -2978,9 +2732,9 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnUp != -1)
-                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnDown = int.Parse(v2.Last());
                                         else
-                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnUp = int.Parse(v2.Last());
                                     }
                                 }
                                 else
@@ -3000,11 +2754,11 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnUp != -1)
-                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnDown = int.Parse(v1.Last());
                                         else
-                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnUp = int.Parse(v1.Last());
                                     }
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    Straight = int.Parse(v2.Last());
                                 }
                             }
                         }
@@ -3017,7 +2771,15 @@ namespace WpfMap.Route
                 }
             }
             //打印结果
-            MapOperate.SystemMsg.WriteLine("向左：上分叉【{0}】直行【{1}】下分叉【{2}】", TurnUp, Straight, TurnDown);
+            MapOperate.SystemMsg.WriteLine("向左：上分叉【{0}】直行【{1}】下分叉【{2}】",
+                TurnUp == -1 ? TurnUp : MapElement.MapObject.RFIDS[TurnUp].Num,
+                Straight == -1 ? Straight : MapElement.MapObject.RFIDS[Straight].Num,
+                TurnDown == -1 ? TurnDown : MapElement.MapObject.RFIDS[TurnDown].Num);
+
+            List<int> rs = new List<int>();
+            rs.Add(TurnUp);
+            rs.Add(Straight);
+            rs.Add(TurnDown);
             return rs;
         }
         /// <summary>
@@ -3027,10 +2789,9 @@ namespace WpfMap.Route
         /// <param name="vs1">第一组搜索结果</param>
         /// <param name="vs2">第二组搜索结果</param>
         /// <param name="vs3">第三组搜索结果</param>
-        /// <returns></returns>
-        public static List<string> AnalyRightResault(int id, List<string> vs1, List<string> vs2, List<string> vs3)
+        /// <returns>0:向上分叉可到达的标签索引，1:直行可到达的标签索引，2:向下分叉可到达的标签索引</returns>
+        public static List<int> AnalyRightResault(int id, List<string> vs1, List<string> vs2, List<string> vs3)
         {
-            List<string> rs = new List<string>();
             //直行
             int Straight = -1;
             //上分叉
@@ -3040,7 +2801,7 @@ namespace WpfMap.Route
             //有直接的直行标签
             if (id != -1)
             {
-                Straight = MapElement.MapObject.RFIDS[id].Num;
+                Straight = id;
                 if (vs1 != null && vs2 != null && vs3 != null)
                 {
                     MapOperate.SystemMsg.WriteLine("错误：单个方向不能出现三个以上标签！");
@@ -3065,14 +2826,14 @@ namespace WpfMap.Route
                     else
                     if (vs1.First().StartsWith("右上") && vs2.First().StartsWith("右下"))
                     {
-                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                        TurnUp = int.Parse(vs1.Last());
+                        TurnDown = int.Parse(vs2.Last());
                     }
                     else
                     if (vs1.First().StartsWith("右下") && vs2.First().StartsWith("右上"))
                     {
-                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                        TurnDown = int.Parse(vs1.Last());
+                        TurnUp = int.Parse(vs2.Last());
                     }
                     else
                     {
@@ -3085,9 +2846,9 @@ namespace WpfMap.Route
                 if (vs1 != null)
                 {
                     if (vs1.First().StartsWith("右上"))
-                        TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                        TurnUp = int.Parse(vs1.Last());
                     else
-                        TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                        TurnDown = int.Parse(vs1.Last());
                 }
             }
             else
@@ -3096,7 +2857,7 @@ namespace WpfMap.Route
                 //有一个标签
                 if (vs1 != null && vs2 == null && vs3 == null)
                 {
-                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                    Straight = int.Parse(vs1.Last());
                 }
                 else
                 //有两个标签
@@ -3116,14 +2877,14 @@ namespace WpfMap.Route
                     {
                         if (vs1.First().StartsWith("左上") && vs2.First().StartsWith("左下"))
                         {
-                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnDown = int.Parse(vs1.Last());
+                            TurnUp = int.Parse(vs2.Last());
                         }
                         else
                         if (vs1.First().StartsWith("左下") && vs2.First().StartsWith("左上"))
                         {
-                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnUp = int.Parse(vs1.Last());
+                            TurnDown = int.Parse(vs2.Last());
                         }
                         else
                         {
@@ -3138,13 +2899,13 @@ namespace WpfMap.Route
                                 //靠左的是直行，靠右的下分叉
                                 if (pt1.X < pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnDown = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnDown = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                             else
@@ -3152,13 +2913,13 @@ namespace WpfMap.Route
                             {
                                 if (pt1.X < pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnUp = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnUp = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                         }
@@ -3169,14 +2930,14 @@ namespace WpfMap.Route
                     {
                         if (vs1.First().StartsWith("右上") && vs2.First().StartsWith("右下"))
                         {
-                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnUp = int.Parse(vs1.Last());
+                            TurnDown = int.Parse(vs2.Last());
                         }
                         else
                         if (vs1.First().StartsWith("右下") && vs2.First().StartsWith("右上"))
                         {
-                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnDown = int.Parse(vs1.Last());
+                            TurnUp = int.Parse(vs2.Last());
                         }
                         else
                         {
@@ -3190,13 +2951,13 @@ namespace WpfMap.Route
                                 //靠右的是直行，靠左的上分叉
                                 if (pt1.X > pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnUp = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnUp = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                             else
@@ -3205,13 +2966,13 @@ namespace WpfMap.Route
                                 //靠右的是直行，靠左的下分叉
                                 if (pt1.X > pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnDown = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnDown = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                         }
@@ -3222,14 +2983,14 @@ namespace WpfMap.Route
                     {
                         if (vs1.First().StartsWith("上左") && vs2.First().StartsWith("上右"))
                         {
-                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnUp = int.Parse(vs1.Last());
+                            TurnDown = int.Parse(vs2.Last());
                         }
                         else
                         if (vs1.First().StartsWith("上右") && vs2.First().StartsWith("上左"))
                         {
-                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnDown = int.Parse(vs1.Last());
+                            TurnUp = int.Parse(vs2.Last());
                         }
                         else
                         {
@@ -3243,13 +3004,13 @@ namespace WpfMap.Route
                                 //靠上的是直行，靠下的上分叉
                                 if (pt1.Y < pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnUp = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnUp = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                             else
@@ -3258,13 +3019,13 @@ namespace WpfMap.Route
                                 //靠上的是直行，靠下的下分叉
                                 if (pt1.Y < pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnDown = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnDown = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                         }
@@ -3275,14 +3036,14 @@ namespace WpfMap.Route
                     {
                         if (vs1.First().StartsWith("下左") && vs2.First().StartsWith("下右"))
                         {
-                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnDown = int.Parse(vs1.Last());
+                            TurnUp = int.Parse(vs2.Last());
                         }
                         else
                         if (vs1.First().StartsWith("下右") && vs2.First().StartsWith("下左"))
                         {
-                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnUp = int.Parse(vs1.Last());
+                            TurnDown = int.Parse(vs2.Last());
                         }
                         else
                         {
@@ -3296,13 +3057,13 @@ namespace WpfMap.Route
                                 //靠下的是直行，靠上的下分叉
                                 if (pt1.Y > pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnDown = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnDown = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                             else
@@ -3311,13 +3072,13 @@ namespace WpfMap.Route
                                 //靠下的是直行，靠上的上分叉
                                 if (pt1.Y > pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnUp = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnUp = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                         }
@@ -3350,7 +3111,7 @@ namespace WpfMap.Route
                         if (vs1.Count == 1)
                         {
                             //直行到达
-                            Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                            Straight = int.Parse(vs1.Last());
                             v1 = vs2;
                             v2 = vs3;
                         }
@@ -3358,7 +3119,7 @@ namespace WpfMap.Route
                         if (vs2.Count == 1)
                         {
                             //直行到达
-                            Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            Straight = int.Parse(vs2.Last());
                             v1 = vs1;
                             v2 = vs3;
                         }
@@ -3366,7 +3127,7 @@ namespace WpfMap.Route
                         if (vs3.Count == 1)
                         {
                             //直行到达
-                            Straight = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                            Straight = int.Parse(vs3.Last());
                             v1 = vs1;
                             v2 = vs2;
                         }
@@ -3424,14 +3185,14 @@ namespace WpfMap.Route
                         {
                             if (v1.First().StartsWith("左上") && v2.First().StartsWith("左下"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnDown = int.Parse(v1.Last());
+                                TurnUp = int.Parse(v2.Last());
                             }
                             else
                             if (v1.First().StartsWith("左下") && v2.First().StartsWith("左上"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnUp = int.Parse(v1.Last());
+                                TurnDown = int.Parse(v2.Last());
                             }
                         }
                         else
@@ -3439,14 +3200,14 @@ namespace WpfMap.Route
                         {
                             if (v1.First().StartsWith("右上") && v2.First().StartsWith("右下"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnUp = int.Parse(v1.Last());
+                                TurnDown = int.Parse(v2.Last());
                             }
                             else
                             if (v1.First().StartsWith("右下") && v2.First().StartsWith("右上"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnDown = int.Parse(v1.Last());
+                                TurnUp = int.Parse(v2.Last());
                             }
                         }
                         else
@@ -3454,14 +3215,14 @@ namespace WpfMap.Route
                         {
                             if (v1.First().StartsWith("上左") && v2.First().StartsWith("上右"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnUp = int.Parse(v1.Last());
+                                TurnDown = int.Parse(v2.Last());
                             }
                             else
                             if (v1.First().StartsWith("上右") && v2.First().StartsWith("上左"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnDown = int.Parse(v1.Last());
+                                TurnUp = int.Parse(v2.Last());
                             }
                         }
                         else
@@ -3469,14 +3230,14 @@ namespace WpfMap.Route
                         {
                             if (v1.First().StartsWith("下左") && v2.First().StartsWith("下右"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnDown = int.Parse(v1.Last());
+                                TurnUp = int.Parse(v2.Last());
                             }
                             else
                             if (v1.First().StartsWith("下右") && v2.First().StartsWith("下左"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnUp = int.Parse(v1.Last());
+                                TurnDown = int.Parse(v2.Last());
                             }
                         }
                         else
@@ -3496,42 +3257,42 @@ namespace WpfMap.Route
                             //肯定是一个左上，两个左下，单独左下的就是左下，两个左上的需要单独处理
                             if (vs1.First().StartsWith("左上") && vs2.First().StartsWith("左下") && vs3.First().StartsWith("左下"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnDown = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("左下") && vs2.First().StartsWith("左上") && vs3.First().StartsWith("左下"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnDown = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("左下") && vs2.First().StartsWith("左下") && vs3.First().StartsWith("左上"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnDown = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
                             else
                             if (vs1.First().StartsWith("左下") && vs2.First().StartsWith("左上") && vs3.First().StartsWith("左上"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnUp = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("左上") && vs2.First().StartsWith("左下") && vs3.First().StartsWith("左上"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnUp = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("左上") && vs2.First().StartsWith("左上") && vs3.First().StartsWith("左下"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnUp = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
@@ -3542,42 +3303,42 @@ namespace WpfMap.Route
                         {
                             if (vs1.First().StartsWith("右上") && vs2.First().StartsWith("右下") && vs3.First().StartsWith("右下"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnUp = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("右下") && vs2.First().StartsWith("右上") && vs3.First().StartsWith("右下"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnUp = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("右下") && vs2.First().StartsWith("右下") && vs3.First().StartsWith("右上"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnUp = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
                             else
                             if (vs1.First().StartsWith("右下") && vs2.First().StartsWith("右上") && vs3.First().StartsWith("右上"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnDown = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("右上") && vs2.First().StartsWith("右下") && vs3.First().StartsWith("右上"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnDown = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("右上") && vs2.First().StartsWith("右上") && vs3.First().StartsWith("右下"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnDown = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
@@ -3588,42 +3349,42 @@ namespace WpfMap.Route
                         {
                             if (vs1.First().StartsWith("上左") && vs2.First().StartsWith("上右") && vs3.First().StartsWith("上右"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnUp = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("上右") && vs2.First().StartsWith("上左") && vs3.First().StartsWith("上右"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnUp = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("上右") && vs2.First().StartsWith("上右") && vs3.First().StartsWith("上左"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnUp = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
                             else
                             if (vs1.First().StartsWith("上右") && vs2.First().StartsWith("上左") && vs3.First().StartsWith("上左"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnDown = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("上左") && vs2.First().StartsWith("上右") && vs3.First().StartsWith("上左"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnDown = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("上左") && vs2.First().StartsWith("上左") && vs3.First().StartsWith("上右"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnDown = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
@@ -3634,42 +3395,42 @@ namespace WpfMap.Route
                         {
                             if (vs1.First().StartsWith("下左") && vs2.First().StartsWith("下右") && vs3.First().StartsWith("下右"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnDown = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                               if (vs1.First().StartsWith("下右") && vs2.First().StartsWith("下左") && vs3.First().StartsWith("下右"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnDown = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                               if (vs1.First().StartsWith("下右") && vs2.First().StartsWith("下右") && vs3.First().StartsWith("下左"))
                             {
-                                TurnDown = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnDown = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
                             else
                               if (vs1.First().StartsWith("下右") && vs2.First().StartsWith("下左") && vs3.First().StartsWith("下左"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnUp = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                               if (vs1.First().StartsWith("下左") && vs2.First().StartsWith("下右") && vs3.First().StartsWith("下左"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnUp = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                               if (vs1.First().StartsWith("下左") && vs2.First().StartsWith("下左") && vs3.First().StartsWith("下右"))
                             {
-                                TurnUp = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnUp = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
@@ -3695,7 +3456,7 @@ namespace WpfMap.Route
                                 //靠左的是直行
                                 if (pt1.X < pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    Straight = int.Parse(v1.Last());
                                     if (v2.First().StartsWith("左下") && TurnUp != -1)
                                     {
                                         MapOperate.SystemMsg.WriteLine("错误：出现了两个右上！");
@@ -3710,9 +3471,9 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnUp != -1)
-                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnDown = int.Parse(v2.Last());
                                         else
-                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnUp = int.Parse(v2.Last());
                                     }
                                 }
                                 else
@@ -3731,11 +3492,11 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnUp != -1)
-                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnDown = int.Parse(v1.Last());
                                         else
-                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnUp = int.Parse(v1.Last());
                                     }
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    Straight = int.Parse(v2.Last());
                                 }
                             }
                             else
@@ -3747,7 +3508,7 @@ namespace WpfMap.Route
                                 //靠右的是直行
                                 if (pt1.X > pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    Straight = int.Parse(v1.Last());
                                     if (v2.First().StartsWith("右下") && TurnDown != -1)
                                     {
                                         MapOperate.SystemMsg.WriteLine("错误：出现了两个右下！");
@@ -3762,9 +3523,9 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnUp != -1)
-                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnDown = int.Parse(v2.Last());
                                         else
-                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnUp = int.Parse(v2.Last());
                                     }
                                 }
                                 else
@@ -3783,11 +3544,11 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnUp != -1)
-                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnDown = int.Parse(v1.Last());
                                         else
-                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnUp = int.Parse(v1.Last());
                                     }
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    Straight = int.Parse(v2.Last());
                                 }
                             }
                             else
@@ -3799,7 +3560,7 @@ namespace WpfMap.Route
                                 //靠上的是直行
                                 if (pt1.Y < pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    Straight = int.Parse(v1.Last());
                                     if (v2.First().StartsWith("上左") && TurnUp != -1)
                                     {
                                         MapOperate.SystemMsg.WriteLine("错误：出现了两个右上！");
@@ -3814,9 +3575,9 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnUp != -1)
-                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnDown = int.Parse(v2.Last());
                                         else
-                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnUp = int.Parse(v2.Last());
                                     }
                                 }
                                 else
@@ -3835,11 +3596,11 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnUp != -1)
-                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnDown = int.Parse(v1.Last());
                                         else
-                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnUp = int.Parse(v1.Last());
                                     }
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    Straight = int.Parse(v2.Last());
                                 }
                             }
                             else
@@ -3850,7 +3611,7 @@ namespace WpfMap.Route
                                 //靠下的是直行
                                 if (pt1.Y > pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    Straight = int.Parse(v1.Last());
                                     if (v2.First().StartsWith("下左") && TurnDown != -1)
                                     {
                                         MapOperate.SystemMsg.WriteLine("错误：出现了两个右下！");
@@ -3865,9 +3626,9 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnUp != -1)
-                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnDown = int.Parse(v2.Last());
                                         else
-                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnUp = int.Parse(v2.Last());
                                     }
                                 }
                                 else
@@ -3886,11 +3647,11 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnUp != -1)
-                                            TurnDown = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnDown = int.Parse(v1.Last());
                                         else
-                                            TurnUp = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnUp = int.Parse(v1.Last());
                                     }
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    Straight = int.Parse(v2.Last());
                                 }
                             }
                         }
@@ -3903,7 +3664,15 @@ namespace WpfMap.Route
                 }
             }
             //打印结果
-            MapOperate.SystemMsg.WriteLine("向右：上分叉【{0}】直行【{1}】下分叉【{2}】", TurnUp, Straight, TurnDown);
+            MapOperate.SystemMsg.WriteLine("向右：上分叉【{0}】直行【{1}】下分叉【{2}】",
+             TurnUp == -1 ? TurnUp : MapElement.MapObject.RFIDS[TurnUp].Num,
+             Straight == -1 ? Straight : MapElement.MapObject.RFIDS[Straight].Num,
+             TurnDown == -1 ? TurnDown : MapElement.MapObject.RFIDS[TurnDown].Num);
+
+            List<int> rs = new List<int>();
+            rs.Add(TurnUp);
+            rs.Add(Straight);
+            rs.Add(TurnDown);
             return rs;
         }
         /// <summary>
@@ -3913,10 +3682,9 @@ namespace WpfMap.Route
         /// <param name="vs1">第一组搜索结果</param>
         /// <param name="vs2">第二组搜索结果</param>
         /// <param name="vs3">第三组搜索结果</param>
-        /// <returns></returns>
-        public static List<string> AnalyUpResault(int id, List<string> vs1, List<string> vs2, List<string> vs3)
+        /// <returns>0:向左分叉可到达的标签索引，1:直行可到达的标签索引，2:向右分叉可到达的标签索引</returns>
+        public static List<int> AnalyUpResault(int id, List<string> vs1, List<string> vs2, List<string> vs3)
         {
-            List<string> rs = new List<string>();
             //直行
             int Straight = -1;
             //左分叉
@@ -3926,7 +3694,7 @@ namespace WpfMap.Route
             //有直接的直行标签
             if (id != -1)
             {
-                Straight = MapElement.MapObject.RFIDS[id].Num;
+                Straight = id;
                 if (vs1 != null && vs2 != null && vs3 != null)
                 {
                     MapOperate.SystemMsg.WriteLine("错误：单个方向不能出现三个以上标签！");
@@ -3951,14 +3719,14 @@ namespace WpfMap.Route
                     else
                     if (vs1.First().StartsWith("上左") && vs2.First().StartsWith("上右"))
                     {
-                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                        TurnLeft = int.Parse(vs1.Last());
+                        TurnRight = int.Parse(vs2.Last());
                     }
                     else
                     if (vs1.First().StartsWith("上右") && vs2.First().StartsWith("上左"))
                     {
-                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                        TurnRight = int.Parse(vs1.Last());
+                        TurnLeft = int.Parse(vs2.Last());
                     }
                     else
                     {
@@ -3971,9 +3739,9 @@ namespace WpfMap.Route
                 if (vs1 != null)
                 {
                     if (vs1.First().StartsWith("上左"))
-                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                        TurnLeft = int.Parse(vs1.Last());
                     else
-                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                        TurnRight = int.Parse(vs1.Last());
                 }
             }
             else
@@ -3982,7 +3750,7 @@ namespace WpfMap.Route
                 //有一个标签
                 if (vs1 != null && vs2 == null && vs3 == null)
                 {
-                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                    Straight = int.Parse(vs1.Last());
                 }
                 else
                 //有两个标签
@@ -4002,14 +3770,14 @@ namespace WpfMap.Route
                     {
                         if (vs1.First().StartsWith("左上") && vs2.First().StartsWith("左下"))
                         {
-                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnRight = int.Parse(vs1.Last());
+                            TurnLeft = int.Parse(vs2.Last());
                         }
                         else
                         if (vs1.First().StartsWith("左下") && vs2.First().StartsWith("左上"))
                         {
-                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnLeft = int.Parse(vs1.Last());
+                            TurnRight = int.Parse(vs2.Last());
                         }
                         else
                         {
@@ -4023,13 +3791,13 @@ namespace WpfMap.Route
                                 //靠左的是直行，靠右的右分叉
                                 if (pt1.X < pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnRight = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnRight = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                             else
@@ -4038,13 +3806,13 @@ namespace WpfMap.Route
                                 //靠左的是直行，靠右的左分叉
                                 if (pt1.X < pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnLeft = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnLeft = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                         }
@@ -4055,14 +3823,14 @@ namespace WpfMap.Route
                     {
                         if (vs1.First().StartsWith("右上") && vs2.First().StartsWith("右下"))
                         {
-                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnLeft = int.Parse(vs1.Last());
+                            TurnRight = int.Parse(vs2.Last());
                         }
                         else
                         if (vs1.First().StartsWith("右下") && vs2.First().StartsWith("右上"))
                         {
-                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnRight = int.Parse(vs1.Last());
+                            TurnLeft = int.Parse(vs2.Last());
                         }
                         else
                         {
@@ -4076,13 +3844,13 @@ namespace WpfMap.Route
                                 //靠右的是直行，靠左的左分叉
                                 if (pt1.X > pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnLeft = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnLeft = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                             else
@@ -4091,13 +3859,13 @@ namespace WpfMap.Route
                                 //靠右的是直行，靠左的右分叉
                                 if (pt1.X > pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnRight = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnRight = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
 
                             }
@@ -4109,14 +3877,14 @@ namespace WpfMap.Route
                     {
                         if (vs1.First().StartsWith("上左") && vs2.First().StartsWith("上右"))
                         {
-                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnLeft = int.Parse(vs1.Last());
+                            TurnRight = int.Parse(vs2.Last());
                         }
                         else
                         if (vs1.First().StartsWith("上右") && vs2.First().StartsWith("上左"))
                         {
-                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnRight = int.Parse(vs1.Last());
+                            TurnLeft = int.Parse(vs2.Last());
                         }
                         else
                         {
@@ -4130,13 +3898,13 @@ namespace WpfMap.Route
                                 //靠上的是直行，靠下的左分叉
                                 if (pt1.Y < pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnLeft = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnLeft = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                             else
@@ -4145,13 +3913,13 @@ namespace WpfMap.Route
                                 //靠上的是直行，靠下的右分叉
                                 if (pt1.Y < pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnRight = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnRight = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                         }
@@ -4162,14 +3930,14 @@ namespace WpfMap.Route
                     {
                         if (vs1.First().StartsWith("下左") && vs2.First().StartsWith("下右"))
                         {
-                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnRight = int.Parse(vs1.Last());
+                            TurnLeft = int.Parse(vs2.Last());
                         }
                         else
                         if (vs1.First().StartsWith("下右") && vs2.First().StartsWith("下左"))
                         {
-                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnLeft = int.Parse(vs1.Last());
+                            TurnRight = int.Parse(vs2.Last());
                         }
                         else
                         {
@@ -4183,13 +3951,13 @@ namespace WpfMap.Route
                                 //靠下的是直行，靠上的右分叉
                                 if (pt1.Y > pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnRight = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnRight = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                             else
@@ -4198,13 +3966,13 @@ namespace WpfMap.Route
                                 //靠下的是直行，靠上的左分叉
                                 if (pt1.Y > pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnLeft = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnLeft = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                         }
@@ -4237,7 +4005,7 @@ namespace WpfMap.Route
                         if (vs1.Count == 1)
                         {
                             //直行到达
-                            Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                            Straight = int.Parse(vs1.Last());
                             v1 = vs2;
                             v2 = vs3;
                         }
@@ -4245,7 +4013,7 @@ namespace WpfMap.Route
                         if (vs2.Count == 1)
                         {
                             //直行到达
-                            Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            Straight = int.Parse(vs2.Last());
                             v1 = vs1;
                             v2 = vs3;
                         }
@@ -4253,7 +4021,7 @@ namespace WpfMap.Route
                         if (vs3.Count == 1)
                         {
                             //直行到达
-                            Straight = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                            Straight = int.Parse(vs3.Last());
                             v1 = vs1;
                             v2 = vs2;
                         }
@@ -4311,14 +4079,14 @@ namespace WpfMap.Route
                         {
                             if (v1.First().StartsWith("左上") && v2.First().StartsWith("左下"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnRight = int.Parse(v1.Last());
+                                TurnLeft = int.Parse(v2.Last());
                             }
                             else
                             if (v1.First().StartsWith("左下") && v2.First().StartsWith("左上"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnLeft = int.Parse(v1.Last());
+                                TurnRight = int.Parse(v2.Last());
                             }
                         }
                         else
@@ -4326,14 +4094,14 @@ namespace WpfMap.Route
                         {
                             if (v1.First().StartsWith("右上") && v2.First().StartsWith("右下"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnLeft = int.Parse(v1.Last());
+                                TurnRight = int.Parse(v2.Last());
                             }
                             else
                             if (v1.First().StartsWith("右下") && v2.First().StartsWith("右上"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnRight = int.Parse(v1.Last());
+                                TurnLeft = int.Parse(v2.Last());
                             }
                         }
                         else
@@ -4341,14 +4109,14 @@ namespace WpfMap.Route
                         {
                             if (v1.First().StartsWith("上左") && v2.First().StartsWith("上右"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnLeft = int.Parse(v1.Last());
+                                TurnRight = int.Parse(v2.Last());
                             }
                             else
                             if (v1.First().StartsWith("上右") && v2.First().StartsWith("上左"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnRight = int.Parse(v1.Last());
+                                TurnLeft = int.Parse(v2.Last());
                             }
                         }
                         else
@@ -4356,14 +4124,14 @@ namespace WpfMap.Route
                         {
                             if (v1.First().StartsWith("下左") && v2.First().StartsWith("下右"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnRight = int.Parse(v1.Last());
+                                TurnLeft = int.Parse(v2.Last());
                             }
                             else
                             if (v1.First().StartsWith("下右") && v2.First().StartsWith("下左"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnLeft = int.Parse(v1.Last());
+                                TurnRight = int.Parse(v2.Last());
                             }
                         }
                         else
@@ -4383,42 +4151,42 @@ namespace WpfMap.Route
                             //肯定是一个左上，两个左下，单独左下的就是左下，两个左上的需要单独处理
                             if (vs1.First().StartsWith("左上") && vs2.First().StartsWith("左下") && vs3.First().StartsWith("左下"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnRight = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("左下") && vs2.First().StartsWith("左上") && vs3.First().StartsWith("左下"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnRight = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("左下") && vs2.First().StartsWith("左下") && vs3.First().StartsWith("左上"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnRight = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
                             else
                             if (vs1.First().StartsWith("左下") && vs2.First().StartsWith("左上") && vs3.First().StartsWith("左上"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnLeft = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("左上") && vs2.First().StartsWith("左下") && vs3.First().StartsWith("左上"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnLeft = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("左上") && vs2.First().StartsWith("左上") && vs3.First().StartsWith("左下"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnLeft = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
@@ -4429,42 +4197,42 @@ namespace WpfMap.Route
                         {
                             if (vs1.First().StartsWith("右上") && vs2.First().StartsWith("右下") && vs3.First().StartsWith("右下"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnLeft = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("右下") && vs2.First().StartsWith("右上") && vs3.First().StartsWith("右下"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnLeft = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("右下") && vs2.First().StartsWith("右下") && vs3.First().StartsWith("右上"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnLeft = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
                             else
                             if (vs1.First().StartsWith("右下") && vs2.First().StartsWith("右上") && vs3.First().StartsWith("右上"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnRight = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("右上") && vs2.First().StartsWith("右下") && vs3.First().StartsWith("右上"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnRight = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("右上") && vs2.First().StartsWith("右上") && vs3.First().StartsWith("右下"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnRight = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
@@ -4475,42 +4243,42 @@ namespace WpfMap.Route
                         {
                             if (vs1.First().StartsWith("上左") && vs2.First().StartsWith("上右") && vs3.First().StartsWith("上右"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnLeft = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("上右") && vs2.First().StartsWith("上左") && vs3.First().StartsWith("上右"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnLeft = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("上右") && vs2.First().StartsWith("上右") && vs3.First().StartsWith("上左"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnLeft = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
                             else
                             if (vs1.First().StartsWith("上右") && vs2.First().StartsWith("上左") && vs3.First().StartsWith("上左"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnRight = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("上左") && vs2.First().StartsWith("上右") && vs3.First().StartsWith("上左"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnRight = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("上左") && vs2.First().StartsWith("上左") && vs3.First().StartsWith("上右"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnRight = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
@@ -4521,42 +4289,42 @@ namespace WpfMap.Route
                         {
                             if (vs1.First().StartsWith("下左") && vs2.First().StartsWith("下右") && vs3.First().StartsWith("下右"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnRight = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                               if (vs1.First().StartsWith("下右") && vs2.First().StartsWith("下左") && vs3.First().StartsWith("下右"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnRight = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                               if (vs1.First().StartsWith("下右") && vs2.First().StartsWith("下右") && vs3.First().StartsWith("下左"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnRight = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
                             else
                               if (vs1.First().StartsWith("下右") && vs2.First().StartsWith("下左") && vs3.First().StartsWith("下左"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnLeft = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                               if (vs1.First().StartsWith("下左") && vs2.First().StartsWith("下右") && vs3.First().StartsWith("下左"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnLeft = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                               if (vs1.First().StartsWith("下左") && vs2.First().StartsWith("下左") && vs3.First().StartsWith("下右"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnLeft = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
@@ -4582,7 +4350,7 @@ namespace WpfMap.Route
                                 //靠左的是直行
                                 if (pt1.X < pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    Straight = int.Parse(v1.Last());
                                     if (v2.First().StartsWith("左下") && TurnLeft != -1)
                                     {
                                         MapOperate.SystemMsg.WriteLine("错误：出现了两个上左！");
@@ -4597,9 +4365,9 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnLeft != -1)
-                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnRight = int.Parse(v2.Last());
                                         else
-                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnLeft = int.Parse(v2.Last());
                                     }
                                 }
                                 else
@@ -4618,11 +4386,11 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnLeft != -1)
-                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnRight = int.Parse(v1.Last());
                                         else
-                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnLeft = int.Parse(v1.Last());
                                     }
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    Straight = int.Parse(v2.Last());
                                 }
                             }
                             else
@@ -4634,7 +4402,7 @@ namespace WpfMap.Route
                                 //靠右的是直行
                                 if (pt1.X > pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    Straight = int.Parse(v1.Last());
                                     if (v2.First().StartsWith("右下") && TurnRight != -1)
                                     {
                                         MapOperate.SystemMsg.WriteLine("错误：出现了两个上右！");
@@ -4649,9 +4417,9 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnLeft != -1)
-                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnRight = int.Parse(v2.Last());
                                         else
-                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnLeft = int.Parse(v2.Last());
                                     }
                                 }
                                 else
@@ -4670,11 +4438,11 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnLeft != -1)
-                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnRight = int.Parse(v1.Last());
                                         else
-                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnLeft = int.Parse(v1.Last());
                                     }
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    Straight = int.Parse(v2.Last());
                                 }
                             }
                             else
@@ -4686,7 +4454,7 @@ namespace WpfMap.Route
                                 //靠上的是直行
                                 if (pt1.Y < pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    Straight = int.Parse(v1.Last());
                                     if (v2.First().StartsWith("上左") && TurnLeft != -1)
                                     {
                                         MapOperate.SystemMsg.WriteLine("错误：出现了两个上左！");
@@ -4701,9 +4469,9 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnLeft != -1)
-                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnRight = int.Parse(v2.Last());
                                         else
-                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnLeft = int.Parse(v2.Last());
                                     }
                                 }
                                 else
@@ -4722,11 +4490,11 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnLeft != -1)
-                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnRight = int.Parse(v1.Last());
                                         else
-                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnLeft = int.Parse(v1.Last());
                                     }
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    Straight = int.Parse(v2.Last());
                                 }
                             }
                             else
@@ -4737,7 +4505,7 @@ namespace WpfMap.Route
                                 //靠下的是直行
                                 if (pt1.Y > pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    Straight = int.Parse(v1.Last());
                                     if (v2.First().StartsWith("下左") && TurnRight != -1)
                                     {
                                         MapOperate.SystemMsg.WriteLine("错误：出现了两个上右！");
@@ -4752,9 +4520,9 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnLeft != -1)
-                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnRight = int.Parse(v2.Last());
                                         else
-                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnLeft = int.Parse(v2.Last());
                                     }
                                 }
                                 else
@@ -4773,11 +4541,11 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnLeft != -1)
-                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnRight = int.Parse(v1.Last());
                                         else
-                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnLeft = int.Parse(v1.Last());
                                     }
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    Straight = int.Parse(v2.Last());
                                 }
                             }
                         }
@@ -4790,7 +4558,14 @@ namespace WpfMap.Route
                 }
             }
             //打印结果
-            MapOperate.SystemMsg.WriteLine("向上：左分叉【{0}】直行【{1}】右分叉【{2}】", TurnLeft, Straight, TurnRight);
+            MapOperate.SystemMsg.WriteLine("向上：左分叉【{0}】直行【{1}】右分叉【{2}】",
+               TurnLeft == -1 ? TurnLeft : MapElement.MapObject.RFIDS[TurnLeft].Num,
+               Straight == -1 ? Straight : MapElement.MapObject.RFIDS[Straight].Num,
+               TurnRight == -1 ? TurnRight : MapElement.MapObject.RFIDS[TurnRight].Num);
+            List<int> rs = new List<int>();
+            rs.Add(TurnLeft);
+            rs.Add(Straight);
+            rs.Add(TurnRight);
             return rs;
         }
         /// <summary>
@@ -4800,10 +4575,9 @@ namespace WpfMap.Route
         /// <param name="vs1">第一组搜索结果</param>
         /// <param name="vs2">第二组搜索结果</param>
         /// <param name="vs3">第三组搜索结果</param>
-        /// <returns></returns>
-        public static List<string> AnalyDownResault(int id, List<string> vs1, List<string> vs2, List<string> vs3)
+        /// <returns>0:向左分叉可到达的标签索引，1:直行可到达的标签索引，2:向右分叉可到达的标签索引</returns>
+        public static List<int> AnalyDownResault(int id, List<string> vs1, List<string> vs2, List<string> vs3)
         {
-            List<string> rs = new List<string>();
             //直行
             int Straight = -1;
             //左分叉
@@ -4813,7 +4587,7 @@ namespace WpfMap.Route
             //有直接的直行标签
             if (id != -1)
             {
-                Straight = MapElement.MapObject.RFIDS[id].Num;
+                Straight = id;
                 if (vs1 != null && vs2 != null && vs3 != null)
                 {
                     MapOperate.SystemMsg.WriteLine("错误：单个方向不能出现三个以上标签！");
@@ -4838,14 +4612,14 @@ namespace WpfMap.Route
                     else
                     if (vs1.First().StartsWith("下左") && vs2.First().StartsWith("下右"))
                     {
-                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                        TurnLeft = int.Parse(vs1.Last());
+                        TurnRight = int.Parse(vs2.Last());
                     }
                     else
                     if (vs1.First().StartsWith("下右") && vs2.First().StartsWith("下左"))
                     {
-                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                        TurnRight = int.Parse(vs1.Last());
+                        TurnLeft = int.Parse(vs2.Last());
                     }
                     else
                     {
@@ -4858,9 +4632,9 @@ namespace WpfMap.Route
                 if (vs1 != null)
                 {
                     if (vs1.First().StartsWith("下左"))
-                        TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                        TurnLeft = int.Parse(vs1.Last());
                     else
-                        TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                        TurnRight = int.Parse(vs1.Last());
                 }
             }
             else
@@ -4869,7 +4643,7 @@ namespace WpfMap.Route
                 //有一个标签
                 if (vs1 != null && vs2 == null && vs3 == null)
                 {
-                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                    Straight = int.Parse(vs1.Last());
                 }
                 else
                 //有两个标签
@@ -4889,14 +4663,14 @@ namespace WpfMap.Route
                     {
                         if (vs1.First().StartsWith("左上") && vs2.First().StartsWith("左下"))
                         {
-                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnLeft = int.Parse(vs1.Last());
+                            TurnRight = int.Parse(vs2.Last());
                         }
                         else
                         if (vs1.First().StartsWith("左下") && vs2.First().StartsWith("左上"))
                         {
-                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnRight = int.Parse(vs1.Last());
+                            TurnLeft = int.Parse(vs2.Last());
                         }
                         else
                         {
@@ -4910,13 +4684,13 @@ namespace WpfMap.Route
                                 //靠左的是直行，靠右的左分叉
                                 if (pt1.X < pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnLeft = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnLeft = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                             else
@@ -4925,13 +4699,13 @@ namespace WpfMap.Route
                                 //靠左的是直行，靠右的右分叉
                                 if (pt1.X < pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnRight = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnRight = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                         }
@@ -4942,14 +4716,14 @@ namespace WpfMap.Route
                     {
                         if (vs1.First().StartsWith("右上") && vs2.First().StartsWith("右下"))
                         {
-                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnRight = int.Parse(vs1.Last());
+                            TurnLeft = int.Parse(vs2.Last());
                         }
                         else
                         if (vs1.First().StartsWith("右下") && vs2.First().StartsWith("右上"))
                         {
-                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnLeft = int.Parse(vs1.Last());
+                            TurnRight = int.Parse(vs2.Last());
                         }
                         else
                         {
@@ -4963,13 +4737,13 @@ namespace WpfMap.Route
                                 //靠右的是直行，靠左的右分叉
                                 if (pt1.X > pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnRight = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnRight = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                             else
@@ -4978,13 +4752,13 @@ namespace WpfMap.Route
                                 //靠右的是直行，靠左的左分叉
                                 if (pt1.X > pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnLeft = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnLeft = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                         }
@@ -4995,14 +4769,14 @@ namespace WpfMap.Route
                     {
                         if (vs1.First().StartsWith("上左") && vs2.First().StartsWith("上右"))
                         {
-                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnRight = int.Parse(vs1.Last());
+                            TurnLeft = int.Parse(vs2.Last());
                         }
                         else
                         if (vs1.First().StartsWith("上右") && vs2.First().StartsWith("上左"))
                         {
-                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnLeft = int.Parse(vs1.Last());
+                            TurnRight = int.Parse(vs2.Last());
                         }
                         else
                         {
@@ -5016,13 +4790,13 @@ namespace WpfMap.Route
                                 //靠上的是直行，靠下的右分叉
                                 if (pt1.Y < pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnRight = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnRight = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                             else
@@ -5031,13 +4805,13 @@ namespace WpfMap.Route
                                 //靠上的是直行，靠下的左分叉
                                 if (pt1.Y < pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnLeft = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnLeft = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                         }
@@ -5048,14 +4822,14 @@ namespace WpfMap.Route
                     {
                         if (vs1.First().StartsWith("下左") && vs2.First().StartsWith("下右"))
                         {
-                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnLeft = int.Parse(vs1.Last());
+                            TurnRight = int.Parse(vs2.Last());
                         }
                         else
                         if (vs1.First().StartsWith("下右") && vs2.First().StartsWith("下左"))
                         {
-                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            TurnRight = int.Parse(vs1.Last());
+                            TurnLeft = int.Parse(vs2.Last());
                         }
                         else
                         {
@@ -5069,13 +4843,13 @@ namespace WpfMap.Route
                                 //靠下的是直行，靠上的左分叉
                                 if (pt1.Y > pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnLeft = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnLeft = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                             else
@@ -5084,13 +4858,13 @@ namespace WpfMap.Route
                                 //靠下的是直行，靠上的右分叉
                                 if (pt1.Y > pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    Straight = int.Parse(vs1.Last());
+                                    TurnRight = int.Parse(vs2.Last());
                                 }
                                 else
                                 {
-                                    TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                    TurnRight = int.Parse(vs1.Last());
+                                    Straight = int.Parse(vs2.Last());
                                 }
                             }
                         }
@@ -5123,7 +4897,7 @@ namespace WpfMap.Route
                         if (vs1.Count == 1)
                         {
                             //直行到达
-                            Straight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                            Straight = int.Parse(vs1.Last());
                             v1 = vs2;
                             v2 = vs3;
                         }
@@ -5131,7 +4905,7 @@ namespace WpfMap.Route
                         if (vs2.Count == 1)
                         {
                             //直行到达
-                            Straight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                            Straight = int.Parse(vs2.Last());
                             v1 = vs1;
                             v2 = vs3;
                         }
@@ -5139,7 +4913,7 @@ namespace WpfMap.Route
                         if (vs3.Count == 1)
                         {
                             //直行到达
-                            Straight = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                            Straight = int.Parse(vs3.Last());
                             v1 = vs1;
                             v2 = vs2;
                         }
@@ -5197,14 +4971,14 @@ namespace WpfMap.Route
                         {
                             if (v1.First().StartsWith("左上") && v2.First().StartsWith("左下"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnLeft = int.Parse(v1.Last());
+                                TurnRight = int.Parse(v2.Last());
                             }
                             else
                             if (v1.First().StartsWith("左下") && v2.First().StartsWith("左上"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnRight = int.Parse(v1.Last());
+                                TurnLeft = int.Parse(v2.Last());
                             }
                         }
                         else
@@ -5212,14 +4986,14 @@ namespace WpfMap.Route
                         {
                             if (v1.First().StartsWith("右上") && v2.First().StartsWith("右下"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnRight = int.Parse(v1.Last());
+                                TurnLeft = int.Parse(v2.Last());
                             }
                             else
                             if (v1.First().StartsWith("右下") && v2.First().StartsWith("右上"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnLeft = int.Parse(v1.Last());
+                                TurnRight = int.Parse(v2.Last());
                             }
                         }
                         else
@@ -5227,14 +5001,14 @@ namespace WpfMap.Route
                         {
                             if (v1.First().StartsWith("上左") && v2.First().StartsWith("上右"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnRight = int.Parse(v1.Last());
+                                TurnLeft = int.Parse(v2.Last());
                             }
                             else
                             if (v1.First().StartsWith("上右") && v2.First().StartsWith("上左"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnLeft = int.Parse(v1.Last());
+                                TurnRight = int.Parse(v2.Last());
                             }
                         }
                         else
@@ -5242,14 +5016,14 @@ namespace WpfMap.Route
                         {
                             if (v1.First().StartsWith("下左") && v2.First().StartsWith("下右"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnLeft = int.Parse(v1.Last());
+                                TurnRight = int.Parse(v2.Last());
                             }
                             else
                             if (v1.First().StartsWith("下右") && v2.First().StartsWith("下左"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                TurnRight = int.Parse(v1.Last());
+                                TurnLeft = int.Parse(v2.Last());
                             }
                         }
                         else
@@ -5269,42 +5043,42 @@ namespace WpfMap.Route
                             //肯定是一个左上，两个左下，单独左下的就是左下，两个左上的需要单独处理
                             if (vs1.First().StartsWith("左上") && vs2.First().StartsWith("左下") && vs3.First().StartsWith("左下"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnLeft = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("左下") && vs2.First().StartsWith("左上") && vs3.First().StartsWith("左下"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnLeft = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("左下") && vs2.First().StartsWith("左下") && vs3.First().StartsWith("左上"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnLeft = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
                             else
                             if (vs1.First().StartsWith("左下") && vs2.First().StartsWith("左上") && vs3.First().StartsWith("左上"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnRight = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("左上") && vs2.First().StartsWith("左下") && vs3.First().StartsWith("左上"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnRight = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("左上") && vs2.First().StartsWith("左上") && vs3.First().StartsWith("左下"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnRight = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
@@ -5315,42 +5089,42 @@ namespace WpfMap.Route
                         {
                             if (vs1.First().StartsWith("右上") && vs2.First().StartsWith("右下") && vs3.First().StartsWith("右下"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnRight = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("右下") && vs2.First().StartsWith("右上") && vs3.First().StartsWith("右下"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnRight = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("右下") && vs2.First().StartsWith("右下") && vs3.First().StartsWith("右上"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnRight = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
                             else
                             if (vs1.First().StartsWith("右下") && vs2.First().StartsWith("右上") && vs3.First().StartsWith("右上"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnLeft = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("右上") && vs2.First().StartsWith("右下") && vs3.First().StartsWith("右上"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnLeft = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("右上") && vs2.First().StartsWith("右上") && vs3.First().StartsWith("右下"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnLeft = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
@@ -5361,42 +5135,42 @@ namespace WpfMap.Route
                         {
                             if (vs1.First().StartsWith("上左") && vs2.First().StartsWith("上右") && vs3.First().StartsWith("上右"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnRight = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("上右") && vs2.First().StartsWith("上左") && vs3.First().StartsWith("上右"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnRight = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("上右") && vs2.First().StartsWith("上右") && vs3.First().StartsWith("上左"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnRight = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
                             else
                             if (vs1.First().StartsWith("上右") && vs2.First().StartsWith("上左") && vs3.First().StartsWith("上左"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnLeft = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("上左") && vs2.First().StartsWith("上右") && vs3.First().StartsWith("上左"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnLeft = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                             if (vs1.First().StartsWith("上左") && vs2.First().StartsWith("上左") && vs3.First().StartsWith("上右"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnLeft = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
@@ -5407,42 +5181,42 @@ namespace WpfMap.Route
                         {
                             if (vs1.First().StartsWith("下左") && vs2.First().StartsWith("下右") && vs3.First().StartsWith("下右"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnLeft = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                               if (vs1.First().StartsWith("下右") && vs2.First().StartsWith("下左") && vs3.First().StartsWith("下右"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnLeft = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                               if (vs1.First().StartsWith("下右") && vs2.First().StartsWith("下右") && vs3.First().StartsWith("下左"))
                             {
-                                TurnLeft = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnLeft = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
                             else
                               if (vs1.First().StartsWith("下右") && vs2.First().StartsWith("下左") && vs3.First().StartsWith("下左"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num;
+                                TurnRight = int.Parse(vs1.Last());
                                 v1 = vs2;
                                 v2 = vs3;
                             }
                             else
                               if (vs1.First().StartsWith("下左") && vs2.First().StartsWith("下右") && vs3.First().StartsWith("下左"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num;
+                                TurnRight = int.Parse(vs2.Last());
                                 v1 = vs1;
                                 v2 = vs3;
                             }
                             else
                               if (vs1.First().StartsWith("下左") && vs2.First().StartsWith("下左") && vs3.First().StartsWith("下右"))
                             {
-                                TurnRight = MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num;
+                                TurnRight = int.Parse(vs3.Last());
                                 v1 = vs1;
                                 v2 = vs2;
                             }
@@ -5468,7 +5242,7 @@ namespace WpfMap.Route
                                 //靠左的是直行
                                 if (pt1.X < pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    Straight = int.Parse(v1.Last());
                                     if (v2.First().StartsWith("左下") && TurnRight != -1)
                                     {
                                         MapOperate.SystemMsg.WriteLine("错误：出现了两个下右 ！");
@@ -5483,9 +5257,9 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnLeft != -1)
-                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnRight = int.Parse(v2.Last());
                                         else
-                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnLeft = int.Parse(v2.Last());
                                     }
                                 }
                                 else
@@ -5504,11 +5278,11 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnLeft != -1)
-                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnRight = int.Parse(v1.Last());
                                         else
-                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnLeft = int.Parse(v1.Last());
                                     }
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    Straight = int.Parse(v2.Last());
                                 }
                             }
                             else
@@ -5520,7 +5294,7 @@ namespace WpfMap.Route
                                 //靠右的是直行
                                 if (pt1.X > pt2.X)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    Straight = int.Parse(v1.Last());
                                     if (v2.First().StartsWith("右下") && TurnLeft != -1)
                                     {
                                         MapOperate.SystemMsg.WriteLine("错误：出现了两个下左 ！");
@@ -5535,9 +5309,9 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnLeft != -1)
-                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnRight = int.Parse(v2.Last());
                                         else
-                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnLeft = int.Parse(v2.Last());
                                     }
                                 }
                                 else
@@ -5556,11 +5330,11 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnLeft != -1)
-                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnRight = int.Parse(v1.Last());
                                         else
-                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnLeft = int.Parse(v1.Last());
                                     }
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    Straight = int.Parse(v2.Last());
                                 }
                             }
                             else
@@ -5572,7 +5346,7 @@ namespace WpfMap.Route
                                 //靠上的是直行
                                 if (pt1.Y < pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    Straight = int.Parse(v1.Last());
                                     if (v2.First().StartsWith("上左") && TurnRight != -1)
                                     {
                                         MapOperate.SystemMsg.WriteLine("错误：出现了两个下右！");
@@ -5587,9 +5361,9 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnLeft != -1)
-                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnRight = int.Parse(v2.Last());
                                         else
-                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnLeft = int.Parse(v2.Last());
                                     }
                                 }
                                 else
@@ -5608,11 +5382,11 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnLeft != -1)
-                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnRight = int.Parse(v1.Last());
                                         else
-                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnLeft = int.Parse(v1.Last());
                                     }
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    Straight = int.Parse(v2.Last());
                                 }
                             }
                             else
@@ -5623,7 +5397,7 @@ namespace WpfMap.Route
                                 //靠下的是直行
                                 if (pt1.Y > pt2.Y)
                                 {
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                    Straight = int.Parse(v1.Last());
                                     if (v2.First().StartsWith("下左") && TurnLeft != -1)
                                     {
                                         MapOperate.SystemMsg.WriteLine("错误：出现了两个下左！");
@@ -5638,9 +5412,9 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnLeft != -1)
-                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnRight = int.Parse(v2.Last());
                                         else
-                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                            TurnLeft = int.Parse(v2.Last());
                                     }
                                 }
                                 else
@@ -5659,11 +5433,11 @@ namespace WpfMap.Route
                                     else
                                     {
                                         if (TurnLeft != -1)
-                                            TurnRight = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnRight = int.Parse(v1.Last());
                                         else
-                                            TurnLeft = MapElement.MapObject.RFIDS[int.Parse(v1.Last())].Num;
+                                            TurnLeft = int.Parse(v1.Last());
                                     }
-                                    Straight = MapElement.MapObject.RFIDS[int.Parse(v2.Last())].Num;
+                                    Straight = int.Parse(v2.Last());
                                 }
                             }
                         }
@@ -5676,17 +5450,268 @@ namespace WpfMap.Route
                 }
             }
             //打印结果
-            MapOperate.SystemMsg.WriteLine("向下：左分叉【{0}】直行【{1}】右分叉【{2}】", TurnLeft, Straight, TurnRight);
+            MapOperate.SystemMsg.WriteLine("向下：左分叉【{0}】直行【{1}】右分叉【{2}】",
+               TurnLeft == -1 ? TurnLeft : MapElement.MapObject.RFIDS[TurnLeft].Num,
+               Straight == -1 ? Straight : MapElement.MapObject.RFIDS[Straight].Num,
+               TurnRight == -1 ? TurnRight : MapElement.MapObject.RFIDS[TurnRight].Num);
+            List<int> rs = new List<int>();
+            rs.Add(TurnLeft);
+            rs.Add(Straight);
+            rs.Add(TurnRight);
             return rs;
         }
 
+        //规定
+        //上右下左：1234，按照顺时针增加的规律定义四个方向
+
+
+
+        public enum HeadDirections
+        {
+            /// <summary>
+            /// 未定义
+            /// </summary>
+            None = 0,
+            Up,
+            Right,
+            Down,
+            Left
+        }
+
+        /// <summary>
+        /// 车头方向类
+        /// </summary>
+        public class HeadDirection
+        {
+            public HeadDirection()
+            {
+                Dir = HeadDirections.None;
+            }
+            /// <summary>
+            /// 车头方向
+            /// </summary>
+            public HeadDirections Dir;
+            /// <summary>
+            /// 搜索标记【是否通过该点搜索过】
+            /// </summary>
+            public bool Searched = false;
+            /// <summary>
+            /// 顺时针旋转
+            /// </summary>
+            public void Clockwise()
+            {
+                switch (Dir)
+                {
+                    case HeadDirections.None:
+                        break;
+                    case HeadDirections.Up:
+                        Dir = HeadDirections.Right;
+                        break;
+                    case HeadDirections.Right:
+                        Dir = HeadDirections.Down;
+                        break;
+                    case HeadDirections.Down:
+                        Dir = HeadDirections.Left;
+                        break;
+                    case HeadDirections.Left:
+                        Dir = HeadDirections.Up;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            /// <summary>
+            /// 逆时针旋转
+            /// </summary>
+            public void Counterclockwise()
+            {
+                switch (Dir)
+                {
+                    case HeadDirections.None:
+                        break;
+                    case HeadDirections.Up:
+                        Dir = HeadDirections.Left;
+                        break;
+                    case HeadDirections.Right:
+                        Dir = HeadDirections.Up;
+                        break;
+                    case HeadDirections.Down:
+                        Dir = HeadDirections.Right;
+                        break;
+                    case HeadDirections.Left:
+                        Dir = HeadDirections.Down;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 车头方向集合
+        /// </summary>
+        public static List<HeadDirection> HeadDirectionList = new List<HeadDirection>();
+        /// <summary>
+        /// 生成车头方向方法
+        /// </summary>
+        /// <param name="rfid">参考标签的索引</param>
+        /// <param name="dir">参考标签的车头方向</param>
+        public static void GerateDirection(int rfid, HeadDirections dir)
+        {
+            if (rfid == -1 || dir == HeadDirections.None)
+                return;
+            //重新实例化列表
+            HeadDirectionList = new List<HeadDirection>();
+            //1.添加所有标签,默认标签车头方向为None
+            foreach (var item in MapElement.MapObject.RFIDS)
+            {
+                HeadDirection head = new HeadDirection();
+                HeadDirectionList.Add(head);
+            }
+            //2.设置参考点方向
+            HeadDirectionList[rfid].Dir = dir;
+            //3.根据已知点推算未知点
+            int num = 0;
+            for (int i = 0; i < HeadDirectionList.Count; i++)
+            {
+                if (HeadDirectionList[i].Dir != HeadDirections.None && HeadDirectionList[i].Searched == false)
+                {
+                    GenerateNeighbour(i, HeadDirectionList[i].Dir);
+                    HeadDirectionList[i].Searched = true;
+                    //从第一个重新遍历
+                    i = 0; num++;
+                }
+            }
+            for (int i = 0; i < HeadDirectionList.Count; i++)
+            {
+                if (HeadDirectionList[i].Dir == HeadDirections.None)
+                    MapOperate.SystemMsg.WriteLine("【{0}】未标记", MapElement.MapObject.RFIDS[i].Num);
+                else
+                    MapOperate.SystemMsg.WriteLine("【{0}】【{1}】：", MapElement.MapObject.RFIDS[i].Num, (HeadDirections)HeadDirectionList[i].Dir);
+            }
+             MapOperate.SystemMsg.WriteLine("共循环：【{0}】次", num);
+        }
+        /// <summary>
+        /// 地图上标签的邻接关系类
+        /// </summary>
+        public class MapNeighbour
+        {
+            public MapNeighbour()
+            {
+                NowIndex = -1;
+                LeftUp = -1;
+                Left = -1;
+                LeftDown = -1;
+                RightUp = -1;
+                Right = -1;
+                RightDown = -1;
+                UpLeft = -1;
+                Up = -1;
+                UpRight = -1;
+                DownLeft = -1;
+                Down = -1;
+                DownRight = -1;
+            }
+            /// <summary>
+            /// 当前点标签索引
+            /// </summary>
+            public int NowIndex;
+            public int LeftUp;
+            public int Left;
+            public int LeftDown;
+            public int RightUp;
+            public int Right;
+            public int RightDown;
+            public int UpLeft;
+            public int Up;
+            public int UpRight;
+            public int DownLeft;
+            public int Down;
+            public int DownRight;
+        }
+
+        /// <summary>
+        /// AGV上标签的邻接关系类
+        /// </summary>
+        public class AGVNeighbour
+        {
+            /// <summary>
+            /// 当前点标签编号
+            /// </summary>
+            public int NowNum;
+            public class Go
+            {
+                /// <summary>
+                /// 左分叉
+                /// </summary>
+                public int LeftFork;
+                /// <summary>
+                /// 直行
+                /// </summary>
+                public int Straight;
+                /// <summary>
+                /// 右分叉
+                /// </summary>
+                public int RightFork;
+                /// <summary>
+                /// 左旋
+                /// </summary>
+                public int TurnLeft;
+                /// <summary>
+                /// 左旋角度
+                /// </summary>
+                public int AngleLeft;
+                /// <summary>
+                /// 右旋
+                /// </summary>
+                public int TurnRight;
+                /// <summary>
+                /// 右旋角度
+                /// </summary>
+                public int AngleRight;
+            }
+            public class Back
+            {
+                /// <summary>
+                /// 左分叉
+                /// </summary>
+                public int LeftFork;
+                /// <summary>
+                /// 直行
+                /// </summary>
+                public int Straight;
+                /// <summary>
+                /// 右分叉
+                /// </summary>
+                public int RightFork;
+                /// <summary>
+                /// 左旋
+                /// </summary>
+                public int TurnLeft;
+                /// <summary>
+                /// 左旋角度
+                /// </summary>
+                public int AngleLeft;
+                /// <summary>
+                /// 右旋
+                /// </summary>
+                public int TurnRight;
+                /// <summary>
+                /// 右旋角度
+                /// </summary>
+                public int AngleRight;
+            }
+        }
 
         /// <summary>
         /// 生成一个点的邻接关系
         /// </summary>
         /// <param name="index">标签号</param>
-        public static void GenerateNeighbour(int index)
+        public static MapNeighbour GenerateNeighbour(int index, HeadDirections dir = HeadDirections.Right)
         {
+            MapNeighbour neighbour = new MapNeighbour();
+
             MapElement.RFID rfid = MapElement.MapObject.RFIDS[index];
             //清除选中
             for (int i = 0; i < MapElement.MapObject.RFIDS.Count; i++)
@@ -5697,6 +5722,7 @@ namespace WpfMap.Route
             {
                 MapFunction.SetRouteForkLineIsNormal(i);
             }
+
             #region 向左搜索
             /*-----------搜索【标签】----------------------*/
             int id = Base.FindRFID.Left(index, rfid.LeftPoint, new Base.Range());
@@ -5789,7 +5815,27 @@ namespace WpfMap.Route
             //    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num.ToString());
             //if (vs3 != null)
             //    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num.ToString());
-            AnalyLeftResault(id, vs1, vs2, vs3);
+            List<int> rs = AnalyLeftResault(id, vs1, vs2, vs3);
+            if (rs == null)
+            {
+                //解析出错,路径不合理
+            }
+            else
+            {
+                neighbour.LeftUp = rs[0];
+                neighbour.Left = rs[1];
+                neighbour.LeftDown = rs[2];
+                //计算转向后的方向
+                if (id != -1)
+                {
+                    List<string> vss = new List<string>();
+                    vss.Add(id.ToString());
+                    RouteDir(vss, "左", dir);
+                }
+                RouteDir(vs1, "左", dir);
+                RouteDir(vs2, "左", dir);
+                RouteDir(vs3, "左", dir);
+            }
             #endregion
 
             #region 向右搜索
@@ -5882,7 +5928,27 @@ namespace WpfMap.Route
             //    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num.ToString());
             //if (vs3 != null)
             //    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num.ToString());
-            AnalyRightResault(id, vs1, vs2, vs3);
+            rs = AnalyRightResault(id, vs1, vs2, vs3);
+            if (rs == null)
+            {
+                //解析出错,路径不合理
+            }
+            else
+            {
+                neighbour.RightUp = rs[0];
+                neighbour.Right = rs[1];
+                neighbour.RightDown = rs[2];
+                //计算转向后的方向
+                if (id != -1)
+                {
+                    List<string> vss = new List<string>();
+                    vss.Add(id.ToString());
+                    RouteDir(vss, "右", dir);
+                }
+                RouteDir(vs1, "右", dir);
+                RouteDir(vs2, "右", dir);
+                RouteDir(vs3, "右", dir);
+            }
             #endregion
 
             #region 向上搜索
@@ -5968,7 +6034,6 @@ namespace WpfMap.Route
                     }
                 }
             }
-            #endregion
             ////打印结果
             //if (vs1 != null)
             //    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num.ToString());
@@ -5976,7 +6041,29 @@ namespace WpfMap.Route
             //    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num.ToString());
             //if (vs3 != null)
             //    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num.ToString());
-            AnalyUpResault(id, vs1, vs2, vs3);
+            rs = AnalyUpResault(id, vs1, vs2, vs3);
+            if (rs == null)
+            {
+                //解析出错,路径不合理
+            }
+            else
+            {
+                neighbour.UpLeft = rs[0];
+                neighbour.Up = rs[1];
+                neighbour.UpRight = rs[2];
+                //计算转向后的方向
+                if (id != -1)
+                {
+                    List<string> vss = new List<string>();
+                    vss.Add(id.ToString());
+                    RouteDir(vss, "上", dir);
+                }
+                RouteDir(vs1, "上", dir);
+                RouteDir(vs2, "上", dir);
+                RouteDir(vs3, "上", dir);
+            }
+            #endregion
+
             #region 向下搜索
             /*-----------向下搜索【标签】----------------------*/
             id = Base.FindRFID.Down(index, rfid.DownPoint, new Base.Range());
@@ -6060,7 +6147,6 @@ namespace WpfMap.Route
                     }
                 }
             }
-            #endregion
             ////打印结果
             //if (vs1 != null)
             //    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num.ToString());
@@ -6068,9 +6154,104 @@ namespace WpfMap.Route
             //    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num.ToString());
             //if (vs3 != null)
             //    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num.ToString());
-            AnalyDownResault(id, vs1, vs2, vs3);
-            MapOperate.SystemMsg.WriteLine("-----------END-------------");
-        }
+            rs = AnalyDownResault(id, vs1, vs2, vs3);
+            if (rs == null)
+            {
+                //解析出错,路径不合理
+            }
+            else
+            {
+                neighbour.DownLeft = rs[0];
+                neighbour.Down = rs[1];
+                neighbour.DownRight = rs[2];
+                //计算转向后的方向
+                if (id != -1)
+                {
+                    List<string> vss = new List<string>();
+                    vss.Add(id.ToString());
+                    RouteDir(vss, "下", dir);
+                }
+                RouteDir(vs1, "下", dir);
+                RouteDir(vs2, "下", dir);
+                RouteDir(vs3, "下", dir);
+            }
+            #endregion
 
+            MapOperate.SystemMsg.WriteLine("-----------END-------------");
+            return neighbour;
+        }
+        /// <summary>
+        /// 旋转车身方向
+        /// </summary>
+        /// <param name="headDirection"></param>
+        /// <param name="Dir"></param>
+        public static void RouteDir(List<string> vs, string findDir, HeadDirections dir)
+        {
+            if (vs != null)
+            {
+                //已经标记过的不再标记
+                if (HeadDirectionList[int.Parse(vs.Last())].Dir != HeadDirections.None)
+                    return;
+
+                //设置默认方向
+                if (findDir == "左")
+                {
+                    if (dir == HeadDirections.Left || dir == HeadDirections.Right)
+                        HeadDirectionList[int.Parse(vs.Last())].Dir = dir;
+                    else
+                        HeadDirectionList[int.Parse(vs.Last())].Dir = HeadDirections.Left;
+                }
+                else
+                if (findDir == "右")
+                {
+                    if (dir == HeadDirections.Left || dir == HeadDirections.Right)
+                        HeadDirectionList[int.Parse(vs.Last())].Dir = dir;
+                    else
+                        HeadDirectionList[int.Parse(vs.Last())].Dir = HeadDirections.Right;
+                }
+                else
+                if (findDir == "上")
+                {
+                    if (dir == HeadDirections.Up || dir == HeadDirections.Down)
+                        HeadDirectionList[int.Parse(vs.Last())].Dir = dir;
+                    else
+                        HeadDirectionList[int.Parse(vs.Last())].Dir = HeadDirections.Up;
+                }
+                else
+                if (findDir == "下")
+                {
+                    if (dir == HeadDirections.Up || dir == HeadDirections.Down)
+                        HeadDirectionList[int.Parse(vs.Last())].Dir = dir;
+                    else
+                        HeadDirectionList[int.Parse(vs.Last())].Dir = HeadDirections.Down;
+                }
+
+                if (vs.Count > 1)
+                {
+                    for (int i = 0; i < vs.Count - 1; i++)
+                    {
+                        //旋转车身方向
+                        switch (vs[i].Substring(0, 2))
+                        {
+                            case "左上": HeadDirectionList[int.Parse(vs.Last())].Clockwise(); break;
+                            case "左下": HeadDirectionList[int.Parse(vs.Last())].Counterclockwise(); break;
+                            case "右上": HeadDirectionList[int.Parse(vs.Last())].Counterclockwise(); break;
+                            case "右下": HeadDirectionList[int.Parse(vs.Last())].Clockwise(); break;
+                            case "上左": HeadDirectionList[int.Parse(vs.Last())].Counterclockwise(); break;
+                            case "上右": HeadDirectionList[int.Parse(vs.Last())].Clockwise(); break;
+                            case "下左": HeadDirectionList[int.Parse(vs.Last())].Clockwise(); break;
+                            case "下右": HeadDirectionList[int.Parse(vs.Last())].Counterclockwise(); break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+        public static void test()
+        {
+            //获取车头方向
+            GerateDirection(20, HeadDirections.Right);
+        }
     }
 }

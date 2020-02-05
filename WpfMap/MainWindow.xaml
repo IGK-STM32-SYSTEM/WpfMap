@@ -135,7 +135,8 @@
                                         </Grid.RowDefinitions>
                                         <Border BorderThickness="0.5" BorderBrush="Gray"></Border>
                                         <StackPanel Grid.Row="0" Margin="20,10">
-                                            <CheckBox x:Name="cbShowGrid" IsChecked="True" Click="CbShowGrid_Click" Margin="5"  >显示栅格</CheckBox>    
+                                            <CheckBox x:Name="cbShowGrid" IsChecked="True" Click="CbShowGrid_Click" Margin="5"  >显示栅格</CheckBox>
+                                            <Button x:Name="Btn_GenerateNeighbor" Content="生成邻接关系" Click="Btn_GenerateNeighbor_Click" Margin="5"  VerticalAlignment="Center" Height="30"/>
                                             <Button x:Name="Btn_SaveMap" Content="保存地图" Click="Btn_SaveMap_Click" Margin="5"  VerticalAlignment="Center" Height="30"/>
                                             <Button x:Name="Btn_SaveMapAs" Content="另存地图" Click="Btn_SaveMapAs_Click" Margin="5"  VerticalAlignment="Center" Height="30"/>
                                             <Button x:Name="Btn_LoadMap" Content="加载地图" Click="Btn_LoadMap_Click"  Margin="5"  VerticalAlignment="Center"  Height="30"/>

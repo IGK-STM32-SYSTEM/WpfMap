@@ -1108,5 +1108,10 @@ namespace WpfMap
         {
             MapOperate.SystemMsg.Clear();
         }
+
+        private void Btn_GenerateNeighbor_Click(object sender, RoutedEventArgs e)
+        {
+            Route.Helper.test();
+        }
     }
 }
