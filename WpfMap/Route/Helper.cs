@@ -1893,6 +1893,7 @@ namespace WpfMap.Route
         /// <returns>0:向上分叉可到达的标签索引，1:直行可到达的标签索引，2:向下分叉可到达的标签索引</returns>
         public static List<int> AnalyLeftResault(int id, List<string> vs1, List<string> vs2, List<string> vs3)
         {
+            bool debug = false;
             //直行
             int Straight = -1;
             //上分叉
@@ -2771,11 +2772,11 @@ namespace WpfMap.Route
                 }
             }
             //打印结果
-            MapOperate.SystemMsg.WriteLine("向左：上分叉【{0}】直行【{1}】下分叉【{2}】",
-                TurnUp == -1 ? TurnUp : MapElement.MapObject.RFIDS[TurnUp].Num,
-                Straight == -1 ? Straight : MapElement.MapObject.RFIDS[Straight].Num,
-                TurnDown == -1 ? TurnDown : MapElement.MapObject.RFIDS[TurnDown].Num);
-
+            if (debug)
+                MapOperate.SystemMsg.WriteLine("向左：上分叉【{0}】直行【{1}】下分叉【{2}】",
+                    TurnUp == -1 ? TurnUp : MapElement.MapObject.RFIDS[TurnUp].Num,
+                    Straight == -1 ? Straight : MapElement.MapObject.RFIDS[Straight].Num,
+                    TurnDown == -1 ? TurnDown : MapElement.MapObject.RFIDS[TurnDown].Num);
             List<int> rs = new List<int>();
             rs.Add(TurnUp);
             rs.Add(Straight);
@@ -2792,6 +2793,7 @@ namespace WpfMap.Route
         /// <returns>0:向上分叉可到达的标签索引，1:直行可到达的标签索引，2:向下分叉可到达的标签索引</returns>
         public static List<int> AnalyRightResault(int id, List<string> vs1, List<string> vs2, List<string> vs3)
         {
+            bool debug = false;
             //直行
             int Straight = -1;
             //上分叉
@@ -3664,10 +3666,11 @@ namespace WpfMap.Route
                 }
             }
             //打印结果
-            MapOperate.SystemMsg.WriteLine("向右：上分叉【{0}】直行【{1}】下分叉【{2}】",
-             TurnUp == -1 ? TurnUp : MapElement.MapObject.RFIDS[TurnUp].Num,
-             Straight == -1 ? Straight : MapElement.MapObject.RFIDS[Straight].Num,
-             TurnDown == -1 ? TurnDown : MapElement.MapObject.RFIDS[TurnDown].Num);
+            if (debug)
+                MapOperate.SystemMsg.WriteLine("向右：上分叉【{0}】直行【{1}】下分叉【{2}】",
+                 TurnUp == -1 ? TurnUp : MapElement.MapObject.RFIDS[TurnUp].Num,
+                 Straight == -1 ? Straight : MapElement.MapObject.RFIDS[Straight].Num,
+                 TurnDown == -1 ? TurnDown : MapElement.MapObject.RFIDS[TurnDown].Num);
 
             List<int> rs = new List<int>();
             rs.Add(TurnUp);
@@ -3685,6 +3688,7 @@ namespace WpfMap.Route
         /// <returns>0:向左分叉可到达的标签索引，1:直行可到达的标签索引，2:向右分叉可到达的标签索引</returns>
         public static List<int> AnalyUpResault(int id, List<string> vs1, List<string> vs2, List<string> vs3)
         {
+            bool debug = false;
             //直行
             int Straight = -1;
             //左分叉
@@ -4558,7 +4562,8 @@ namespace WpfMap.Route
                 }
             }
             //打印结果
-            MapOperate.SystemMsg.WriteLine("向上：左分叉【{0}】直行【{1}】右分叉【{2}】",
+            if (debug)
+                MapOperate.SystemMsg.WriteLine("向上：左分叉【{0}】直行【{1}】右分叉【{2}】",
                TurnLeft == -1 ? TurnLeft : MapElement.MapObject.RFIDS[TurnLeft].Num,
                Straight == -1 ? Straight : MapElement.MapObject.RFIDS[Straight].Num,
                TurnRight == -1 ? TurnRight : MapElement.MapObject.RFIDS[TurnRight].Num);
@@ -4578,6 +4583,7 @@ namespace WpfMap.Route
         /// <returns>0:向左分叉可到达的标签索引，1:直行可到达的标签索引，2:向右分叉可到达的标签索引</returns>
         public static List<int> AnalyDownResault(int id, List<string> vs1, List<string> vs2, List<string> vs3)
         {
+            bool debug = false;
             //直行
             int Straight = -1;
             //左分叉
@@ -5450,10 +5456,11 @@ namespace WpfMap.Route
                 }
             }
             //打印结果
-            MapOperate.SystemMsg.WriteLine("向下：左分叉【{0}】直行【{1}】右分叉【{2}】",
-               TurnLeft == -1 ? TurnLeft : MapElement.MapObject.RFIDS[TurnLeft].Num,
-               Straight == -1 ? Straight : MapElement.MapObject.RFIDS[Straight].Num,
-               TurnRight == -1 ? TurnRight : MapElement.MapObject.RFIDS[TurnRight].Num);
+            if (debug)
+                MapOperate.SystemMsg.WriteLine("向下：左分叉【{0}】直行【{1}】右分叉【{2}】",
+                   TurnLeft == -1 ? TurnLeft : MapElement.MapObject.RFIDS[TurnLeft].Num,
+                   Straight == -1 ? Straight : MapElement.MapObject.RFIDS[Straight].Num,
+                   TurnRight == -1 ? TurnRight : MapElement.MapObject.RFIDS[TurnRight].Num);
             List<int> rs = new List<int>();
             rs.Add(TurnLeft);
             rs.Add(Straight);
@@ -5590,7 +5597,7 @@ namespace WpfMap.Route
                 else
                     MapOperate.SystemMsg.WriteLine("【{0}】【{1}】：", MapElement.MapObject.RFIDS[i].Num, (HeadDirections)HeadDirectionList[i].Dir);
             }
-             MapOperate.SystemMsg.WriteLine("共循环：【{0}】次", num);
+            MapOperate.SystemMsg.WriteLine("共循环：【{0}】次", num);
         }
         /// <summary>
         /// 地图上标签的邻接关系类
@@ -5713,15 +5720,15 @@ namespace WpfMap.Route
             MapNeighbour neighbour = new MapNeighbour();
 
             MapElement.RFID rfid = MapElement.MapObject.RFIDS[index];
-            //清除选中
-            for (int i = 0; i < MapElement.MapObject.RFIDS.Count; i++)
-            {
-                MapFunction.SetRFIDIsNormal(i);
-            }
-            for (int i = 0; i < MapElement.MapObject.ForkLines.Count; i++)
-            {
-                MapFunction.SetRouteForkLineIsNormal(i);
-            }
+            ////清除选中
+            //for (int i = 0; i < MapElement.MapObject.RFIDS.Count; i++)
+            //{
+            //    MapFunction.SetRFIDIsNormal(i);
+            //}
+            //for (int i = 0; i < MapElement.MapObject.ForkLines.Count; i++)
+            //{
+            //    MapFunction.SetRouteForkLineIsNormal(i);
+            //}
 
             #region 向左搜索
             /*-----------搜索【标签】----------------------*/
@@ -5731,7 +5738,7 @@ namespace WpfMap.Route
             if (id != -1)
             {
                 //设置选中
-                MapFunction.SetRFIDIsSelected(id);
+               // MapFunction.SetRFIDIsSelected(id);
                 //MapOperate.SystemMsg.WriteLine("左直-{0}标签!", MapElement.MapObject.RFIDS[id].Num);
                 //设置搜索的x终点坐标【X的最小值为找的的标签的右侧中心坐标】
                 range.MinX = MapElement.MapObject.RFIDS[id].RightPoint.X;
@@ -5846,7 +5853,7 @@ namespace WpfMap.Route
             if (id != -1)
             {
                 //设置选中
-                MapFunction.SetRFIDIsSelected(id);
+               // MapFunction.SetRFIDIsSelected(id);
                 // MapOperate.SystemMsg.WriteLine("右直-{0}标签!", MapElement.MapObject.RFIDS[id].Num);
                 //设置搜索的x终点坐标【X的最大值为找的的标签的左侧中心坐标】
                 range.MaxX = MapElement.MapObject.RFIDS[id].LeftPoint.X;
@@ -5959,7 +5966,7 @@ namespace WpfMap.Route
             if (id != -1)
             {
                 //设置选中
-                MapFunction.SetRFIDIsSelected(id);
+               // MapFunction.SetRFIDIsSelected(id);
                 //MapOperate.SystemMsg.WriteLine("上直-{0}标签!", MapElement.MapObject.RFIDS[id].Num);
                 //设置搜索的y终点坐标【Y的最小值为找的的标签的下侧中心坐标】
                 range.MinY = MapElement.MapObject.RFIDS[id].DownPoint.Y;
@@ -6072,7 +6079,7 @@ namespace WpfMap.Route
             if (id != -1)
             {
                 //设置选中
-                MapFunction.SetRFIDIsSelected(id);
+              //  MapFunction.SetRFIDIsSelected(id);
                 //MapOperate.SystemMsg.WriteLine("下直-{0}标签!", MapElement.MapObject.RFIDS[id].Num);
                 //设置搜索的y终点坐标【Y的最大值为找的的标签的上侧中心坐标】
                 range.MaxY = MapElement.MapObject.RFIDS[id].UpPoint.Y;
@@ -6177,7 +6184,7 @@ namespace WpfMap.Route
             }
             #endregion
 
-            MapOperate.SystemMsg.WriteLine("-----------END-------------");
+           // MapOperate.SystemMsg.WriteLine("-----------END-------------");
             return neighbour;
         }
         /// <summary>
