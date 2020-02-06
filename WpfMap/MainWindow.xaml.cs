@@ -315,7 +315,7 @@ namespace WpfMap
                         MapOperate.NowType = MapOperate.EnumElementType.RFID;
                         this.DataContext = MapElement.MapObject.RFIDS[rs];
                         //搜索
-                        Route.Helper.GenerateNeighbour(rs);
+                        //Route.Helper.GenerateNeighbour(rs);
                         return;
                     }
                 }

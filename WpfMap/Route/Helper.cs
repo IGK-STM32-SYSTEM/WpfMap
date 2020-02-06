@@ -11,6 +11,154 @@ namespace WpfMap.Route
     {
         public class Base
         {
+            #region 四个方向的分叉定义
+            /// <summary>
+            /// 向左行驶
+            /// </summary>
+            public class Left
+            {
+                public Left()
+                {
+                    Straight = -1;
+                    Up = -1;
+                    Down = -1;
+                }
+                /// <summary>
+                /// 直行可到达目标索引
+                /// </summary>
+                public int Straight;
+                /// <summary>
+                /// 向上分叉可到达目标索引
+                /// </summary>
+                public int Up;
+                /// <summary>
+                /// 向下分叉可到达目标索引
+                /// </summary>
+                public int Down;
+                /// <summary>
+                /// 路径集合1
+                /// </summary>
+                public List<string> V1 = null;
+                /// <summary>
+                /// 路径集合2
+                /// </summary>
+                public List<string> V2 = null;
+                /// <summary>
+                /// 路径集合3
+                /// </summary>
+                public List<string> V3 = null;
+            }
+            /// <summary>
+            /// 向右行驶
+            /// </summary>
+            public class Right
+            {
+                public Right()
+                {
+                    Straight = -1;
+                    Up = -1;
+                    Down = -1;
+                }
+                /// <summary>
+                /// 直行可到达目标索引
+                /// </summary>
+                public int Straight;
+                /// <summary>
+                /// 向上分叉可到达目标索引
+                /// </summary>
+                public int Up;
+                /// <summary>
+                /// 向下分叉可到达目标索引
+                /// </summary>
+                public int Down;
+                /// <summary>
+                /// 路径集合1
+                /// </summary>
+                public List<string> V1 = null;
+                /// <summary>
+                /// 路径集合2
+                /// </summary>
+                public List<string> V2 = null;
+                /// <summary>
+                /// 路径集合3
+                /// </summary>
+                public List<string> V3 = null;
+            }
+            /// <summary>
+            /// 向上行驶
+            /// </summary>
+            public class Up
+            {
+                public Up()
+                {
+                    Straight = -1;
+                    Left = -1;
+                    Right = -1;
+                }
+                /// <summary>
+                /// 直行可到达目标索引
+                /// </summary>
+                public int Straight;
+                /// <summary>
+                /// 向左分叉可到达目标索引
+                /// </summary>
+                public int Left;
+                /// <summary>
+                /// 向右分叉可到达目标索引
+                /// </summary>
+                public int Right;
+                /// <summary>
+                /// 路径集合1
+                /// </summary>
+                public List<string> V1 = null;
+                /// <summary>
+                /// 路径集合2
+                /// </summary>
+                public List<string> V2 = null;
+                /// <summary>
+                /// 路径集合3
+                /// </summary>
+                public List<string> V3 = null;
+            }
+            /// <summary>
+            /// 向下行驶
+            /// </summary>
+            public class Down
+            {
+                public Down()
+                {
+                    Straight = -1;
+                    Left = -1;
+                    Right = -1;
+                }
+                /// <summary>
+                /// 直行可到达目标索引
+                /// </summary>
+                public int Straight;
+                /// <summary>
+                /// 向左分叉可到达目标索引
+                /// </summary>
+                public int Left;
+                /// <summary>
+                /// 向右分叉可到达目标索引
+                /// </summary>
+                public int Right;
+                /// <summary>
+                /// 路径集合1
+                /// </summary>
+                public List<string> V1 = null;
+                /// <summary>
+                /// 路径集合2
+                /// </summary>
+                public List<string> V2 = null;
+                /// <summary>
+                /// 路径集合3
+                /// </summary>
+                public List<string> V3 = null;
+            }
+            #endregion
+
+
             //定义寻找范围
             public class Range
             {
@@ -54,7 +202,7 @@ namespace WpfMap.Route
                     Point pt = new Point(point.X, point.Y);
                     //标签索引
                     int id = -1;
-                    for (double i = pt.X; i > range.MinX; i -= 1)
+                    for (double i = pt.X; i > range.MinX; i -= MapElement.GridSize)
                     {
                         //更新当前位置
                         pt.X = i;
@@ -91,7 +239,7 @@ namespace WpfMap.Route
                     Point pt = new Point(point.X, point.Y);
                     //标签索引
                     int id = -1;
-                    for (double i = pt.X; i < range.MaxX; i += 1)
+                    for (double i = pt.X; i < range.MaxX; i += MapElement.GridSize)
                     {
                         //更新当前位置
                         pt.X = i;
@@ -128,7 +276,7 @@ namespace WpfMap.Route
                     Point pt = new Point(point.X, point.Y);
                     //标签索引
                     int id = -1;
-                    for (double i = pt.Y; i > range.MinY; i -= 1)
+                    for (double i = pt.Y; i > range.MinY; i -= MapElement.GridSize)
                     {
                         //更新当前位置
                         pt.Y = i;
@@ -165,7 +313,7 @@ namespace WpfMap.Route
                     Point pt = new Point(point.X, point.Y);
                     //标签索引
                     int id = -1;
-                    for (double i = pt.Y; i < range.MaxY; i += 1)
+                    for (double i = pt.Y; i < range.MaxY; i += MapElement.GridSize)
                     {
                         //更新当前位置
                         pt.Y = i;
@@ -227,7 +375,7 @@ namespace WpfMap.Route
                     //定义临时坐标
                     Point pt = new Point(point.X, point.Y);
                     //分叉索引
-                    for (double i = pt.X; i > minX; i -= 1)
+                    for (double i = pt.X; i > minX; i -= MapElement.GridSize)
                     {
                         //更新当前位置
                         pt.X = i;
@@ -266,7 +414,7 @@ namespace WpfMap.Route
                     //定义临时坐标
                     Point pt = new Point(point.X, point.Y);
                     //分叉索引
-                    for (double i = pt.X; i > minX; i -= 1)
+                    for (double i = pt.X; i > minX; i -= MapElement.GridSize)
                     {
                         //更新当前位置
                         pt.X = i;
@@ -305,7 +453,7 @@ namespace WpfMap.Route
                     //定义临时坐标
                     Point pt = new Point(point.X, point.Y);
                     //分叉索引
-                    for (double i = pt.X; i < maxX; i += 1)
+                    for (double i = pt.X; i < maxX; i += MapElement.GridSize)
                     {
                         //更新当前位置
                         pt.X = i;
@@ -345,7 +493,7 @@ namespace WpfMap.Route
                     //定义临时坐标
                     Point pt = new Point(point.X, point.Y);
                     //分叉索引
-                    for (double i = pt.X; i < maxX; i += 1)
+                    for (double i = pt.X; i < maxX; i += MapElement.GridSize)
                     {
                         //更新当前位置
                         pt.X = i;
@@ -385,7 +533,7 @@ namespace WpfMap.Route
                     //定义临时坐标
                     Point pt = new Point(point.X, point.Y);
                     //分叉索引
-                    for (double i = pt.Y; i > minY; i -= 1)
+                    for (double i = pt.Y; i > minY; i -= MapElement.GridSize)
                     {
                         //更新当前位置
                         pt.Y = i;
@@ -424,7 +572,7 @@ namespace WpfMap.Route
                     //定义临时坐标
                     Point pt = new Point(point.X, point.Y);
                     //分叉索引
-                    for (double i = pt.Y; i > minY; i -= 1)
+                    for (double i = pt.Y; i > minY; i -= MapElement.GridSize)
                     {
                         //更新当前位置
                         pt.Y = i;
@@ -463,7 +611,7 @@ namespace WpfMap.Route
                     //定义临时坐标
                     Point pt = new Point(point.X, point.Y);
                     //分叉索引
-                    for (double i = pt.Y; i < maxY; i += 1)
+                    for (double i = pt.Y; i < maxY; i += MapElement.GridSize)
                     {
                         //更新当前位置
                         pt.Y = i;
@@ -502,7 +650,7 @@ namespace WpfMap.Route
                     //定义临时坐标
                     Point pt = new Point(point.X, point.Y);
                     //分叉索引
-                    for (double i = pt.Y; i < maxY; i += 1)
+                    for (double i = pt.Y; i < maxY; i += MapElement.GridSize)
                     {
                         //更新当前位置
                         pt.Y = i;
@@ -5559,6 +5707,7 @@ namespace WpfMap.Route
         /// 车头方向集合
         /// </summary>
         public static List<HeadDirection> HeadDirectionList = new List<HeadDirection>();
+
         /// <summary>
         /// 生成车头方向方法
         /// </summary>
@@ -5566,6 +5715,7 @@ namespace WpfMap.Route
         /// <param name="dir">参考标签的车头方向</param>
         public static void GerateDirection(int rfid, HeadDirections dir)
         {
+            bool debug = true;
             if (rfid == -1 || dir == HeadDirections.None)
                 return;
             //重新实例化列表
@@ -5580,24 +5730,40 @@ namespace WpfMap.Route
             HeadDirectionList[rfid].Dir = dir;
             //3.根据已知点推算未知点
             int num = 0;
+            //定义邻接关系序列
+            List<MapNeighbour> MapNeighbours = new List<MapNeighbour>();
+            //生成每个标签的邻接关系
+            for (int i = 0; i < MapElement.MapObject.RFIDS.Count; i++)
+            {
+                MapNeighbour neighbour = GetMapNeighbour(i);
+                if (neighbour != null)
+                    MapNeighbours.Add(GetMapNeighbour(i));
+            }
             for (int i = 0; i < HeadDirectionList.Count; i++)
             {
                 if (HeadDirectionList[i].Dir != HeadDirections.None && HeadDirectionList[i].Searched == false)
                 {
-                    GenerateNeighbour(i, HeadDirectionList[i].Dir);
+                    GetAgvHeadDirection(MapNeighbours[i], HeadDirectionList[i].Dir);
                     HeadDirectionList[i].Searched = true;
                     //从第一个重新遍历
                     i = 0; num++;
                 }
             }
-            for (int i = 0; i < HeadDirectionList.Count; i++)
+
+            //打印结果
+            if (debug)
             {
-                if (HeadDirectionList[i].Dir == HeadDirections.None)
-                    MapOperate.SystemMsg.WriteLine("【{0}】未标记", MapElement.MapObject.RFIDS[i].Num);
-                else
-                    MapOperate.SystemMsg.WriteLine("【{0}】【{1}】：", MapElement.MapObject.RFIDS[i].Num, (HeadDirections)HeadDirectionList[i].Dir);
+                for (int i = 0; i < HeadDirectionList.Count; i++)
+                {
+                    if (HeadDirectionList[i].Dir == HeadDirections.None)
+                        MapOperate.SystemMsg.WriteLine("【{0}】未标记", MapElement.MapObject.RFIDS[i].Num);
+                    else
+                        MapOperate.SystemMsg.WriteLine("【{0}】【{1}】：", MapElement.MapObject.RFIDS[i].Num, (HeadDirections)HeadDirectionList[i].Dir);
+                }
+                MapOperate.SystemMsg.WriteLine("共循环：【{0}】次", num);
             }
-            MapOperate.SystemMsg.WriteLine("共循环：【{0}】次", num);
+            //4.生成AGV邻接关系表
+
         }
         /// <summary>
         /// 地图上标签的邻接关系类
@@ -5606,36 +5772,28 @@ namespace WpfMap.Route
         {
             public MapNeighbour()
             {
-                NowIndex = -1;
-                LeftUp = -1;
-                Left = -1;
-                LeftDown = -1;
-                RightUp = -1;
-                Right = -1;
-                RightDown = -1;
-                UpLeft = -1;
-                Up = -1;
-                UpRight = -1;
-                DownLeft = -1;
-                Down = -1;
-                DownRight = -1;
+                Index = -1;
             }
             /// <summary>
             /// 当前点标签索引
             /// </summary>
-            public int NowIndex;
-            public int LeftUp;
-            public int Left;
-            public int LeftDown;
-            public int RightUp;
-            public int Right;
-            public int RightDown;
-            public int UpLeft;
-            public int Up;
-            public int UpRight;
-            public int DownLeft;
-            public int Down;
-            public int DownRight;
+            public int Index;
+            /// <summary>
+            /// 向左行驶可到达目标索引集合
+            /// </summary>
+            public Base.Left Left = new Base.Left();
+            /// <summary>
+            /// 向右行驶可到达目标索引集合
+            /// </summary>
+            public Base.Right Right = new Base.Right();
+            /// <summary>
+            /// 向上行驶可到达目标索引集合
+            /// </summary>
+            public Base.Up Up = new Base.Up();
+            /// <summary>
+            /// 向下行驶可到达目标索引集合
+            /// </summary>
+            public Base.Down Down = new Base.Down();
         }
 
         /// <summary>
@@ -5712,136 +5870,123 @@ namespace WpfMap.Route
         }
 
         /// <summary>
-        /// 生成一个点的邻接关系
+        /// 生成地图标签的邻接关系
         /// </summary>
         /// <param name="index">标签号</param>
-        public static MapNeighbour GenerateNeighbour(int index, HeadDirections dir = HeadDirections.Right)
+        public static MapNeighbour GetMapNeighbour(int index)
         {
             MapNeighbour neighbour = new MapNeighbour();
-
+            neighbour.Index = index;
             MapElement.RFID rfid = MapElement.MapObject.RFIDS[index];
-            ////清除选中
-            //for (int i = 0; i < MapElement.MapObject.RFIDS.Count; i++)
-            //{
-            //    MapFunction.SetRFIDIsNormal(i);
-            //}
-            //for (int i = 0; i < MapElement.MapObject.ForkLines.Count; i++)
-            //{
-            //    MapFunction.SetRouteForkLineIsNormal(i);
-            //}
-
             #region 向左搜索
             /*-----------搜索【标签】----------------------*/
             int id = Base.FindRFID.Left(index, rfid.LeftPoint, new Base.Range());
             Base.Range range = new Base.Range();
             //搜到标签
             if (id != -1)
-            {
-                //设置选中
-               // MapFunction.SetRFIDIsSelected(id);
-                //MapOperate.SystemMsg.WriteLine("左直-{0}标签!", MapElement.MapObject.RFIDS[id].Num);
                 //设置搜索的x终点坐标【X的最小值为找的的标签的右侧中心坐标】
                 range.MinX = MapElement.MapObject.RFIDS[id].RightPoint.X;
-            }
             //向左找上分叉
-            List<string> vs1 = ProcessString(index, rfid.LeftPoint, ProcessState.LeftUp, range);
-            List<string> vs2 = null;
-            List<string> vs3 = null;
+            neighbour.Left.V1 = ProcessString(index, rfid.LeftPoint, ProcessState.LeftUp, range);
             //找到了继续向左找下分叉
-            if (vs1 != null)
+            if (neighbour.Left.V1 != null)
             {
-                vs2 = null;
-                vs3 = null;
                 //向左找下分叉
-                vs2 = ProcessString(index, rfid.LeftPoint, ProcessState.LeftDown, range);
+                neighbour.Left.V2 = ProcessString(index, rfid.LeftPoint, ProcessState.LeftDown, range);
                 //没找到就进行第二次，找到了就直接进行第三次
-                if (vs2 == null || ListLastEquls(vs1, vs2))
+                if (neighbour.Left.V2 == null || ListLastEquls(neighbour.Left.V1, neighbour.Left.V2))
                 {
                     //第二次搜索
-                    if (vs1.Count > 1)
-                        FindSecond(index, vs1, ref vs2, ref vs3, range);
+                    if (neighbour.Left.V1.Count > 1)
+                        FindSecond(index, neighbour.Left.V1, ref neighbour.Left.V2, ref neighbour.Left.V3, range);
                 }
                 //第三次搜索
-                if (!(vs1 != null && vs2 != null && id != -1))
+                if (!(neighbour.Left.V1 != null && neighbour.Left.V2 != null && id != -1))
                 {
                     //不够三条路才进行第三次搜索
-                    if (vs2 != null && vs3 == null)
+                    if (neighbour.Left.V2 != null && neighbour.Left.V3 == null)
                     {
                         List<string> vs = new List<string>();
                         bool p = false;
                         int num = 0;
-                        for (int i = 0; i < vs2.Count; i++)
+                        for (int i = 0; i < neighbour.Left.V2.Count; i++)
                         {
 
                             if (p == false)
                             {
-                                if (vs2[i] == vs1[i])
+                                if (neighbour.Left.V2[i] == neighbour.Left.V1[i])
                                     continue;
                                 else
                                 { p = true; num = i; }
                             }
                             if (p)
-                                vs.Add(vs2[i]);
+                                vs.Add(neighbour.Left.V2[i]);
                         }
-                        FindThird(index, vs1, vs, ref vs3);
+                        FindThird(index, neighbour.Left.V1, vs, ref neighbour.Left.V3);
                         //补齐前段
-                        if (vs3 != null)
-                            vs3.InsertRange(0, vs2.GetRange(0, num));
+                        if (neighbour.Left.V3 != null)
+                            neighbour.Left.V3.InsertRange(0, neighbour.Left.V2.GetRange(0, num));
                         else
                         //如果第三次还是没有找到，用vs1的公共部分后半段再搜一次
-                        if (vs3 == null)
+                        if (neighbour.Left.V3 == null)
                         {
                             vs = new List<string>();
                             p = false;
                             num = 0;
-                            for (int i = 0; i < vs1.Count; i++)
+                            for (int i = 0; i < neighbour.Left.V1.Count; i++)
                             {
 
                                 if (p == false)
                                 {
-                                    if (vs1[i] == vs2[i])
+                                    if (neighbour.Left.V1[i] == neighbour.Left.V2[i])
                                         continue;
                                     else
                                     { p = true; num = i; }
                                 }
                                 if (p)
-                                    vs.Add(vs1[i]);
+                                    vs.Add(neighbour.Left.V1[i]);
                             }
-                            FindThird(index, vs2, vs, ref vs3);
+                            FindThird(index, neighbour.Left.V2, vs, ref neighbour.Left.V3);
                             //补齐前段
-                            if (vs3 != null)
-                                vs3.InsertRange(0, vs1.GetRange(0, num));
+                            if (neighbour.Left.V3 != null)
+                                neighbour.Left.V3.InsertRange(0, neighbour.Left.V1.GetRange(0, num));
                         }
                     }
                 }
             }
-            ////打印结果
-            //if (vs1 != null)
-            //    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num.ToString());
-            //if (vs2 != null)
-            //    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num.ToString());
-            //if (vs3 != null)
-            //    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num.ToString());
-            List<int> rs = AnalyLeftResault(id, vs1, vs2, vs3);
+            //将搜索结果解析成AGV可以识别的形式
+            List<int> rs = AnalyLeftResault(id, neighbour.Left.V1, neighbour.Left.V2, neighbour.Left.V3);
             if (rs == null)
             {
-                //解析出错,路径不合理
+                return null;
             }
             else
             {
-                neighbour.LeftUp = rs[0];
-                neighbour.Left = rs[1];
-                neighbour.LeftDown = rs[2];
-                //计算转向后的方向
+                //把结果整合到邻接对象中
+                neighbour.Left.Up = rs[0];
+                neighbour.Left.Straight = rs[1];
+                neighbour.Left.Down = rs[2];
+                //如果有直接可以到达的标签，把该标签加入到列表，方便后面的计算
                 if (id != -1)
                 {
-                    List<string> vss = new List<string>();
-                    vss.Add(id.ToString());
-                    RouteDir(vss, "左", dir);
+                    if (neighbour.Left.V1 == null)
+                    {
+                        neighbour.Left.V1 = new List<string>();
+                        neighbour.Left.V1.Add(id.ToString());
+                    }
+                    else
+                    if (neighbour.Left.V2 == null)
+                    {
+                        neighbour.Left.V2 = new List<string>();
+                        neighbour.Left.V2.Add(id.ToString());
+                    }
+                    else
+                    if (neighbour.Left.V3 == null)
+                    {
+                        neighbour.Left.V3 = new List<string>();
+                        neighbour.Left.V3.Add(id.ToString());
+                    }
                 }
-                RouteDir(vs1, "左", dir);
-                RouteDir(vs2, "左", dir);
-                RouteDir(vs3, "左", dir);
             }
             #endregion
 
@@ -5852,109 +5997,113 @@ namespace WpfMap.Route
             //搜到标签
             if (id != -1)
             {
-                //设置选中
-               // MapFunction.SetRFIDIsSelected(id);
-                // MapOperate.SystemMsg.WriteLine("右直-{0}标签!", MapElement.MapObject.RFIDS[id].Num);
                 //设置搜索的x终点坐标【X的最大值为找的的标签的左侧中心坐标】
                 range.MaxX = MapElement.MapObject.RFIDS[id].LeftPoint.X;
             }
             //向右找上分叉
-            vs1 = ProcessString(index, rfid.RightPoint, ProcessState.RightUp, range);
+            neighbour.Right.V1 = ProcessString(index, rfid.RightPoint, ProcessState.RightUp, range);
             //找到了继续向右找下分叉
-            if (vs1 != null)
+            if (neighbour.Right.V1 != null)
             {
-                vs2 = null;
-                vs3 = null;
+                neighbour.Right.V2 = null;
+                neighbour.Right.V3 = null;
                 //向右找下分叉
-                vs2 = ProcessString(index, rfid.RightPoint, ProcessState.RightDown, range);
+                neighbour.Right.V2 = ProcessString(index, rfid.RightPoint, ProcessState.RightDown, range);
                 //没找到就进行第二次，找到了就直接进行第三次
-                if (vs2 == null || ListLastEquls(vs1, vs2))
+                if (neighbour.Right.V2 == null || ListLastEquls(neighbour.Right.V1, neighbour.Right.V2))
                 {
                     //第二次搜索
-                    if (vs1.Count > 1)
-                        FindSecond(index, vs1, ref vs2, ref vs3, range);
+                    if (neighbour.Right.V1.Count > 1)
+                        FindSecond(index, neighbour.Right.V1, ref neighbour.Right.V2, ref neighbour.Right.V3, range);
                 }
                 //第三次搜索
-                if (!(vs1 != null && vs2 != null && id != -1))
+                if (!(neighbour.Right.V1 != null && neighbour.Right.V2 != null && id != -1))
                 {
                     //不够三条路才进行第三次搜索 
-                    if (vs2 != null && vs3 == null)
+                    if (neighbour.Right.V2 != null && neighbour.Right.V3 == null)
                     {
                         List<string> vs = new List<string>();
                         bool p = false;
                         int num = 0;
-                        for (int i = 0; i < vs2.Count; i++)
+                        for (int i = 0; i < neighbour.Right.V2.Count; i++)
                         {
 
                             if (p == false)
                             {
-                                if (vs2[i] == vs1[i])
+                                if (neighbour.Right.V2[i] == neighbour.Right.V1[i])
                                     continue;
                                 else
                                 { p = true; num = i; }
                             }
                             if (p)
-                                vs.Add(vs2[i]);
+                                vs.Add(neighbour.Right.V2[i]);
                         }
-                        FindThird(index, vs1, vs, ref vs3);
+                        FindThird(index, neighbour.Right.V1, vs, ref neighbour.Right.V3);
                         //补齐前段
-                        if (vs3 != null)
-                            vs3.InsertRange(0, vs2.GetRange(0, num));
+                        if (neighbour.Right.V3 != null)
+                            neighbour.Right.V3.InsertRange(0, neighbour.Right.V2.GetRange(0, num));
                         else
                         //如果第三次还是没有找到，用vs1的公共部分后半段再搜一次
-                        if (vs3 == null)
+                        if (neighbour.Right.V3 == null)
                         {
                             vs = new List<string>();
                             p = false;
                             num = 0;
-                            for (int i = 0; i < vs1.Count; i++)
+                            for (int i = 0; i < neighbour.Right.V1.Count; i++)
                             {
 
                                 if (p == false)
                                 {
-                                    if (vs1[i] == vs2[i])
+                                    if (neighbour.Right.V1[i] == neighbour.Right.V2[i])
                                         continue;
                                     else
                                     { p = true; num = i; }
                                 }
                                 if (p)
-                                    vs.Add(vs1[i]);
+                                    vs.Add(neighbour.Right.V1[i]);
                             }
-                            FindThird(index, vs2, vs, ref vs3);
+                            FindThird(index, neighbour.Right.V2, vs, ref neighbour.Right.V3);
                             //补齐前段
-                            if (vs3 != null)
-                                vs3.InsertRange(0, vs1.GetRange(0, num));
+                            if (neighbour.Right.V3 != null)
+                                neighbour.Right.V3.InsertRange(0, neighbour.Right.V1.GetRange(0, num));
                         }
                     }
                 }
             }
-            ////打印结果
-            //if (vs1 != null)
-            //    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num.ToString());
-            //if (vs2 != null)
-            //    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num.ToString());
-            //if (vs3 != null)
-            //    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num.ToString());
-            rs = AnalyRightResault(id, vs1, vs2, vs3);
+            //将搜索结果解析成AGV可以识别的形式
+            rs = AnalyRightResault(id, neighbour.Right.V1, neighbour.Right.V2, neighbour.Right.V3);
             if (rs == null)
             {
                 //解析出错,路径不合理
+                return null;
             }
             else
             {
-                neighbour.RightUp = rs[0];
-                neighbour.Right = rs[1];
-                neighbour.RightDown = rs[2];
-                //计算转向后的方向
+                //把结果整合到邻接对象中
+                neighbour.Right.Up = rs[0];
+                neighbour.Right.Straight = rs[1];
+                neighbour.Right.Down = rs[2];
+                //如果有直接可以到达的标签，把该标签加入到列表，方便后面的计算
                 if (id != -1)
                 {
-                    List<string> vss = new List<string>();
-                    vss.Add(id.ToString());
-                    RouteDir(vss, "右", dir);
+                    if (neighbour.Right.V1 == null)
+                    {
+                        neighbour.Right.V1 = new List<string>();
+                        neighbour.Right.V1.Add(id.ToString());
+                    }
+                    else
+                    if (neighbour.Right.V2 == null)
+                    {
+                        neighbour.Right.V2 = new List<string>();
+                        neighbour.Right.V2.Add(id.ToString());
+                    }
+                    else
+                    if (neighbour.Right.V3 == null)
+                    {
+                        neighbour.Right.V3 = new List<string>();
+                        neighbour.Right.V3.Add(id.ToString());
+                    }
                 }
-                RouteDir(vs1, "右", dir);
-                RouteDir(vs2, "右", dir);
-                RouteDir(vs3, "右", dir);
             }
             #endregion
 
@@ -5965,109 +6114,111 @@ namespace WpfMap.Route
             //搜到标签
             if (id != -1)
             {
-                //设置选中
-               // MapFunction.SetRFIDIsSelected(id);
-                //MapOperate.SystemMsg.WriteLine("上直-{0}标签!", MapElement.MapObject.RFIDS[id].Num);
                 //设置搜索的y终点坐标【Y的最小值为找的的标签的下侧中心坐标】
                 range.MinY = MapElement.MapObject.RFIDS[id].DownPoint.Y;
             }
             //向上找左分叉
-            vs1 = ProcessString(index, rfid.UpPoint, ProcessState.UpLeft, range);
+            neighbour.Up.V1 = ProcessString(index, rfid.UpPoint, ProcessState.UpLeft, range);
             //找到了继续向上找右分叉
-            if (vs1 != null)
+            if (neighbour.Up.V1 != null)
             {
-                vs2 = null;
-                vs3 = null;
                 //向上找右分叉
-                vs2 = ProcessString(index, rfid.UpPoint, ProcessState.UpRight, range);
+                neighbour.Up.V2 = ProcessString(index, rfid.UpPoint, ProcessState.UpRight, range);
                 //没找到就进行第二次，找到了就直接进行第三次
-                if (vs2 == null || ListLastEquls(vs1, vs2))
+                if (neighbour.Up.V2 == null || ListLastEquls(neighbour.Up.V1, neighbour.Up.V2))
                 {
                     //第二次搜索
-                    if (vs1.Count > 1)
-                        FindSecond(index, vs1, ref vs2, ref vs3, range);
+                    if (neighbour.Up.V1.Count > 1)
+                        FindSecond(index, neighbour.Up.V1, ref neighbour.Up.V2, ref neighbour.Up.V3, range);
                 }
                 //第三次搜索
-                if (!(vs1 != null && vs2 != null && id != -1))
+                if (!(neighbour.Up.V1 != null && neighbour.Up.V2 != null && id != -1))
                 {
                     //不够三条路才进行第三次搜索 
-                    if (vs2 != null && vs3 == null)
+                    if (neighbour.Up.V2 != null && neighbour.Up.V3 == null)
                     {
                         List<string> vs = new List<string>();
                         bool p = false;
                         int num = 0;
-                        for (int i = 0; i < vs2.Count; i++)
+                        for (int i = 0; i < neighbour.Up.V2.Count; i++)
                         {
 
                             if (p == false)
                             {
-                                if (vs2[i] == vs1[i])
+                                if (neighbour.Up.V2[i] == neighbour.Up.V1[i])
                                     continue;
                                 else
                                 { p = true; num = i; }
                             }
                             if (p)
-                                vs.Add(vs2[i]);
+                                vs.Add(neighbour.Up.V2[i]);
                         }
-                        FindThird(index, vs1, vs, ref vs3);
+                        FindThird(index, neighbour.Up.V1, vs, ref neighbour.Up.V3);
                         //补齐前段
-                        if (vs3 != null)
-                            vs3.InsertRange(0, vs2.GetRange(0, num));
+                        if (neighbour.Up.V3 != null)
+                            neighbour.Up.V3.InsertRange(0, neighbour.Up.V2.GetRange(0, num));
                         else
-                        //如果第三次还是没有找到，用vs1的公共部分后半段再搜一次
-                        if (vs3 == null)
+                        //如果第三次还是没有找到，用neighbour.Up.V1的公共部分后半段再搜一次
+                        if (neighbour.Up.V3 == null)
                         {
                             vs = new List<string>();
                             p = false;
                             num = 0;
-                            for (int i = 0; i < vs1.Count; i++)
+                            for (int i = 0; i < neighbour.Up.V1.Count; i++)
                             {
 
                                 if (p == false)
                                 {
-                                    if (vs1[i] == vs2[i])
+                                    if (neighbour.Up.V1[i] == neighbour.Up.V2[i])
                                         continue;
                                     else
                                     { p = true; num = i; }
                                 }
                                 if (p)
-                                    vs.Add(vs1[i]);
+                                    vs.Add(neighbour.Up.V1[i]);
                             }
-                            FindThird(index, vs2, vs, ref vs3);
+                            FindThird(index, neighbour.Up.V2, vs, ref neighbour.Up.V3);
                             //补齐前段
-                            if (vs3 != null)
-                                vs3.InsertRange(0, vs1.GetRange(0, num));
+                            if (neighbour.Up.V3 != null)
+                                neighbour.Up.V3.InsertRange(0, neighbour.Up.V1.GetRange(0, num));
                         }
                     }
                 }
             }
-            ////打印结果
-            //if (vs1 != null)
-            //    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num.ToString());
-            //if (vs2 != null)
-            //    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num.ToString());
-            //if (vs3 != null)
-            //    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num.ToString());
-            rs = AnalyUpResault(id, vs1, vs2, vs3);
+            //将搜索结果解析成AGV可以识别的形式
+            rs = AnalyUpResault(id, neighbour.Up.V1, neighbour.Up.V2, neighbour.Up.V3);
             if (rs == null)
             {
                 //解析出错,路径不合理
+                return null;
             }
             else
             {
-                neighbour.UpLeft = rs[0];
-                neighbour.Up = rs[1];
-                neighbour.UpRight = rs[2];
-                //计算转向后的方向
+                //把结果整合到邻接对象中
+                neighbour.Up.Left = rs[0];
+                neighbour.Up.Straight = rs[1];
+                neighbour.Up.Right = rs[2];
+                //如果有直接可以到达的标签，把该标签加入到列表，方便后面的计算
                 if (id != -1)
                 {
-                    List<string> vss = new List<string>();
-                    vss.Add(id.ToString());
-                    RouteDir(vss, "上", dir);
+                    if (neighbour.Up.V1 == null)
+                    {
+                        neighbour.Up.V1 = new List<string>();
+                        neighbour.Up.V1.Add(id.ToString());
+                    }
+                    else
+                    if (neighbour.Up.V2 == null)
+                    {
+                        neighbour.Up.V2 = new List<string>();
+                        neighbour.Up.V2.Add(id.ToString());
+                    }
+                    else
+                    if (neighbour.Up.V3 == null)
+                    {
+                        neighbour.Up.V3 = new List<string>();
+                        neighbour.Up.V3.Add(id.ToString());
+                    }
                 }
-                RouteDir(vs1, "上", dir);
-                RouteDir(vs2, "上", dir);
-                RouteDir(vs3, "上", dir);
             }
             #endregion
 
@@ -6078,121 +6229,148 @@ namespace WpfMap.Route
             //搜到标签
             if (id != -1)
             {
-                //设置选中
-              //  MapFunction.SetRFIDIsSelected(id);
-                //MapOperate.SystemMsg.WriteLine("下直-{0}标签!", MapElement.MapObject.RFIDS[id].Num);
                 //设置搜索的y终点坐标【Y的最大值为找的的标签的上侧中心坐标】
                 range.MaxY = MapElement.MapObject.RFIDS[id].UpPoint.Y;
             }
             //向下找左分叉
-            vs1 = ProcessString(index, rfid.DownPoint, ProcessState.DownLeft, range);
+            neighbour.Down.V1 = ProcessString(index, rfid.DownPoint, ProcessState.DownLeft, range);
             //找到了继续向下找右分叉
-            if (vs1 != null)
+            if (neighbour.Down.V1 != null)
             {
-                vs2 = null;
-                vs3 = null;
+                neighbour.Down.V2 = null;
+                neighbour.Down.V3 = null;
                 //向下找右分叉
-                vs2 = ProcessString(index, rfid.DownPoint, ProcessState.DownRight, range);
+                neighbour.Down.V2 = ProcessString(index, rfid.DownPoint, ProcessState.DownRight, range);
                 //没找到就进行第二次，找到了就直接进行第三次
-                if (vs2 == null || ListLastEquls(vs1, vs2))
+                if (neighbour.Down.V2 == null || ListLastEquls(neighbour.Down.V1, neighbour.Down.V2))
                 {
                     //第二次搜索
-                    if (vs1.Count > 1)
-                        FindSecond(index, vs1, ref vs2, ref vs3, range);
+                    if (neighbour.Down.V1.Count > 1)
+                        FindSecond(index, neighbour.Down.V1, ref neighbour.Down.V2, ref neighbour.Down.V3, range);
                 }
                 //第三次搜索
-                if (!(vs1 != null && vs2 != null && id != -1))
+                if (!(neighbour.Down.V1 != null && neighbour.Down.V2 != null && id != -1))
                 {
                     //不够三条路才进行第三次搜索
-                    if (vs2 != null && vs3 == null)
+                    if (neighbour.Down.V2 != null && neighbour.Down.V3 == null)
                     {
                         List<string> vs = new List<string>();
                         bool p = false;
                         int num = 0;
-                        for (int i = 0; i < vs2.Count; i++)
+                        for (int i = 0; i < neighbour.Down.V2.Count; i++)
                         {
 
                             if (p == false)
                             {
-                                if (vs2[i] == vs1[i])
+                                if (neighbour.Down.V2[i] == neighbour.Down.V1[i])
                                     continue;
                                 else
                                 { p = true; num = i; }
                             }
                             if (p)
-                                vs.Add(vs2[i]);
+                                vs.Add(neighbour.Down.V2[i]);
                         }
-                        FindThird(index, vs1, vs, ref vs3);
+                        FindThird(index, neighbour.Down.V1, vs, ref neighbour.Down.V3);
                         //补齐前段
-                        if (vs3 != null)
-                            vs3.InsertRange(0, vs2.GetRange(0, num));
+                        if (neighbour.Down.V3 != null)
+                            neighbour.Down.V3.InsertRange(0, neighbour.Down.V2.GetRange(0, num));
                         else
-                        //如果第三次还是没有找到，用vs1的公共部分后半段再搜一次
-                        if (vs3 == null)
+                        //如果第三次还是没有找到，用neighbour.Down.V1的公共部分后半段再搜一次
+                        if (neighbour.Down.V3 == null)
                         {
                             vs = new List<string>();
                             p = false;
                             num = 0;
-                            for (int i = 0; i < vs1.Count; i++)
+                            for (int i = 0; i < neighbour.Down.V1.Count; i++)
                             {
 
                                 if (p == false)
                                 {
-                                    if (vs1[i] == vs2[i])
+                                    if (neighbour.Down.V1[i] == neighbour.Down.V2[i])
                                         continue;
                                     else
                                     { p = true; num = i; }
                                 }
                                 if (p)
-                                    vs.Add(vs1[i]);
+                                    vs.Add(neighbour.Down.V1[i]);
                             }
-                            FindThird(index, vs2, vs, ref vs3);
+                            FindThird(index, neighbour.Down.V2, vs, ref neighbour.Down.V3);
                             //补齐前段
-                            if (vs3 != null)
-                                vs3.InsertRange(0, vs1.GetRange(0, num));
+                            if (neighbour.Down.V3 != null)
+                                neighbour.Down.V3.InsertRange(0, neighbour.Down.V1.GetRange(0, num));
                         }
                     }
                 }
             }
-            ////打印结果
-            //if (vs1 != null)
-            //    MapOperate.SystemMsg.WriteLine("vs1:" + String.Join("-", vs1.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs1.Last())].Num.ToString());
-            //if (vs2 != null)
-            //    MapOperate.SystemMsg.WriteLine("vs2:" + String.Join("-", vs2.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs2.Last())].Num.ToString());
-            //if (vs3 != null)
-            //    MapOperate.SystemMsg.WriteLine("vs3:" + String.Join("-", vs3.ToArray()) + "标签：" + MapElement.MapObject.RFIDS[int.Parse(vs3.Last())].Num.ToString());
-            rs = AnalyDownResault(id, vs1, vs2, vs3);
+            //将搜索结果解析成AGV可以识别的形式
+            rs = AnalyDownResault(id, neighbour.Down.V1, neighbour.Down.V2, neighbour.Down.V3);
             if (rs == null)
             {
                 //解析出错,路径不合理
+                return null;
             }
             else
             {
-                neighbour.DownLeft = rs[0];
-                neighbour.Down = rs[1];
-                neighbour.DownRight = rs[2];
-                //计算转向后的方向
+                //把结果整合到邻接对象中
+                neighbour.Down.Left = rs[0];
+                neighbour.Down.Straight = rs[1];
+                neighbour.Down.Right = rs[2];
+                //如果有直接可以到达的标签，把该标签加入到列表，方便后面的计算
                 if (id != -1)
                 {
-                    List<string> vss = new List<string>();
-                    vss.Add(id.ToString());
-                    RouteDir(vss, "下", dir);
+                    if (neighbour.Down.V1 == null)
+                    {
+                        neighbour.Down.V1 = new List<string>();
+                        neighbour.Down.V1.Add(id.ToString());
+                    }
+                    else
+                    if (neighbour.Down.V2 == null)
+                    {
+                        neighbour.Down.V2 = new List<string>();
+                        neighbour.Down.V2.Add(id.ToString());
+                    }
+                    else
+                    if (neighbour.Down.V3 == null)
+                    {
+                        neighbour.Down.V3 = new List<string>();
+                        neighbour.Down.V3.Add(id.ToString());
+                    }
                 }
-                RouteDir(vs1, "下", dir);
-                RouteDir(vs2, "下", dir);
-                RouteDir(vs3, "下", dir);
             }
             #endregion
-
-           // MapOperate.SystemMsg.WriteLine("-----------END-------------");
             return neighbour;
         }
+
+        /// <summary>
+        /// 根据地图标签的邻接关系确定AGV的车头方向，最终结果保存在全局变量【HeadDirectionList】
+        /// </summary>
+        /// <param name="neighbour">某个标签的地图邻接关系</param>
+        /// <param name="dir">AGV在这个标签的车头方向</param>
+        public static void GetAgvHeadDirection(MapNeighbour neighbour, HeadDirections dir)
+        {
+            RotateAgvHeadDir(neighbour.Left.V1, "左", dir);
+            RotateAgvHeadDir(neighbour.Left.V2, "左", dir);
+            RotateAgvHeadDir(neighbour.Left.V3, "左", dir);
+
+            RotateAgvHeadDir(neighbour.Right.V1, "右", dir);
+            RotateAgvHeadDir(neighbour.Right.V2, "右", dir);
+            RotateAgvHeadDir(neighbour.Right.V3, "右", dir);
+
+            RotateAgvHeadDir(neighbour.Up.V1, "上", dir);
+            RotateAgvHeadDir(neighbour.Up.V2, "上", dir);
+            RotateAgvHeadDir(neighbour.Up.V3, "上", dir);
+
+            RotateAgvHeadDir(neighbour.Down.V1, "下", dir);
+            RotateAgvHeadDir(neighbour.Down.V2, "下", dir);
+            RotateAgvHeadDir(neighbour.Down.V3, "下", dir);
+        }
+
         /// <summary>
         /// 旋转车身方向
         /// </summary>
         /// <param name="headDirection"></param>
         /// <param name="Dir"></param>
-        public static void RouteDir(List<string> vs, string findDir, HeadDirections dir)
+        public static void RotateAgvHeadDir(List<string> vs, string findDir, HeadDirections dir)
         {
             if (vs != null)
             {
@@ -6200,7 +6378,7 @@ namespace WpfMap.Route
                 if (HeadDirectionList[int.Parse(vs.Last())].Dir != HeadDirections.None)
                     return;
 
-                //设置默认方向
+                //设置方向为起点方向
                 if (findDir == "左")
                 {
                     if (dir == HeadDirections.Left || dir == HeadDirections.Right)
@@ -6255,6 +6433,7 @@ namespace WpfMap.Route
                 }
             }
         }
+
         public static void test()
         {
             //获取车头方向
