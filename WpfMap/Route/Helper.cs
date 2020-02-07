@@ -5985,36 +5985,38 @@ namespace WpfMap.Route
                 }
                 AGVNeighbours.Add(nb);
             }
-
-            //打印结果
-            foreach (var item in AGVNeighbours)
+            if (debug)
             {
-                //前进
-                if (item.go.LeftFork != -1)
-                    MapOperate.SystemMsg.WriteLine("【{0}】：前进-左分叉->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.go.LeftFork].Num);
-                if (item.go.Straight != -1)
-                    MapOperate.SystemMsg.WriteLine("【{0}】：前进-直行->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.go.Straight].Num);
-                if (item.go.RightFork != -1)
-                    MapOperate.SystemMsg.WriteLine("【{0}】：前进-右分叉->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.go.RightFork].Num);
+                //打印结果
+                foreach (var item in AGVNeighbours)
+                {
+                    //前进
+                    if (item.go.LeftFork != -1)
+                        MapOperate.SystemMsg.WriteLine("【{0}】：前进-左分叉->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.go.LeftFork].Num);
+                    if (item.go.Straight != -1)
+                        MapOperate.SystemMsg.WriteLine("【{0}】：前进-直行->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.go.Straight].Num);
+                    if (item.go.RightFork != -1)
+                        MapOperate.SystemMsg.WriteLine("【{0}】：前进-右分叉->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.go.RightFork].Num);
 
-                if (item.go.TurnLeft != -1)
-                    MapOperate.SystemMsg.WriteLine("【{0}】：前进-左旋->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.go.TurnLeft].Num);
-                if (item.go.TurnRight != -1)
-                    MapOperate.SystemMsg.WriteLine("【{0}】：前进-右旋->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.go.TurnRight].Num);
-                
-                //后退
-                if (item.back.LeftFork != -1)
-                    MapOperate.SystemMsg.WriteLine("【{0}】：后退-左分叉->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.back.LeftFork].Num);
-                if (item.back.Straight != -1)
-                    MapOperate.SystemMsg.WriteLine("【{0}】：后退-直行->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.back.Straight].Num);
-                if (item.back.RightFork != -1)
-                    MapOperate.SystemMsg.WriteLine("【{0}】：后退-右分叉->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.back.RightFork].Num);
+                    if (item.go.TurnLeft != -1)
+                        MapOperate.SystemMsg.WriteLine("【{0}】：前进-左旋【{1}】度->【{2}】", MapElement.MapObject.RFIDS[item.NowNum].Num, item.go.AngleLeft, MapElement.MapObject.RFIDS[item.go.TurnLeft].Num);
+                    if (item.go.TurnRight != -1)
+                        MapOperate.SystemMsg.WriteLine("【{0}】：前进-右旋【{1}】度->【{2}】", MapElement.MapObject.RFIDS[item.NowNum].Num, item.go.AngleLeft, MapElement.MapObject.RFIDS[item.go.TurnRight].Num);
+
+                    //后退
+                    if (item.back.LeftFork != -1)
+                        MapOperate.SystemMsg.WriteLine("【{0}】：后退-左分叉->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.back.LeftFork].Num);
+                    if (item.back.Straight != -1)
+                        MapOperate.SystemMsg.WriteLine("【{0}】：后退-直行->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.back.Straight].Num);
+                    if (item.back.RightFork != -1)
+                        MapOperate.SystemMsg.WriteLine("【{0}】：后退-右分叉->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.back.RightFork].Num);
 
 
-                if (item.back.TurnLeft != -1)
-                    MapOperate.SystemMsg.WriteLine("【{0}】：后退-左旋->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.back.TurnLeft].Num);
-                if (item.back.TurnRight != -1)
-                    MapOperate.SystemMsg.WriteLine("【{0}】：后退-右旋->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.back.TurnRight].Num);
+                    if (item.back.TurnLeft != -1)
+                        MapOperate.SystemMsg.WriteLine("【{0}】：后退-左旋【{1}】度->【{2}】", MapElement.MapObject.RFIDS[item.NowNum].Num, item.back.AngleLeft, MapElement.MapObject.RFIDS[item.back.TurnLeft].Num);
+                    if (item.back.TurnRight != -1)
+                        MapOperate.SystemMsg.WriteLine("【{0}】：后退-右旋【{1}】度->【{2}】", MapElement.MapObject.RFIDS[item.NowNum].Num, item.back.AngleLeft, MapElement.MapObject.RFIDS[item.back.TurnRight].Num);
+                }
             }
         }
         /// <summary>
