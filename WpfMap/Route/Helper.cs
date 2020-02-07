@@ -5738,9 +5738,17 @@ namespace WpfMap.Route
                 MapNeighbour neighbour = GetMapNeighbour(i);
                 if (neighbour != null)
                     MapNeighbours.Add(GetMapNeighbour(i));
+                else
+                {
+                    //有错误
+                    MapOperate.SystemMsg.WriteLine("提示：【{0}】号标签出错，生成失败！", MapElement.MapObject.RFIDS[i].Num);
+                    return;
+                }
             }
+            //根据邻接关系生成所有标签的车头方向
             for (int i = 0; i < HeadDirectionList.Count; i++)
             {
+                //如果规定了当前标签的方向但是没有用该标签搜索过，则搜索一次
                 if (HeadDirectionList[i].Dir != HeadDirections.None && HeadDirectionList[i].Searched == false)
                 {
                     GetAgvHeadDirection(MapNeighbours[i], HeadDirectionList[i].Dir);
@@ -5749,7 +5757,6 @@ namespace WpfMap.Route
                     i = 0; num++;
                 }
             }
-
             //打印结果
             if (debug)
             {
@@ -5762,8 +5769,253 @@ namespace WpfMap.Route
                 }
                 MapOperate.SystemMsg.WriteLine("共循环：【{0}】次", num);
             }
-            //4.生成AGV邻接关系表
+            //4.生成AGV邻接关系表【遍历所有点】
+            List<AGVNeighbour> AGVNeighbours = new List<AGVNeighbour>();
+            for (int i = 0; i < MapNeighbours.Count; i++)
+            {
+                AGVNeighbour nb = new AGVNeighbour();
+                nb.NowNum = i;
+                //根据车头方向解析邻接关系
+                switch (HeadDirectionList[i].Dir)
+                {
+                    case HeadDirections.None:
+                        break;
+                    case HeadDirections.Up:
+                        {
+                            //左侧
+                            if (MapNeighbours[i].Left.Straight != -1)
+                            {
+                                //如果左面的点的车头方向要求朝左
+                                if (HeadDirectionList[MapNeighbours[i].Left.Straight].Dir == HeadDirections.Left)
+                                {
+                                    //左旋90度，前进
+                                    nb.go.TurnLeft = MapNeighbours[i].Left.Straight;
+                                    nb.go.AngleLeft = 90;
+                                }
+                                else
+                                //如果左面的点的车头方向要求朝右
+                                if (HeadDirectionList[MapNeighbours[i].Left.Straight].Dir == HeadDirections.Right)
+                                {
+                                    //右旋90度，后退
+                                    nb.back.TurnRight = MapNeighbours[i].Left.Straight;
+                                    nb.back.AngleRight = 90;
+                                }
+                            }
+                            //右侧
+                            if (MapNeighbours[i].Right.Straight != -1)
+                            {
+                                //如果右面的点的车头方向要求朝左
+                                if (HeadDirectionList[MapNeighbours[i].Right.Straight].Dir == HeadDirections.Left)
+                                {
+                                    //左旋90度，后退
+                                    nb.back.TurnLeft = MapNeighbours[i].Right.Straight;
+                                    nb.back.AngleLeft = 90;
+                                }
+                                else
+                                //如果右面的点的车头方向要求朝右
+                                if (HeadDirectionList[MapNeighbours[i].Right.Straight].Dir == HeadDirections.Right)
+                                {
+                                    //右旋90度，前进
+                                    nb.go.TurnRight = MapNeighbours[i].Right.Straight;
+                                    nb.go.AngleRight = 90;
+                                }
+                            }
+                            //上侧
+                            nb.go.LeftFork = MapNeighbours[i].Up.Left;
+                            nb.go.Straight = MapNeighbours[i].Up.Straight;
+                            nb.go.RightFork = MapNeighbours[i].Up.Right;
+                            //下侧
+                            nb.back.LeftFork = MapNeighbours[i].Down.Left;
+                            nb.back.Straight = MapNeighbours[i].Down.Straight;
+                            nb.back.RightFork = MapNeighbours[i].Down.Right;
+                            break;
+                        }
+                    case HeadDirections.Right:
+                        {
+                            //左侧
+                            nb.back.LeftFork = MapNeighbours[i].Left.Up;
+                            nb.back.Straight = MapNeighbours[i].Left.Straight;
+                            nb.back.RightFork = MapNeighbours[i].Left.Down;
+                            //右侧
+                            nb.go.LeftFork = MapNeighbours[i].Right.Up;
+                            nb.go.Straight = MapNeighbours[i].Right.Straight;
+                            nb.go.RightFork = MapNeighbours[i].Right.Down;
+                            //上侧
+                            if (MapNeighbours[i].Up.Straight != -1)
+                            {
+                                //如果上面的点的车头方向要求朝上
+                                if (HeadDirectionList[MapNeighbours[i].Up.Straight].Dir == HeadDirections.Up)
+                                {
+                                    //左旋90度，前进
+                                    nb.go.TurnLeft = MapNeighbours[i].Up.Straight;
+                                    nb.go.AngleLeft = 90;
+                                }
+                                else
+                                //如果上面的点的车头方向要求朝下
+                                if (HeadDirectionList[MapNeighbours[i].Up.Straight].Dir == HeadDirections.Down)
+                                {
+                                    //右旋90度，后退
+                                    nb.back.TurnRight = MapNeighbours[i].Up.Straight;
+                                    nb.back.AngleRight = 90;
+                                }
+                            }
+                            //下侧
+                            if (MapNeighbours[i].Down.Straight != -1)
+                            {
+                                //如果下面的点的车头方向要求朝上
+                                if (HeadDirectionList[MapNeighbours[i].Down.Straight].Dir == HeadDirections.Up)
+                                {
+                                    //左旋90度，后退
+                                    nb.back.TurnLeft = MapNeighbours[i].Down.Straight;
+                                    nb.back.AngleLeft = 90;
+                                }
+                                else
+                                //如果下面的点的车头方向要求朝下
+                                if (HeadDirectionList[MapNeighbours[i].Down.Straight].Dir == HeadDirections.Down)
+                                {
+                                    //右旋90度，前进
+                                    nb.go.TurnRight = MapNeighbours[i].Down.Straight;
+                                    nb.go.AngleRight = 90;
+                                }
+                            }
+                            break;
+                        }
+                    case HeadDirections.Down:
+                        {
+                            //左侧
+                            if (MapNeighbours[i].Left.Straight != -1)
+                            {
+                                //如果左面的点的车头方向要求朝左
+                                if (HeadDirectionList[MapNeighbours[i].Left.Straight].Dir == HeadDirections.Left)
+                                {
+                                    //右旋90度，前进
+                                    nb.go.TurnRight = MapNeighbours[i].Left.Straight;
+                                    nb.go.AngleRight = 90;
+                                }
+                                else
+                                //如果左面的点的车头方向要求朝右
+                                if (HeadDirectionList[MapNeighbours[i].Left.Straight].Dir == HeadDirections.Right)
+                                {
+                                    //左旋90度，后退
+                                    nb.back.TurnLeft = MapNeighbours[i].Left.Straight;
+                                    nb.back.AngleLeft = 90;
+                                }
+                            }
+                            //右侧
+                            if (MapNeighbours[i].Right.Straight != -1)
+                            {
+                                //如果右面的点的车头方向要求朝左
+                                if (HeadDirectionList[MapNeighbours[i].Right.Straight].Dir == HeadDirections.Left)
+                                {
+                                    //右旋90度，后退
+                                    nb.back.TurnRight = MapNeighbours[i].Right.Straight;
+                                    nb.back.AngleRight = 90;
+                                }
+                                else
+                                //如果右面的点的车头方向要求朝右
+                                if (HeadDirectionList[MapNeighbours[i].Right.Straight].Dir == HeadDirections.Right)
+                                {
+                                    //左旋90度，前进
+                                    nb.go.TurnLeft = MapNeighbours[i].Right.Straight;
+                                    nb.go.AngleLeft = 90;
+                                }
+                            }
+                            //上侧
+                            nb.back.LeftFork = MapNeighbours[i].Up.Right;
+                            nb.back.Straight = MapNeighbours[i].Up.Straight;
+                            nb.back.RightFork = MapNeighbours[i].Up.Left;
+                            //下侧
+                            nb.go.LeftFork = MapNeighbours[i].Down.Right;
+                            nb.go.Straight = MapNeighbours[i].Down.Straight;
+                            nb.go.RightFork = MapNeighbours[i].Down.Left;
+                            break;
+                        }
+                    case HeadDirections.Left:
+                        {
+                            //左侧
+                            nb.go.RightFork = MapNeighbours[i].Left.Up;
+                            nb.go.Straight = MapNeighbours[i].Left.Straight;
+                            nb.go.LeftFork = MapNeighbours[i].Left.Down;
+                            //右侧
+                            nb.back.RightFork = MapNeighbours[i].Right.Up;
+                            nb.back.Straight = MapNeighbours[i].Right.Straight;
+                            nb.back.LeftFork = MapNeighbours[i].Right.Down;
+                            //上侧
+                            if (MapNeighbours[i].Up.Straight != -1)
+                            {
+                                //如果上面的点的车头方向要求朝上
+                                if (HeadDirectionList[MapNeighbours[i].Up.Straight].Dir == HeadDirections.Up)
+                                {
+                                    //右旋90度，前进
+                                    nb.go.TurnRight = MapNeighbours[i].Up.Straight;
+                                    nb.go.AngleRight = 90;
+                                }
+                                else
+                                //如果上面的点的车头方向要求朝下
+                                if (HeadDirectionList[MapNeighbours[i].Up.Straight].Dir == HeadDirections.Down)
+                                {
+                                    //左旋90度，后退
+                                    nb.back.TurnLeft = MapNeighbours[i].Up.Straight;
+                                    nb.back.AngleLeft = 90;
+                                }
+                            }
+                            //下侧
+                            if (MapNeighbours[i].Down.Straight != -1)
+                            {
+                                //如果下面的点的车头方向要求朝上
+                                if (HeadDirectionList[MapNeighbours[i].Down.Straight].Dir == HeadDirections.Up)
+                                {
+                                    //右旋90度，后退
+                                    nb.back.TurnRight = MapNeighbours[i].Down.Straight;
+                                    nb.back.AngleRight = 90;
+                                }
+                                else
+                                //如果下面的点的车头方向要求朝下
+                                if (HeadDirectionList[MapNeighbours[i].Down.Straight].Dir == HeadDirections.Down)
+                                {
+                                    //左旋90度，前进
+                                    nb.go.TurnLeft = MapNeighbours[i].Down.Straight;
+                                    nb.go.AngleLeft = 90;
+                                }
+                            }
+                            break;
+                        }
+                    default:
+                        break;
+                }
+                AGVNeighbours.Add(nb);
+            }
 
+            //打印结果
+            foreach (var item in AGVNeighbours)
+            {
+                //前进
+                if (item.go.LeftFork != -1)
+                    MapOperate.SystemMsg.WriteLine("【{0}】：前进-左分叉->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.go.LeftFork].Num);
+                if (item.go.Straight != -1)
+                    MapOperate.SystemMsg.WriteLine("【{0}】：前进-直行->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.go.Straight].Num);
+                if (item.go.RightFork != -1)
+                    MapOperate.SystemMsg.WriteLine("【{0}】：前进-右分叉->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.go.RightFork].Num);
+
+                if (item.go.TurnLeft != -1)
+                    MapOperate.SystemMsg.WriteLine("【{0}】：前进-左旋->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.go.TurnLeft].Num);
+                if (item.go.TurnRight != -1)
+                    MapOperate.SystemMsg.WriteLine("【{0}】：前进-右旋->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.go.TurnRight].Num);
+                
+                //后退
+                if (item.back.LeftFork != -1)
+                    MapOperate.SystemMsg.WriteLine("【{0}】：后退-左分叉->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.back.LeftFork].Num);
+                if (item.back.Straight != -1)
+                    MapOperate.SystemMsg.WriteLine("【{0}】：后退-直行->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.back.Straight].Num);
+                if (item.back.RightFork != -1)
+                    MapOperate.SystemMsg.WriteLine("【{0}】：后退-右分叉->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.back.RightFork].Num);
+
+
+                if (item.back.TurnLeft != -1)
+                    MapOperate.SystemMsg.WriteLine("【{0}】：后退-左旋->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.back.TurnLeft].Num);
+                if (item.back.TurnRight != -1)
+                    MapOperate.SystemMsg.WriteLine("【{0}】：后退-右旋->【{1}】", MapElement.MapObject.RFIDS[item.NowNum].Num, MapElement.MapObject.RFIDS[item.back.TurnRight].Num);
+            }
         }
         /// <summary>
         /// 地图上标签的邻接关系类
@@ -5805,67 +6057,69 @@ namespace WpfMap.Route
             /// 当前点标签编号
             /// </summary>
             public int NowNum;
+            public Go go = new Go();
+            public Back back = new Back();
             public class Go
             {
                 /// <summary>
                 /// 左分叉
                 /// </summary>
-                public int LeftFork;
+                public int LeftFork =-1;
                 /// <summary>
                 /// 直行
                 /// </summary>
-                public int Straight;
+                public int Straight =-1;
                 /// <summary>
                 /// 右分叉
                 /// </summary>
-                public int RightFork;
+                public int RightFork =-1;
                 /// <summary>
                 /// 左旋
                 /// </summary>
-                public int TurnLeft;
+                public int TurnLeft =-1;
                 /// <summary>
                 /// 左旋角度
                 /// </summary>
-                public int AngleLeft;
+                public int AngleLeft =-1;
                 /// <summary>
                 /// 右旋
                 /// </summary>
-                public int TurnRight;
+                public int TurnRight =-1;
                 /// <summary>
                 /// 右旋角度
                 /// </summary>
-                public int AngleRight;
+                public int AngleRight =-1;
             }
             public class Back
             {
                 /// <summary>
                 /// 左分叉
                 /// </summary>
-                public int LeftFork;
+                public int LeftFork =-1;
                 /// <summary>
                 /// 直行
                 /// </summary>
-                public int Straight;
+                public int Straight =-1;
                 /// <summary>
                 /// 右分叉
                 /// </summary>
-                public int RightFork;
+                public int RightFork =-1;
                 /// <summary>
                 /// 左旋
                 /// </summary>
-                public int TurnLeft;
+                public int TurnLeft =-1;
                 /// <summary>
                 /// 左旋角度
                 /// </summary>
-                public int AngleLeft;
+                public int AngleLeft =-1;
                 /// <summary>
                 /// 右旋
                 /// </summary>
-                public int TurnRight;
+                public int TurnRight =-1;
                 /// <summary>
                 /// 右旋角度
                 /// </summary>
-                public int AngleRight;
+                public int AngleRight =-1;
             }
         }
 
