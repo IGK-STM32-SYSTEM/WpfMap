@@ -42,7 +42,8 @@ namespace WpfMap
             MapElement.CvRouteLine = cvLine;//直路线
             MapElement.CvForkLine = cvForkLine;//分叉路线
             MapElement.CvOperate = cvOperate;//操作层
-
+            MapElement.CvRouteDisplay = cvRouteDisplay;//路径提示层
+            
             //画背景栅格，大小为20*20
             MapElement.DrawGrid(1024 * 2, 768 * 2);
 
@@ -315,7 +316,7 @@ namespace WpfMap
                         MapOperate.NowType = MapOperate.EnumElementType.RFID;
                         this.DataContext = MapElement.MapObject.RFIDS[rs];
                         //搜索
-                        //Route.Helper.GenerateNeighbour(rs);
+                        Route.Helper.Test2_ShowNB(rs);
                         return;
                     }
                 }

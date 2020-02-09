@@ -28,6 +28,7 @@ namespace WpfMap
         public static Canvas CvRouteLine;//直路线
         public static Canvas CvForkLine;//分叉路线
         public static Canvas CvOperate;//操作层
+        public static Canvas CvRouteDisplay;//路径显示层
 
         //标签类
         public class RFID : SaveMap.ShapesBase

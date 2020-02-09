@@ -114,6 +114,7 @@
                                             <Canvas x:Name="cvForkLine"></Canvas>
                                             <Canvas x:Name="cvRFID"></Canvas>
                                             <Canvas x:Name="cvOperate"></Canvas>
+                                            <Canvas x:Name="cvRouteDisplay"></Canvas>
                                         </Grid>
                                     </ScrollViewer>
                                 </xcad:LayoutDocument>
