@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Shapes;
 
 namespace WpfMap.Route
@@ -6353,12 +6354,29 @@ namespace WpfMap.Route
         {
             if (index == -1)
                 return;
-            Ellipse ellipse = new Ellipse();
-            ellipse.Margin = MapElement.MapObject.RFIDS[index].ellipse.Margin;
-            ellipse.Width = MapElement.MapObject.RFIDS[index].ellipse.Width;
-            ellipse.Height = MapElement.MapObject.RFIDS[index].ellipse.Height;
-            ellipse.Fill = CavnvasBase.GetSolid(200, Colors.Blue);
-            MapElement.CvRouteDisplay.Children.Add(ellipse);
+            //复制标签
+            MapElement.RFID rfid = MapFunction.IgkClone.RFID(MapElement.MapObject.RFIDS[index]);
+
+            //Ellipse ellipse = new Ellipse();
+            //ellipse.Margin = MapElement.MapObject.RFIDS[index].ellipse.Margin;
+            //ellipse.Width = MapElement.MapObject.RFIDS[index].ellipse.Width;
+            //ellipse.Height = MapElement.MapObject.RFIDS[index].ellipse.Height;
+            rfid.ellipse.Fill = Brushes.Pink;// CavnvasBase.GetSolid(255, Colors.Pink);
+            DropShadowEffect drop = new DropShadowEffect();
+            drop.ShadowDepth = 3;
+            drop.Color = Colors.LightGray;
+            rfid.ellipse.Effect = drop;
+            rfid.ellipse.Stroke= Brushes.Pink;
+            MapElement.CvRouteDisplay.Children.Add(rfid.ellipse);
+            //显示编号
+            CavnvasBase.DrawText(
+                rfid.ellipse.Margin.Left + rfid.ellipse.Width / 2,
+                rfid.ellipse.Margin.Top + rfid.ellipse.Width / 2,
+                rfid.Num.ToString(),
+                Colors.Black,
+                MapElement.CvRouteDisplay,
+                rfid.textBlock
+                );
         }
         /// <summary>
         /// 
@@ -6379,14 +6397,14 @@ namespace WpfMap.Route
                 if (vs.Count == 1)
                 {
                     if (Dir == "左")
-                    { 
+                    {
                         //从当前标签的左中点画到目标标签的右终点
                         p1 = MapElement.MapObject.RFIDS[nb.Index].LeftPoint;
                         p2 = MapElement.MapObject.RFIDS[int.Parse(vs[0])].RightPoint;
                     }
                     else
                     if (Dir == "右")
-                    {  
+                    {
                         p1 = MapElement.MapObject.RFIDS[nb.Index].RightPoint;
                         p2 = MapElement.MapObject.RFIDS[int.Parse(vs[0])].LeftPoint;
                     }
@@ -6486,6 +6504,11 @@ namespace WpfMap.Route
                 line.Y2 = p2.Y;
                 //线的宽度
                 line.StrokeThickness = 3.5;
+                //添加发光效果
+                DropShadowEffect drop = new DropShadowEffect();
+                drop.ShadowDepth = 2;
+                drop.Color = Colors.LightGray;
+                line.Effect = drop;
                 //添加到画布
                 MapElement.CvRouteDisplay.Children.Add(line);
             }
@@ -6505,6 +6528,11 @@ namespace WpfMap.Route
                 forkLine.SelectPath.Stroke = color;
                 //设置线宽
                 forkLine.SelectPath.StrokeThickness = 3.5;
+                //添加发光效果
+                DropShadowEffect drop = new DropShadowEffect();
+                drop.ShadowDepth = 2;
+                drop.Color = Colors.LightGray;
+                forkLine.SelectPath.Effect = drop;
                 //添加到画布
                 MapElement.CvRouteDisplay.Children.Add(forkLine.SelectPath);
             }
@@ -6524,7 +6552,7 @@ namespace WpfMap.Route
             DrawRFID(nb.Left.Straight);
             DrawRFID(nb.Left.Down);
             //画所有的直线
-            DrawLine(nb, nb.Left.V1, color,"左");
+            DrawLine(nb, nb.Left.V1, color, "左");
             DrawLine(nb, nb.Left.V2, color, "左");
             DrawLine(nb, nb.Left.V3, color, "左");
             //画所有的弧线

@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Shapes;
 
 namespace WpfMap
@@ -29,6 +30,100 @@ namespace WpfMap
         public static Canvas CvForkLine;//分叉路线
         public static Canvas CvOperate;//操作层
         public static Canvas CvRouteDisplay;//路径显示层
+
+        /// <summary>
+        /// 地图主题，配色
+        /// </summary>
+        [DisplayName("主题")]
+        public class Theme
+        {
+            /// <summary>
+            /// 标签颜色
+            /// </summary>
+            private Color rfid;
+            [Category("颜色")]
+            [Description("标签颜色")]
+            [DisplayName("标签色")]
+            public Color RFID
+            {
+                get { return rfid; }
+                set
+                {
+                    rfid = value;
+                    foreach (var item in MapObject.RFIDS)
+                    {
+                        item.ellipse.Fill = new SolidColorBrush(value);
+                    }
+                }
+            }
+            /// <summary>
+            /// 线条颜色
+            /// </summary>
+            private Color line;
+            [Category("颜色")]
+            [Description("线条颜色")]
+            [DisplayName("线色")]
+            public Color Line
+            {
+                get { return line; }
+                set
+                {
+                    line = value;
+                    //更新颜色
+                    foreach (var item in MapObject.ForkLines)
+                    {
+                        item.Path.Stroke = new SolidColorBrush(value);
+                    }
+                    foreach (var item in MapObject.Lines)
+                    {
+                        item.line.Stroke = new SolidColorBrush(value);
+                    }
+                }
+            }
+            /// <summary>
+            /// 选中后的标签色
+            /// </summary>
+            private Color selectedRDFID;
+            [Category("颜色")]
+            [Description("标签选中后的颜色")]
+            [DisplayName("标签选中色")]
+            public Color SelectedRDFID
+            {
+                get { return selectedRDFID; }
+                set
+                {
+                    selectedRDFID = value;
+                    foreach (var item in MapObject.RFIDS)
+                    {
+                        item.SelectRectangle.Fill = new SolidColorBrush(value);
+                    }
+                }
+            }
+            /// <summary>
+            /// 选中后的线条颜色
+            /// </summary>
+            private Color selectedLine;
+            [Category("颜色")]
+            [Description("线条选中后的颜色")]
+            [DisplayName("线选中色")]
+            public Color SelectedLine
+            {
+                get { return selectedLine; }
+                set
+                {
+                    selectedLine = value;
+                    //更新颜色
+                    foreach (var item in MapObject.ForkLines)
+                    {
+                        item.SelectPath.Stroke = new SolidColorBrush(value);
+                    }
+                    foreach (var item in MapObject.Lines)
+                    {
+                        item.SelectLine.Stroke = new SolidColorBrush(value);
+                    }
+                }
+            }
+        }
 
         //标签类
         public class RFID : SaveMap.ShapesBase
@@ -316,8 +411,14 @@ namespace WpfMap
             /// </summary>
             public List<MapElement.RouteForkLine> ForkLines = new List<MapElement.RouteForkLine>();
         }
+        /// <summary>
+        /// 地图对象
+        /// </summary>
         public static MapObjectClass MapObject = new MapObjectClass();
-
+        /// <summary>
+        /// 地图主题类对象
+        /// </summary>
+        public static Theme MapTheme = new Theme();
 
         /*-------背景栅格---------------*/
         /// <summary>
@@ -387,6 +488,15 @@ namespace WpfMap
         /// </summary>
         public static void ShowRFID(MapElement.RFID rfid)
         {
+            rfid.ellipse.StrokeThickness = 0;
+            rfid.ellipse.Fill = Brushes.Gold;
+            //添加发光效果
+            DropShadowEffect drop = new DropShadowEffect();
+            drop.ShadowDepth = 2;
+            drop.Color = Colors.LightGray;
+            rfid.ellipse.Effect = drop;
+            //CavnvasBase.GetSolid(255, Colors.Green);
+            //rfid.ellipse.Stroke = CavnvasBase.GetSolid(100, Colors.Green);
             MapElement.CvRFID.Children.Add(rfid.ellipse);
             MapElement.CvRFID.Children.Add(rfid.textBlock);
         }
@@ -432,9 +542,9 @@ namespace WpfMap
             rfid.ellipse.Height = Radius * 2;
             rfid.ellipse.Width = Radius * 2;
             rfid.ellipse.Margin = thickness;
-            rfid.ellipse.StrokeThickness = 0.5;
+            //rfid.ellipse.StrokeThickness = 0.5;
             rfid.ellipse.Fill = CavnvasBase.GetSolid(200, Colors.Green);
-            rfid.ellipse.Stroke = CavnvasBase.GetSolid(100, Colors.Green);
+            //rfid.ellipse.Stroke = CavnvasBase.GetSolid(100, Colors.Green);
             MapElement.CvRFID.Children.Add(rfid.ellipse);
             //显示编号
             CavnvasBase.DrawText(

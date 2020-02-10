@@ -141,6 +141,7 @@
                                             <Button x:Name="Btn_SaveMap" Content="保存地图" Click="Btn_SaveMap_Click" Margin="5"  VerticalAlignment="Center" Height="30"/>
                                             <Button x:Name="Btn_SaveMapAs" Content="另存地图" Click="Btn_SaveMapAs_Click" Margin="5"  VerticalAlignment="Center" Height="30"/>
                                             <Button x:Name="Btn_LoadMap" Content="加载地图" Click="Btn_LoadMap_Click"  Margin="5"  VerticalAlignment="Center"  Height="30"/>
+                                            <Button x:Name="Btn_SetTheme" Content="设置主题" Click="Btn_SetTheme_Click"  Margin="5"  VerticalAlignment="Center"  Height="30"/>
                                         </StackPanel>
                                         <TextBlock  Grid.Row="1" Padding="20,0" 
                                                     Style="{StaticResource Header}"

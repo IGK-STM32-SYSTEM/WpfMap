@@ -1114,5 +1114,10 @@ namespace WpfMap
         {
             Route.Helper.test();
         }
+        //设置主题
+        private void Btn_SetTheme_Click(object sender, RoutedEventArgs e)
+        {
+            this.DataContext = MapElement.MapTheme;
+        }
     }
 }
