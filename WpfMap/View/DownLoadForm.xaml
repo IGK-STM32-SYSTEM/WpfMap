@@ -1,0 +1,21 @@
+﻿<Window x:Class="WpfMap.View.DownLoadForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfMap.View"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded"
+        Title="下载地图" Height="291" Width="428">
+    <Grid>
+        <Label Content="下载地图"  FontSize="26" HorizontalAlignment="Left" Margin="151,10,0,0" VerticalAlignment="Top"/>
+        <Label Content="串口号:"  HorizontalAlignment="Left" Margin="80,72,0,0" VerticalAlignment="Top"/>
+        <Label Content="连接状态:"  HorizontalAlignment="Left" Margin="80,105,0,0" VerticalAlignment="Top"/>
+        <Label Content="下载进度:"  HorizontalAlignment="Left" Margin="80,141,0,0" VerticalAlignment="Top"/>
+        <ComboBox Name="serialList" HorizontalAlignment="Left" Margin="151,76,0,0" VerticalAlignment="Top" Width="120"/>
+        <Label Content="未连接" Name="lbConnect" Foreground="Red" HorizontalAlignment="Left" Margin="151,105,0,0" VerticalAlignment="Top"/>
+        <ProgressBar Name="progressBar"  HorizontalAlignment="Left" Height="20" Margin="151,146,0,0" VerticalAlignment="Top" Width="219"/>
+        <Button Content="连接" Name="btnConnect" Click="BtnConnect_Click" HorizontalAlignment="Left" Margin="296,78,0,0" VerticalAlignment="Top" Width="74"/>
+        <Button Content="下载" Name="btnDownLoad" Click="BtnDownLoad_Click" HorizontalAlignment="Left" Margin="88,210,0,0" VerticalAlignment="Top" Width="288" Height="30"/>
+    </Grid>
+</Window>

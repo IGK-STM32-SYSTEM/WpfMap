@@ -5872,7 +5872,7 @@ namespace WpfMap.Route
         /// 车头方向集合
         /// </summary>
         public static List<HeadDirection> HeadDirectionList = new List<HeadDirection>();
-
+        public static List<AGVNeighbour> AGVNeighbourList = new List<AGVNeighbour>();
 
         /// <summary>
         /// 生成地图标签的邻接关系
@@ -6366,7 +6366,7 @@ namespace WpfMap.Route
             drop.ShadowDepth = 3;
             drop.Color = Colors.LightGray;
             rfid.ellipse.Effect = drop;
-            rfid.ellipse.Stroke= Brushes.Pink;
+            rfid.ellipse.Stroke = Brushes.Pink;
             MapElement.CvRouteDisplay.Children.Add(rfid.ellipse);
             //显示编号
             CavnvasBase.DrawText(
@@ -6775,7 +6775,7 @@ namespace WpfMap.Route
                 MapOperate.SystemMsg.WriteLine("共循环：【{0}】次", num);
             }
             //4.生成AGV邻接关系表【遍历所有点】
-            List<AGVNeighbour> AGVNeighbours = new List<AGVNeighbour>();
+            AGVNeighbourList = new List<AGVNeighbour>();
             for (int i = 0; i < MapNeighbours.Count; i++)
             {
                 AGVNeighbour nb = new AGVNeighbour();
@@ -6988,12 +6988,12 @@ namespace WpfMap.Route
                     default:
                         break;
                 }
-                AGVNeighbours.Add(nb);
+                AGVNeighbourList.Add(nb);
             }
             if (debug)
             {
                 //打印结果
-                foreach (var item in AGVNeighbours)
+                foreach (var item in AGVNeighbourList)
                 {
                     //前进
                     if (item.go.LeftFork != -1)
@@ -7021,6 +7021,47 @@ namespace WpfMap.Route
                         MapOperate.SystemMsg.WriteLine("【{0}】：后退-左旋【{1}】度->【{2}】", MapElement.MapObject.RFIDS[item.NowNum].Num, item.back.AngleLeft, MapElement.MapObject.RFIDS[item.back.TurnLeft].Num);
                     if (item.back.TurnRight != -1)
                         MapOperate.SystemMsg.WriteLine("【{0}】：后退-右旋【{1}】度->【{2}】", MapElement.MapObject.RFIDS[item.NowNum].Num, item.back.AngleLeft, MapElement.MapObject.RFIDS[item.back.TurnRight].Num);
+                }
+            }
+
+            //显示车头方向
+            MapElement.CvAGVHeadDir.Children.Clear();
+            for (int i = 0; i < MapElement.MapObject.RFIDS.Count; i++)
+            {
+                if (HeadDirectionList[i].Dir != HeadDirections.None)
+                {
+                    Ellipse ellipse = new Ellipse();
+                    double radius = 3;
+                    ellipse.Width = radius * 2;
+                    ellipse.Height = radius * 2;
+                    ellipse.Fill = Brushes.Black;
+                    Thickness thickness = new Thickness();
+
+                    switch (HeadDirectionList[i].Dir)
+                    {
+                        case HeadDirections.None:
+                            break;
+                        case HeadDirections.Up:
+                            thickness.Left = MapElement.MapObject.RFIDS[i].UpPoint.X - radius;
+                            thickness.Top = MapElement.MapObject.RFIDS[i].UpPoint.Y - radius;
+                            break;
+                        case HeadDirections.Right:
+                            thickness.Left = MapElement.MapObject.RFIDS[i].RightPoint.X - radius;
+                            thickness.Top = MapElement.MapObject.RFIDS[i].RightPoint.Y - radius;
+                            break;
+                        case HeadDirections.Down:
+                            thickness.Left = MapElement.MapObject.RFIDS[i].DownPoint.X - radius;
+                            thickness.Top = MapElement.MapObject.RFIDS[i].DownPoint.Y - radius;
+                            break;
+                        case HeadDirections.Left:
+                            thickness.Left = MapElement.MapObject.RFIDS[i].LeftPoint.X - radius;
+                            thickness.Top = MapElement.MapObject.RFIDS[i].LeftPoint.Y - radius;
+                            break;
+                        default:
+                            break;
+                    }
+                    ellipse.Margin = thickness;
+                    MapElement.CvAGVHeadDir.Children.Add(ellipse);
                 }
             }
         }

@@ -14,6 +14,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
@@ -43,7 +44,8 @@ namespace WpfMap
             MapElement.CvForkLine = cvForkLine;//分叉路线
             MapElement.CvOperate = cvOperate;//操作层
             MapElement.CvRouteDisplay = cvRouteDisplay;//路径提示层
-            
+            MapElement.CvAGVHeadDir = cvAGVHeadDir;//车头方向
+
             //画背景栅格，大小为20*20
             MapElement.DrawGrid(1024 * 2, 768 * 2);
 
@@ -1118,6 +1120,34 @@ namespace WpfMap
         private void Btn_SetTheme_Click(object sender, RoutedEventArgs e)
         {
             this.DataContext = MapElement.MapTheme;
+        }
+
+        private void Btn_Print_Click(object sender, RoutedEventArgs e)
+        {
+            PrintDialog dialog = new PrintDialog();
+            if (dialog.ShowDialog() == true)
+            {
+                Effect effect = MapElement.MapObject.RFIDS.First().ellipse.Effect;
+                foreach (var item in MapElement.MapObject.RFIDS)
+                {
+                    item.ellipse.Effect = null;
+                }
+                dialog.PrintVisual(gridDraw, "Print Test");
+                foreach (var item in MapElement.MapObject.RFIDS)
+                {
+                    item.ellipse.Effect = effect;
+                }
+            }
+        }
+        /// <summary>
+        /// 下载邻接关系到AGV
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_DownLoadNeighbor_Click(object sender, RoutedEventArgs e)
+        {
+            View.DownLoadForm downLoad = new View.DownLoadForm();
+            downLoad.ShowDialog();
         }
     }
 }

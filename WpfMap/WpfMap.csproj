@@ -42,6 +42,10 @@
     <ApplicationIcon>App.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Modbus, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Modbus.dll</HintPath>
+    </Reference>
     <Reference Include="MyLoadingLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\MyLoadingLib.dll</HintPath>
@@ -97,6 +101,9 @@
     <Compile Include="SaveMap\Convert.cs" />
     <Compile Include="SaveMap\Helper.cs" />
     <Compile Include="SaveMap\ShapesBase.cs" />
+    <Compile Include="View\DownLoadForm.xaml.cs">
+      <DependentUpon>DownLoadForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\loadingPage.xaml.cs">
       <DependentUpon>loadingPage.xaml</DependentUpon>
     </Compile>
@@ -133,6 +140,10 @@
     <Page Include="Resources\TextBlockStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\DownLoadForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\loadingPage.xaml">
       <SubType>Designer</SubType>

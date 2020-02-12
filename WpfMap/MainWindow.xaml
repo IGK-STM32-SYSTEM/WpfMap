@@ -115,6 +115,7 @@
                                             <Canvas x:Name="cvRFID"></Canvas>
                                             <Canvas x:Name="cvOperate"></Canvas>
                                             <Canvas x:Name="cvRouteDisplay"></Canvas>
+                                            <Canvas x:Name="cvAGVHeadDir"></Canvas>
                                         </Grid>
                                     </ScrollViewer>
                                 </xcad:LayoutDocument>
@@ -123,7 +124,7 @@
                         <!--右侧栏-->
                         <xcad:LayoutAnchorablePaneGroup Orientation="Vertical" DockWidth="240">
                             <!--地图-->
-                            <xcad:LayoutAnchorablePane DockHeight="1*" >
+                            <xcad:LayoutAnchorablePane DockHeight="1.5*" >
                                 <xcad:LayoutAnchorable ContentId="mapOperate"
                                        Title="地图"
                                        IconSource="Images/alarm-clock-blue.png"
@@ -137,11 +138,13 @@
                                         <Border BorderThickness="0.5" BorderBrush="Gray"></Border>
                                         <StackPanel Grid.Row="0" Margin="20,10">
                                             <CheckBox x:Name="cbShowGrid" IsChecked="True" Click="CbShowGrid_Click" Margin="5"  >显示栅格</CheckBox>
-                                            <Button x:Name="Btn_GenerateNeighbor" Content="生成邻接关系" Click="Btn_GenerateNeighbor_Click" Margin="5"  VerticalAlignment="Center" Height="30"/>
                                             <Button x:Name="Btn_SaveMap" Content="保存地图" Click="Btn_SaveMap_Click" Margin="5"  VerticalAlignment="Center" Height="30"/>
                                             <Button x:Name="Btn_SaveMapAs" Content="另存地图" Click="Btn_SaveMapAs_Click" Margin="5"  VerticalAlignment="Center" Height="30"/>
                                             <Button x:Name="Btn_LoadMap" Content="加载地图" Click="Btn_LoadMap_Click"  Margin="5"  VerticalAlignment="Center"  Height="30"/>
+                                            <Button x:Name="Btn_Print" Content="打印地图" Click="Btn_Print_Click"  Margin="5"  VerticalAlignment="Center"  Height="30"/>
                                             <Button x:Name="Btn_SetTheme" Content="设置主题" Click="Btn_SetTheme_Click"  Margin="5"  VerticalAlignment="Center"  Height="30"/>
+                                            <Button x:Name="Btn_GenerateNeighbor" Content="生成邻接关系" Click="Btn_GenerateNeighbor_Click" Margin="5"  VerticalAlignment="Center" Height="30"/>
+                                            <Button x:Name="Btn_DownLoadNeighbor" Content="下载到AGV" Click="Btn_DownLoadNeighbor_Click" Margin="5"  VerticalAlignment="Center" Height="30"/>
                                         </StackPanel>
                                         <TextBlock  Grid.Row="1" Padding="20,0" 
                                                     Style="{StaticResource Header}"

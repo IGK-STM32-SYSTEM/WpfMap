@@ -1,9 +1,7 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -30,6 +28,7 @@ namespace WpfMap
         public static Canvas CvForkLine;//分叉路线
         public static Canvas CvOperate;//操作层
         public static Canvas CvRouteDisplay;//路径显示层
+        public static Canvas CvAGVHeadDir;//车头方向
 
         /// <summary>
         /// 地图主题，配色
@@ -544,6 +543,12 @@ namespace WpfMap
             rfid.ellipse.Margin = thickness;
             //rfid.ellipse.StrokeThickness = 0.5;
             rfid.ellipse.Fill = CavnvasBase.GetSolid(200, Colors.Green);
+
+            //添加发光效果
+            DropShadowEffect drop = new DropShadowEffect();
+            drop.ShadowDepth = 2;
+            drop.Color = Colors.LightGray;
+            rfid.ellipse.Effect = drop;
             //rfid.ellipse.Stroke = CavnvasBase.GetSolid(100, Colors.Green);
             MapElement.CvRFID.Children.Add(rfid.ellipse);
             //显示编号

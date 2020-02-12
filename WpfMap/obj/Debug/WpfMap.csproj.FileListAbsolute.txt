@@ -67,3 +67,7 @@ C:\Users\Administrator\Desktop\路径规划算法\WpfMap\WpfMap\obj\Debug\Genera
 C:\Users\Administrator\Desktop\路径规划算法\WpfMap\WpfMap\obj\Debug\IgkUserControl\Loading.baml
 C:\Users\Administrator\Desktop\路径规划算法\WpfMap\WpfMap\obj\Debug\View\loadingPage.g.cs
 C:\Users\Administrator\Desktop\路径规划算法\WpfMap\WpfMap\obj\Debug\View\loadingPage.baml
+C:\Users\Administrator\Desktop\路径规划算法\WpfMap\WpfMap\obj\Debug\View\DownLoadForm.g.cs
+C:\Users\Administrator\Desktop\路径规划算法\WpfMap\WpfMap\obj\Debug\View\DownLoadForm.baml
+C:\Users\Administrator\Desktop\路径规划算法\WpfMap\WpfMap\bin\Debug\log4net.dll
+C:\Users\Administrator\Desktop\路径规划算法\WpfMap\WpfMap\bin\Debug\Unme.Common.dll
