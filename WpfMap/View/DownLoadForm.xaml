@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:WpfMap.View"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
+        Closed="Window_Closed"
         Title="下载地图" Height="291" Width="428">
     <Grid>
         <Label Content="下载地图"  FontSize="26" HorizontalAlignment="Left" Margin="151,10,0,0" VerticalAlignment="Top"/>

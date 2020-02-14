@@ -75,53 +75,80 @@ namespace WpfMap.View
             }
 
         }
-
+        Thread thread;
         private void BtnDownLoad_Click(object sender, RoutedEventArgs e)
+        {
+            thread = new Thread(new ThreadStart(function));
+            thread.IsBackground = true;
+            thread.Start();
+        }
+
+        private void function()
+        {
+            this.Dispatcher.BeginInvoke((Action)delegate ()
+            {
+                try
+                {
+                    progressBar.Value = 0;
+                    //生成邻接关系
+                    Route.Helper.GerateAgvNeighbor(20, Route.Helper.HeadDirections.Right);
+                    //连续写入
+                    for (int i = 0; i < Route.Helper.AGVNeighbourList.Count; i++)
+                    {
+                        progressBar.Value = i / Route.Helper.AGVNeighbourList.Count;
+                        //写入当前位置
+                        master.WriteSingleRegister(1, 30, (ushort)MapElement.MapObject.RFIDS[i].Num);
+                        //写入可到达的位置
+                        ushort[] vs = new ushort[16];
+                        int data = 0;
+                        //前进
+                        data = Route.Helper.AGVNeighbourList[i].go.TurnLeft; vs[0] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
+                        data = Route.Helper.AGVNeighbourList[i].go.LeftFork; vs[1] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
+                        data = Route.Helper.AGVNeighbourList[i].go.Straight; vs[2] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
+                        data = Route.Helper.AGVNeighbourList[i].go.RightFork; vs[3] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
+                        data = Route.Helper.AGVNeighbourList[i].go.TurnRight; vs[4] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
+                        //平移
+                        data = -1; vs[5] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
+                        data = -1; vs[6] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
+                        //后退
+                        data = Route.Helper.AGVNeighbourList[i].back.TurnLeft; vs[7] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
+                        data = Route.Helper.AGVNeighbourList[i].back.LeftFork; vs[8] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
+                        data = Route.Helper.AGVNeighbourList[i].back.Straight; vs[9] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
+                        data = Route.Helper.AGVNeighbourList[i].back.RightFork; vs[10] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
+                        data = Route.Helper.AGVNeighbourList[i].back.TurnRight; vs[11] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
+                        //前进角度
+                        data = Route.Helper.AGVNeighbourList[i].go.AngleLeft; vs[12] = data == -1 ? (ushort)0 : (ushort)data;
+                        data = Route.Helper.AGVNeighbourList[i].go.AngleRight; vs[13] = data == -1 ? (ushort)0 : (ushort)data;
+                        //后退角度
+                        data = Route.Helper.AGVNeighbourList[i].back.AngleLeft; vs[14] = data == -1 ? (ushort)0 : (ushort)data;
+                        data = Route.Helper.AGVNeighbourList[i].back.AngleRight; vs[15] = data == -1 ? (ushort)0 : (ushort)data;
+                        //更寄存器
+                        master.WriteMultipleRegisters(1, 1, vs);
+                        Thread.Sleep(50);
+                        //执行写入Flash
+                        master.WriteSingleRegister(1, 31, 1);
+                        Thread.Sleep(100);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message.ToString());
+                }
+            });
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
         {
             try
             {
-                //生成邻接关系
-                Route.Helper.GerateAgvNeighbor(20, Route.Helper.HeadDirections.Right);
-                //连续写入
-                for (int i = 0; i < Route.Helper.AGVNeighbourList.Count; i++)
+                if (serialPort.IsOpen)
                 {
-                    //写入当前位置
-                    master.WriteSingleRegister(1, 30, (ushort)MapElement.MapObject.RFIDS[i].Num);
-                    //写入可到达的位置
-                    ushort[] vs = new ushort[16];
-                    int data = 0;
-                    //前进
-                    data = Route.Helper.AGVNeighbourList[i].go.TurnLeft; vs[0] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
-                    data = Route.Helper.AGVNeighbourList[i].go.LeftFork; vs[1] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
-                    data = Route.Helper.AGVNeighbourList[i].go.Straight; vs[2] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
-                    data = Route.Helper.AGVNeighbourList[i].go.RightFork; vs[3] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
-                    data = Route.Helper.AGVNeighbourList[i].go.TurnRight; vs[4] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
-                    //平移
-                    data = -1; vs[5] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
-                    data = -1; vs[6] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
-                    //后退
-                    data = Route.Helper.AGVNeighbourList[i].back.TurnLeft;  vs[7] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
-                    data = Route.Helper.AGVNeighbourList[i].back.LeftFork;  vs[8] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
-                    data = Route.Helper.AGVNeighbourList[i].back.Straight;  vs[9] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
-                    data = Route.Helper.AGVNeighbourList[i].back.RightFork; vs[10] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
-                    data = Route.Helper.AGVNeighbourList[i].back.TurnRight; vs[11] = data == -1 ? (ushort)0 : (ushort)MapElement.MapObject.RFIDS[data].Num;
-                    //前进角度
-                    data = Route.Helper.AGVNeighbourList[i].go.AngleLeft; vs[12] = data == -1 ? (ushort)0 : (ushort)data;
-                    data = Route.Helper.AGVNeighbourList[i].go.AngleRight; vs[13] = data == -1 ? (ushort)0 : (ushort)data;
-                    //后退角度
-                    data = Route.Helper.AGVNeighbourList[i].back.AngleLeft; vs[14] = data == -1 ? (ushort)0 : (ushort)data;
-                    data = Route.Helper.AGVNeighbourList[i].back.AngleRight; vs[15] = data == -1 ? (ushort)0 : (ushort)data;
-                    //更寄存器
-                    master.WriteMultipleRegisters(1,1,vs);
-                    Thread.Sleep(50);
-                    //执行写入Flash
-                    master.WriteSingleRegister(1, 31, 1);
-                    Thread.Sleep(100);
+                    serialPort.Close();
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message.ToString());
+
             }
         }
     }
