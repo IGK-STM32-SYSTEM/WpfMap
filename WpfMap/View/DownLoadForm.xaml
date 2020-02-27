@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Loaded="Window_Loaded"
         Closed="Window_Closed"
+        WindowStartupLocation="CenterScreen"
         Title="下载地图" Height="291" Width="428">
     <Grid>
         <Label Content="下载地图"  FontSize="26" HorizontalAlignment="Left" Margin="151,10,0,0" VerticalAlignment="Top"/>
@@ -15,7 +16,7 @@
         <Label Content="下载进度:"  HorizontalAlignment="Left" Margin="80,141,0,0" VerticalAlignment="Top"/>
         <ComboBox Name="serialList" HorizontalAlignment="Left" Margin="151,76,0,0" VerticalAlignment="Top" Width="120"/>
         <Label Content="未连接" Name="lbConnect" Foreground="Red" HorizontalAlignment="Left" Margin="151,105,0,0" VerticalAlignment="Top"/>
-        <ProgressBar Name="progressBar"  HorizontalAlignment="Left" Height="20" Margin="151,146,0,0" VerticalAlignment="Top" Width="219"/>
+        <ProgressBar Name="progressBar" Value="{Binding Value}"  HorizontalAlignment="Left" Height="20" Margin="151,146,0,0" VerticalAlignment="Top" Width="219"/>
         <Button Content="连接" Name="btnConnect" Click="BtnConnect_Click" HorizontalAlignment="Left" Margin="296,78,0,0" VerticalAlignment="Top" Width="74"/>
         <Button Content="下载" Name="btnDownLoad" Click="BtnDownLoad_Click" HorizontalAlignment="Left" Margin="88,210,0,0" VerticalAlignment="Top" Width="288" Height="30"/>
     </Grid>

@@ -474,6 +474,8 @@ namespace WpfMap
             nowPoint.Y -= MapElement.MapObject.ForkLines[index].Path.Margin.Top;
             //找到圆弧起点和终点坐标
             PathGeometry pathGeometry = MapElement.MapObject.ForkLines[index].Path.Data as PathGeometry;
+            if (pathGeometry == null)
+                return false;
             PathFigure figure = pathGeometry.Figures.First();
             ArcSegment arc = figure.Segments.First() as ArcSegment;
             //圆弧起点
@@ -1167,6 +1169,8 @@ namespace WpfMap
 
                 //找到圆弧起点和终点坐标
                 PathGeometry pathGeometry = item.Path.Data as PathGeometry;
+                if (pathGeometry==null)
+                    break;
                 PathFigure figure = pathGeometry.Figures.First();
                 ArcSegment arc = figure.Segments.First() as ArcSegment;
                 //圆弧起点

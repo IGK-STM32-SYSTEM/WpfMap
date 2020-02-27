@@ -392,6 +392,37 @@ namespace WpfMap
             public BaseTextBlock baseTextBlock = new BaseTextBlock();
         }
 
+        //标注文字【未完成功能】
+        public class MarkText
+        {
+            /// <summary>
+            /// 内容
+            /// </summary>
+            [Category("基础")]
+            [Description("属性")]
+            [DisplayName("内容")]
+            public string Text { get; set; } = "Text";
+            /// <summary>
+            /// 样式
+            /// </summary>
+            [Category("基础")]
+            [Description("属性")]
+            [DisplayName("字体")]
+            public FontStyle FontStyle { get; set; }
+
+            /// <summary>
+            /// 坐标
+            /// </summary>
+            public Point AxisPoint { get; set; }
+
+            /// <summary>
+            /// 文本对象
+            /// </summary>
+            [JsonIgnore]
+            public TextBlock textBlock = new TextBlock();
+        }
+
+
         /// <summary>
         /// 地图对象
         /// </summary>

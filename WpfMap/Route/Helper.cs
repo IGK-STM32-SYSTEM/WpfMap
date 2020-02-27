@@ -7072,7 +7072,7 @@ namespace WpfMap.Route
         public static void test()
         {
             //获取车头方向
-            GerateAgvNeighbor(20, HeadDirections.Right);
+            GerateAgvNeighbor(1, HeadDirections.Up);
         }
     }
 }

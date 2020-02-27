@@ -1,23 +1,12 @@
-﻿using Microsoft.Win32;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Effects;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
 using Xceed.Wpf.AvalonDock.Layout.Serialization;
 
 namespace WpfMap
@@ -317,8 +306,9 @@ namespace WpfMap
                         //更新当前元素
                         MapOperate.NowType = MapOperate.EnumElementType.RFID;
                         this.DataContext = MapElement.MapObject.RFIDS[rs];
-                        //搜索
-                        Route.Helper.Test2_ShowNB(rs);
+                        //生成邻接关系
+                        if (cbRealTimeNeigb.IsChecked == true)
+                            Route.Helper.Test2_ShowNB(rs);
                         return;
                     }
                 }
@@ -1105,6 +1095,13 @@ namespace WpfMap
                 cvGrid.Visibility = Visibility.Visible;
             else
                 cvGrid.Visibility = Visibility.Hidden;
+        }
+        //是否动态计算邻接关系
+        private void CbRealTimeNeigb_Click(object sender, RoutedEventArgs e)
+        {
+            CheckBox check = sender as CheckBox;
+            if (check.IsChecked == false)
+                cvRouteDisplay.Children.Clear();
         }
         //清空消息
         private void BtnClearMsg_Click(object sender, RoutedEventArgs e)
