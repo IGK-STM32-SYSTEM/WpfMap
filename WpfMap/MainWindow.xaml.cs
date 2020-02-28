@@ -1146,5 +1146,52 @@ namespace WpfMap
             View.DownLoadForm downLoad = new View.DownLoadForm();
             downLoad.ShowDialog();
         }
+
+
+        //提交参考点的车头方向和标签号
+        private void RefAGVDir_btnSubmit_Click(object sender, RoutedEventArgs e)
+        {
+            if(MapElement.MapObject.RFIDS.Count==0)
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("地图中还没有标签，请添加后再试！");
+                return;
+            }
+            //判断标签号是否为数字
+            if (Class.CommonClass.IsNumeric(this.RefAGVDir_tbRFIDNum.Text) == false)
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("标签只能填写数字，请检查后再试！");
+                this.RefAGVDir_tbRFIDNum.Text = string.Empty;
+                return;
+            }
+            //判断是否存在
+            int num = int.Parse(this.RefAGVDir_tbRFIDNum.Text);
+            MapElement.RFID rfid = MapElement.MapObject.RFIDS.Where(n => n.Num == num).First();
+            if (rfid == null)
+            {
+                Xceed.Wpf.Toolkit.MessageBox.Show("您输入的标签不存在，请确认后再试！");
+                this.RefAGVDir_tbRFIDNum.Text = string.Empty;
+                return;
+            }
+            Class.SysParameterClass.Route.RefRFIDIndex = MapElement.MapObject.RFIDS.IndexOf(rfid);
+            ComboBoxItem dir = this.RefAGVDir_cbxDir.Items[this.RefAGVDir_cbxDir.SelectedIndex] as ComboBoxItem;
+            switch (dir.Content)
+            {
+                case "车头朝上":
+                    Class.SysParameterClass.Route.RefDir = Route.Helper.HeadDirections.Up;
+                    break;
+                case "车头朝右":
+                    Class.SysParameterClass.Route.RefDir = Route.Helper.HeadDirections.Right;
+                    break;
+                case "车头朝下":
+                    Class.SysParameterClass.Route.RefDir = Route.Helper.HeadDirections.Down;
+                    break;
+                case "车头朝左":
+                    Class.SysParameterClass.Route.RefDir = Route.Helper.HeadDirections.Left;
+                    break;
+                default:
+                    break;
+            }
+            Xceed.Wpf.Toolkit.MessageBox.Show("提交成功！");
+        }
     }
 }

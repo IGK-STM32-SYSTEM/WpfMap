@@ -71,6 +71,57 @@
                                     </Grid>
                                 </xcad:LayoutAnchorable>
                             </xcad:LayoutAnchorablePane>
+                            <!--方向配置栏-->
+                            <xcad:LayoutAnchorablePane DockHeight="0.6*" >
+                                <xcad:LayoutAnchorable Title="车头方向配置"
+                                               ContentId="RefAGVDir"
+                                               IsSelected="True" 
+                                               AutoHideWidth="240"
+                                               IconSource="Images/address-book-open.png">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="10*" />
+                                            <RowDefinition Height="50"/>
+                                        </Grid.RowDefinitions>
+                                        <Border BorderThickness="0.5" BorderBrush="Gray"></Border>
+                                        <StackPanel Grid.Row="0" Margin="20,10">
+                                            <DockPanel LastChildFill="True" Margin="0,5">
+                                                <Label>标签：</Label>
+                                                <TextBox x:Name="RefAGVDir_tbRFIDNum" VerticalAlignment="Center">1</TextBox>
+                                            </DockPanel>
+                                            <DockPanel LastChildFill="True">
+                                                <Label>方向：</Label>
+                                                <ComboBox  x:Name="RefAGVDir_cbxDir" VerticalAlignment="Center" SelectedIndex="0">
+                                                    <ComboBoxItem Background="LightSeaGreen">
+                                                        <!--<StackPanel Orientation="Horizontal">-->
+                                                           车头朝上
+                                                        <!--</StackPanel>-->
+                                                    </ComboBoxItem>
+                                                    <ComboBoxItem Background="LightGray">
+                                                            车头朝下
+                                                    </ComboBoxItem>
+                                                    <ComboBoxItem Background="LightGreen">
+                                                            车头朝左
+                                                    </ComboBoxItem>
+                                                    <ComboBoxItem Background="LightPink">
+                                                            车头朝右
+                                                    </ComboBoxItem>
+                                                </ComboBox>
+                                            </DockPanel>
+                                            <StackPanel Margin="0,5" Orientation="Horizontal" HorizontalAlignment="Right">
+                                                <Button x:Name="RefAGVDir_btnSubmit" Width="50" Click="RefAGVDir_btnSubmit_Click">提交</Button>
+                                            </StackPanel>
+                                           
+                                        </StackPanel>
+                                        <TextBlock  Grid.Row="1" Padding="20,0" 
+                                                    Style="{StaticResource Header}"
+                                                    FontFamily="Segoe" 
+                                                    TextWrapping="Wrap">
+                                                系统会根据参考标签的车头方向自动生成AGV到达所有点的车头方向！
+                                        </TextBlock>
+                                    </Grid>
+                                </xcad:LayoutAnchorable>
+                            </xcad:LayoutAnchorablePane>
                             <!--属性栏-->
                             <xcad:LayoutAnchorablePane DockWidth="200" DockHeight="1.5*">
                                 <xcad:LayoutAnchorable ContentId="properties"

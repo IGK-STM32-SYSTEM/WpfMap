@@ -180,7 +180,10 @@ namespace WpfMap.View
             }
             catch (Exception ex)
             {
-                Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message.ToString());
+                this.Dispatcher.BeginInvoke((Action)delegate ()
+                {
+                    Xceed.Wpf.Toolkit.MessageBox.Show(ex.Message.ToString());
+                });
             }
         }
 

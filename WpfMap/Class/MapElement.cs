@@ -409,7 +409,6 @@ namespace WpfMap
             [Description("属性")]
             [DisplayName("字体")]
             public FontStyle FontStyle { get; set; }
-
             /// <summary>
             /// 坐标
             /// </summary>

@@ -92,8 +92,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Class\MapCommon.cs" />
+    <Compile Include="Class\CommonClass.cs" />
     <Compile Include="Class\MapProperty.cs" />
+    <Compile Include="Class\SysParameterClass.cs" />
     <Compile Include="IgkUserControl\Loading.xaml.cs">
       <DependentUpon>Loading.xaml</DependentUpon>
     </Compile>

@@ -12,6 +12,7 @@ namespace WpfMap.Route
 {
     public class Helper
     {
+
         public class Base
         {
             #region 四个方向的分叉定义
@@ -713,6 +714,7 @@ namespace WpfMap.Route
             Left
         }
 
+
         /// <summary>
         /// 车头方向类
         /// </summary>
@@ -781,6 +783,7 @@ namespace WpfMap.Route
                 }
             }
         }
+
 
         /// <summary>
         /// 地图上标签的邻接关系类
@@ -7072,7 +7075,7 @@ namespace WpfMap.Route
         public static void test()
         {
             //获取车头方向
-            GerateAgvNeighbor(1, HeadDirections.Up);
+            GerateAgvNeighbor(Class.SysParameterClass.Route.RefRFIDIndex, Class.SysParameterClass.Route.RefDir);
         }
     }
 }
