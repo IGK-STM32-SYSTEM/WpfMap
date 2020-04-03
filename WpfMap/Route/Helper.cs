@@ -6617,6 +6617,11 @@ namespace WpfMap.Route
         {
             //获取邻接关系
             MapNeighbour map = GetMapNeighbour(index);
+            if(map==null)
+            {
+                MapOperate.SystemMsg.WriteLine("生成失败！");
+                return;
+            }
             //打印邻接关系
             MapOperate.SystemMsg.WriteLine(map.ToString());
             //显示

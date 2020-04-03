@@ -42,7 +42,7 @@ namespace WpfMap.SaveMap
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = @"C:\Users\SpringRain\Desktop";
             sfd.Title = "请选择要保存的文件路径";
-            sfd.Filter = "文本文件|*.txt|所有文件|*.*";
+            sfd.Filter = "文本文件|*.json|所有文件|*.*";
             sfd.ShowDialog();
 
             //获得用户要保存的文件的路径
@@ -68,7 +68,7 @@ namespace WpfMap.SaveMap
         {
             string txt = string.Empty;
             OpenFileDialog openFile = new OpenFileDialog();
-            openFile.Filter = "文本文件(*.txt)|*.txt";
+            openFile.Filter = "文本文件(*.json)|*.json";
             if (openFile.ShowDialog() == true)
             {
                 using (StreamReader sr = new StreamReader(openFile.FileName, Encoding.Default))
