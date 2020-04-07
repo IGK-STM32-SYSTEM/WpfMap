@@ -6813,6 +6813,13 @@ namespace WpfMap.Route
                                     nb.back.TurnRight = MapNeighbours[i].Left.Straight;
                                     nb.back.AngleRight = 90;
                                 }
+                                //如果无法符合目标位置角度，则按照默认前进方向转动
+                                else
+                                {
+                                    //左旋90度，前进
+                                    nb.go.TurnLeft = MapNeighbours[i].Left.Straight;
+                                    nb.go.AngleLeft = 90;
+                                }
                             }
                             //右侧
                             if (MapNeighbours[i].Right.Straight != -1)
@@ -6827,6 +6834,13 @@ namespace WpfMap.Route
                                 else
                                 //如果右面的点的车头方向要求朝右
                                 if (HeadDirectionList[MapNeighbours[i].Right.Straight].Dir == HeadDirections.Right)
+                                {
+                                    //右旋90度，前进
+                                    nb.go.TurnRight = MapNeighbours[i].Right.Straight;
+                                    nb.go.AngleRight = 90;
+                                }
+                                //如果无法符合目标位置角度，则按照默认前进方向转动
+                                else
                                 {
                                     //右旋90度，前进
                                     nb.go.TurnRight = MapNeighbours[i].Right.Straight;
@@ -6871,6 +6885,13 @@ namespace WpfMap.Route
                                     nb.back.TurnRight = MapNeighbours[i].Up.Straight;
                                     nb.back.AngleRight = 90;
                                 }
+                                //如果无法符合目标位置角度，则按照默认前进方向转动
+                                else
+                                {
+                                    //左旋90度，前进
+                                    nb.go.TurnLeft = MapNeighbours[i].Up.Straight;
+                                    nb.go.AngleLeft = 90;
+                                }
                             }
                             //下侧
                             if (MapNeighbours[i].Down.Straight != -1)
@@ -6885,6 +6906,13 @@ namespace WpfMap.Route
                                 else
                                 //如果下面的点的车头方向要求朝下
                                 if (HeadDirectionList[MapNeighbours[i].Down.Straight].Dir == HeadDirections.Down)
+                                {
+                                    //右旋90度，前进
+                                    nb.go.TurnRight = MapNeighbours[i].Down.Straight;
+                                    nb.go.AngleRight = 90;
+                                }
+                                //如果无法符合目标位置角度，则按照默认前进方向转动
+                                else
                                 {
                                     //右旋90度，前进
                                     nb.go.TurnRight = MapNeighbours[i].Down.Straight;
@@ -6913,6 +6941,13 @@ namespace WpfMap.Route
                                     nb.back.TurnLeft = MapNeighbours[i].Left.Straight;
                                     nb.back.AngleLeft = 90;
                                 }
+                                //如果无法符合目标位置角度，则按照默认前进方向转动
+                                else
+                                {
+                                    //右旋90度，前进
+                                    nb.go.TurnRight = MapNeighbours[i].Left.Straight;
+                                    nb.go.AngleRight = 90;
+                                }
                             }
                             //右侧
                             if (MapNeighbours[i].Right.Straight != -1)
@@ -6927,6 +6962,13 @@ namespace WpfMap.Route
                                 else
                                 //如果右面的点的车头方向要求朝右
                                 if (HeadDirectionList[MapNeighbours[i].Right.Straight].Dir == HeadDirections.Right)
+                                {
+                                    //左旋90度，前进
+                                    nb.go.TurnLeft = MapNeighbours[i].Right.Straight;
+                                    nb.go.AngleLeft = 90;
+                                }
+                                //如果无法符合目标位置角度，则按照默认前进方向转动
+                                else
                                 {
                                     //左旋90度，前进
                                     nb.go.TurnLeft = MapNeighbours[i].Right.Straight;
@@ -6971,6 +7013,13 @@ namespace WpfMap.Route
                                     nb.back.TurnLeft = MapNeighbours[i].Up.Straight;
                                     nb.back.AngleLeft = 90;
                                 }
+                                //如果无法符合目标位置角度，则按照默认前进方向转动
+                                else
+                                {
+                                    //右旋90度，前进
+                                    nb.go.TurnRight = MapNeighbours[i].Left.Straight;
+                                    nb.go.AngleRight = 90;
+                                }
                             }
                             //下侧
                             if (MapNeighbours[i].Down.Straight != -1)
@@ -6985,6 +7034,13 @@ namespace WpfMap.Route
                                 else
                                 //如果下面的点的车头方向要求朝下
                                 if (HeadDirectionList[MapNeighbours[i].Down.Straight].Dir == HeadDirections.Down)
+                                {
+                                    //左旋90度，前进
+                                    nb.go.TurnLeft = MapNeighbours[i].Down.Straight;
+                                    nb.go.AngleLeft = 90;
+                                }
+                                //如果无法符合目标位置角度，则按照默认前进方向转动
+                                else
                                 {
                                     //左旋90度，前进
                                     nb.go.TurnLeft = MapNeighbours[i].Down.Straight;
